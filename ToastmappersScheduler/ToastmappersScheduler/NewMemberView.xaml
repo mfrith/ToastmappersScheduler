@@ -1,0 +1,33 @@
+﻿<Window x:Class="Toastmappers.NewMemberView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Toastmappers"
+        mc:Ignorable="d"
+        WindowStartupLocation="CenterOwner"
+        Title="New Member" Height="200" Width="200">
+    <Grid>
+    <StackPanel Margin="10,10,0,0">
+      <DockPanel>
+        <TextBlock Text="Name"></TextBlock>
+        <TextBox Margin="10,0,0,0" Text="{Binding Name}"/>
+      </DockPanel>
+      <DockPanel>
+        <TextBlock Text="MemberID"></TextBlock>
+        <TextBox Margin="10,0,0,0" Text="{Binding NemberID}"></TextBox>
+      </DockPanel>
+      <CheckBox Content="Is Current" IsChecked="{Binding IsCurrent, Mode=TwoWay}"/>
+      <CheckBox Content="Can be Toastmaster" IsChecked="{Binding CanBeToastmaster, Mode=TwoWay}"/>
+      <CheckBox Content="Can Be Evaluator" IsChecked="{Binding CanBeEvaluator, Mode=TwoWay}"/>
+      <CheckBox Content="Has been an officer" IsChecked="{Binding HasBeenOfficer}"/>
+      
+      <DockPanel>
+    <Button IsDefault="True" Content="Ok" HorizontalAlignment="Left"  VerticalAlignment="Top" Width="75" Click="Button_Click"/>
+    <Button IsCancel="True" Content="Cancel" HorizontalAlignment="Left"  VerticalAlignment="Top" Width="75" Click="Button_Click_1"/>
+      </DockPanel>
+    </StackPanel>
+
+
+  </Grid>
+</Window>
