@@ -108,7 +108,7 @@ namespace Toastmappers
         if (item != null)
         {
 
-          var mtg = item as MeetingResolutionViewModel;
+          var mtg = item as EditMeetingViewModel;
           if (mtg.MeetingType == 1)
             return element.FindResource("RegularMeetingTemplate") as DataTemplate;
           else if (mtg.MeetingType == 2)

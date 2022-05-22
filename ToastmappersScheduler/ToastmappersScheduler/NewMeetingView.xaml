@@ -25,7 +25,6 @@
           <RowDefinition/>
           <RowDefinition/>
           <RowDefinition/>
-          <!--<RowDefinition/>-->
         </Grid.RowDefinitions>
         <TextBlock Grid.Row="0" Grid.Column="0" Text="Meeting date"/>
         <TextBox Grid.Row="0" Grid.Column="1"  Text="{Binding DayOfMeeting}"/>

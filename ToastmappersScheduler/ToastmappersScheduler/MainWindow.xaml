@@ -319,14 +319,19 @@
         </TabItem.Header>
         <!--<Button Margin="10" Width="100" Height="25" HorizontalAlignment="Left" >New Member</Button>-->
         <Grid>
-          <Image Width="300" Source="pack://application:,,,/Resources/logo.png"/>
-          <Grid HorizontalAlignment="Center" >
-            <StackPanel VerticalAlignment="Center" >
-             <TextBlock FontSize="30" VerticalAlignment="Center" HorizontalAlignment="Center" Text="Toastmappers Scheduler" />
-            <TextBlock FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center" Text="Version 0.2" />             
-            </StackPanel>
+          <Grid.RowDefinitions>
+            <RowDefinition Height="140"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+          </Grid.RowDefinitions>
+          <Image Grid.Row="1" Width="300" Source="pack://application:,,,/Resources/logo.png"/>
 
-          </Grid>
+
+          <StackPanel Grid.Row="2" VerticalAlignment="Center" >
+            <TextBlock FontSize="30" VerticalAlignment="Center" HorizontalAlignment="Center" Text="Toastmappers Scheduler" />
+            <TextBlock FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center" Text="Version 0.2" />
+          </StackPanel>
+
         </Grid>
       </TabItem>
       <TabItem Name="Members" DataContext="{Binding Tabs[1]}">
@@ -596,7 +601,8 @@
         <TabItem.Header>
           <TextBlock Text="Meetings" FontSize="20"/>
         </TabItem.Header>
-        <StackPanel Background="Transparent">
+
+        <StackPanel  Background="Transparent">
           <TextBlock Margin="10" FontSize="14">Meetings</TextBlock>
           <DockPanel Grid.Row="0" HorizontalAlignment="Left" LastChildFill="False">
             <!--<ComboBox ItemsSource="{Binding MeetingTemplates, Mode=OneWay}" SelectedValue="{Binding MeetingTemplate, Mode=TwoWay}"

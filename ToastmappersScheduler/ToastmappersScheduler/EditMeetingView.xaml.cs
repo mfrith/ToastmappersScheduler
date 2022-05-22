@@ -17,9 +17,10 @@ namespace Toastmappers
   /// <summary>
   /// Interaction logic for MeetingResolutionView.xaml
   /// </summary>
-  public partial class MeetingResolutionView : UserControl
+  public partial class EditMeetingView
+    : UserControl
   {
-    public MeetingResolutionView()
+    public EditMeetingView()
     {
       InitializeComponent();
     }
