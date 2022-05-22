@@ -230,17 +230,16 @@ namespace Toastmappers
     private void ComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
     {
       MeetingRoleList.ItemsSource = null;
-      string role = MeetingRoles.SelectedItem.ToString();
+      if (MeetingRoles.SelectedItem == null)
+        return;
+
+      string role = MeetingRoles.SelectedItem?.ToString();
       MainViewModel a = (MainViewModel)this.DataContext;
 
       MembersViewModel c = (MembersViewModel)a.Tabs[1];
-      List<string> r = null;
-      if (role == "Toastmaster")
-        r = c.Members.OrderBy(it => it.Toastmaster).Select(it => it.Name).ToList();
-      else
-        r = c.Members.OrderBy(it => it.Speaker).Select(it => it.Name).ToList();
-      //List<string> ab = c.Members.OrderBy(it => it.GetType().GetProperty(role)).Select(x => x.Name).ToList();
-      MeetingRoleList.ItemsSource = (System.Collections.IEnumerable)r;
+      List<string>? r = null;
+
+      MeetingRoleList.ItemsSource = c.Members.OrderBy(it => it.GetType().GetProperty(role).GetValue(it)).Select(x => x.Name).ToList();
     }
 
     private void MentorsCombo_DropDownClosed(object sender, EventArgs e)

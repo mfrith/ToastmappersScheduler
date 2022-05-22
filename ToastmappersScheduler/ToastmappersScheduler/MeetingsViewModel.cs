@@ -1,10 +1,11 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
+﻿
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace Toastmappers
@@ -98,7 +99,25 @@ namespace Toastmappers
         return _meetingTemplates;
       }
     }
+    public class MeetingTemplateSelector : DataTemplateSelector
+    {
+      public override DataTemplate SelectTemplate(object item, DependencyObject container)
+      {
+        FrameworkElement element = container as FrameworkElement;
 
+        if (item != null)
+        {
+
+          var mtg = item as MeetingResolutionViewModel;
+          if (mtg.MeetingType == 1)
+            return element.FindResource("RegularMeetingTemplate") as DataTemplate;
+          else if (mtg.MeetingType == 2)
+            return element.FindResource("RegularMeetingTemplate2") as DataTemplate;
+
+        }
+        return base.SelectTemplate(item, container);
+      }
+    }
     public List<string> CurrentMeetingTemplate
     {
       get { return regularTemplate; }
@@ -261,13 +280,56 @@ namespace Toastmappers
         _newMeeting.Month = MonthToGenerateFor;
         var w = _meetings.Last();
         list = _newMeeting.GenerateForMonth(GenerateForFriday, (_meetings[_meetings.Count() - 1].ID) + 1);
+
+        using (StreamWriter strmWriter = new StreamWriter(_home + "\\Data\\MembersStatus.json"))
+        {
+          // write out all objects(members)
+          string member = string.Empty;
+          //List<MemberModel> SortedList = _members.OrderBy(o => o.Name).ToList();
+          _members.ToList().Sort((x, y) => x.Name.CompareTo(y.Name));
+          foreach (var m in _members)
+          {
+            // need logic to set vm properties into the model before saving, and then need to have the vm not have a reference to the model in the first place
+            SaveMemberInfo(m);
+            member = m.Member.Serialize(m.Member);
+            //member = m.Serialize(m);
+            strmWriter.WriteLine(member);
+          }
+        }
+
+        //IsoDateTimeConverter timeFormat = new IsoDateTimeConverter();
+        //timeFormat.DateTimeFormat = "yyyy-MM-dd";
+        //File.WriteAllText(_home + "\\Data\\MembersStatus.json", JsonConvert.SerializeObject(_members, timeFormat));
+
+        string fileName = _home + "\\Data\\Meetings" + MonthToGenerateFor + DateTime.Now.Year.ToString() + ".json";
+        if (!File.Exists(fileName))
+        {
+          FileStream fs;
+          fs = File.Create(fileName);
+          fs.Close();
+        }
+        // following is for dev purposes only
+        //int vers = 1;
+        //string meetingFile = _home + "\\Data\\meetings.json";
+        //if (File.Exists (_home + ))
+        using (StreamWriter strmWriter = new StreamWriter(fileName))
+        {
+          // write out all objects(members)
+          strmWriter.AutoFlush = true;
+          string meeting = string.Empty;
+          foreach (var m in list)
+          {
+            meeting = (m as MeetingModelBase).Serialize(m);
+            strmWriter.WriteLine(meeting);
+          }
+        }
       }
       else
       {
         //_newMeeting = new MeetingModelRegularVM(MeetingDate.ToString("MM-dd-yyyy", CultureInfo.InvariantCulture), MeetingTemplate, temporarymemberList);
         _newMeeting = new MeetingModelRegularVM(MeetingDate, MeetingTemplate, temporarymemberList);
         _newMeeting.Generate();
-        CurrentMeeting = _newMeeting.ToList();
+        CurrentMeeting = _newMeeting.ToTempMeeting();
         _generateButtonEnabled = false;
         _roleListVisible = true;
         NotifyPropertyChanged(() => RoleListVisible);
@@ -283,48 +345,7 @@ namespace Toastmappers
       //_members = temporarymemberList.Concat(notCurrentMembers);
       //_members.Sort();
 
-      using (StreamWriter strmWriter = new StreamWriter(_home + "\\Data\\MembersStatus.json"))
-      {
-        // write out all objects(members)
-        string member = string.Empty;
-        //List<MemberModel> SortedList = _members.OrderBy(o => o.Name).ToList();
-        _members.ToList().Sort((x,y) => x.Name.CompareTo(y.Name));
-        foreach (var m in _members)
-        {
-          // need logic to set vm properties into the model before saving, and then need to have the vm not have a reference to the model in the first place
-          SaveMemberInfo(m);
-          member = m.Member.Serialize(m.Member);
-          //member = m.Serialize(m);
-          strmWriter.WriteLine(member);
-        }
-      }
 
-      //IsoDateTimeConverter timeFormat = new IsoDateTimeConverter();
-      //timeFormat.DateTimeFormat = "yyyy-MM-dd";
-      //File.WriteAllText(_home + "\\Data\\MembersStatus.json", JsonConvert.SerializeObject(_members, timeFormat));
-
-      string fileName = _home + "\\Data\\Meetings" + MonthToGenerateFor + DateTime.Now.Year.ToString() + ".json";
-      if (!File.Exists(fileName))
-      {
-        FileStream fs;
-        fs = File.Create(fileName);
-        fs.Close();
-      }
-      // following is for dev purposes only
-      //int vers = 1;
-      //string meetingFile = _home + "\\Data\\meetings.json";
-      //if (File.Exists (_home + ))
-      using (StreamWriter strmWriter = new StreamWriter(fileName))
-      {
-        // write out all objects(members)
-        strmWriter.AutoFlush = true;
-        string meeting = string.Empty;
-        foreach (var m in list)
-        {
-          meeting = (m as MeetingModelBase).Serialize(m);
-          strmWriter.WriteLine(meeting);
-        }
-      }
       //File.WriteAllText(fileName, JsonConvert.SerializeObject(list, timeFormat));
       return;
     }
@@ -435,8 +456,8 @@ namespace Toastmappers
       //  }
       //}
 
-      IsoDateTimeConverter timeFormat = new IsoDateTimeConverter();
-      timeFormat.DateTimeFormat = "yyyy-MM-dd";
+      //IsoDateTimeConverter timeFormat = new IsoDateTimeConverter();
+      //timeFormat.DateTimeFormat = "yyyy-MM-dd";
 
       // following is for dev purposes only
       //int vers = 1;
@@ -539,7 +560,7 @@ namespace Toastmappers
         //File.Delete("C:\\Users\\mike\\Documents\\TI\\MembersStatus.json");
 
       }
-      using (StreamWriter strmWriter = new StreamWriter(_home + "\\Data\\meetingsa.json"))
+      using (StreamWriter strmWriter = new StreamWriter(_home + "\\Data\\meetingstest.json"))
       {
         // write out all objects(members)
         strmWriter.AutoFlush = true;

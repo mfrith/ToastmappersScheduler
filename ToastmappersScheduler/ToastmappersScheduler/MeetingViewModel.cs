@@ -161,6 +161,21 @@ namespace Toastmappers
       return list;
     }
 
+    //List<string> regularTemplate = new List<string>(new string[] {"Toastmaster","Speaker 1","Speaker 2","General Evaluator",
+    //                                                              "Evaluator 1", "Evaluator 2", "Table Topics", "Ah Counter",
+    //                                                              "Timer", "Grammarian", "Quiz Master", "Video", "Hot Seat" });
+    public List<string> ToTempMeeting()
+    {
+      //var list = new List<string>();
+
+      //list.Add(Toastmaster);
+      //list.Add(Speaker1);
+      //list.Add(Speaker2);
+      //list.Add()
+      return new List<string>(new string[] {Toastmaster,Speaker1,Speaker2,GeneralEvaluator,
+                                                                  Evaluator1, Evaluator2, TableTopics, AhCounter,
+                                                                  Timer, Grammarian, QuizMaster, Video, HotSeat });
+    }
     public static Object GetListValue(Object obj, string name)
     {
       return obj.GetType().GetProperty(name).GetValue(obj, null);
@@ -199,20 +214,20 @@ namespace Toastmappers
       _members.Remove(timer);
       var video = _members.OrderBy(a => a.Video).First();
       _members.Remove(video);
-      
-      Toastmaster = toastmaster.ToString();
-      Speaker1 = speaker1.ToString();
-      Speaker2 = speaker2.ToString();
-      GeneralEvaluator = generalEvaluator.ToString();
-      Evaluator1 = evaluator1.ToString();
-      Evaluator2 = evaluator2.ToString();
-      TableTopics = tt.ToString();
-      HotSeat = hotSeat.ToString();
-      Grammarian = gram.ToString();
-      AhCounter = ah.ToString();
-      QuizMaster = quiz.ToString();
-      Timer = timer.ToString();
-      Video = video.ToString();
+
+      Toastmaster = toastmaster.Name;
+      Speaker1 = speaker1?.Name;
+      Speaker2 = speaker2.Name;
+      GeneralEvaluator = generalEvaluator?.Name;
+      Evaluator1 = evaluator1?.Name;
+      Evaluator2 = evaluator2?.Name;
+      TableTopics = tt?.Name;
+      HotSeat = hotSeat?.Name;
+      Grammarian = gram?.Name;
+      AhCounter = ah?.Name;
+      QuizMaster = quiz?.Name;
+      Timer = timer?.Name;
+      Video = video?.Name;
 
       //GetMembers(ref members);
       //List<DateTime> theMeetings = GetMonthlyMeetings(new DateTime(2020, 3, 4), true);

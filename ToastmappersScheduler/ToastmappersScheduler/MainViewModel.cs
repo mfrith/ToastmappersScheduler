@@ -8,6 +8,7 @@ using System.Linq;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Data;
+using System.IO.Compression;
 
 namespace Toastmappers
 {
@@ -26,19 +27,22 @@ namespace Toastmappers
   public class MainViewModel
   {
     ObservableCollection<object> _tabs;
-
+    string _home;
     public MainViewModel()
     {
       _tabs = new ObservableCollection<object>();
-      string home = Path.GetDirectoryName(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
+      var t = Assembly.GetExecutingAssembly().Location;
+      var e = Path.GetDirectoryName(t);
+
+      _home = Path.GetDirectoryName(e);
       
-      GeneralViewModel generalVM = new GeneralViewModel(home);
-      MembersViewModel membersVM = new MembersViewModel(home);
+      GeneralViewModel generalVM = new GeneralViewModel(_home);
+      MembersViewModel membersVM = new MembersViewModel(_home, this);
       membersVM.Load();
-      MeetingsViewModel meetingsVM = new MeetingsViewModel(membersVM.Members, home);
+      MeetingsViewModel meetingsVM = new MeetingsViewModel(membersVM.Members, _home);
       meetingsVM.Load();
 
-      ReportsViewModel reportsVM = new ReportsViewModel(meetingsVM.Meetings.ToList(), membersVM.Members, home);
+      ReportsViewModel reportsVM = new ReportsViewModel(meetingsVM.Meetings.ToList(), membersVM.Members, _home);
 
       _tabs.Add(generalVM);
       _tabs.Add(membersVM);
@@ -86,5 +90,14 @@ namespace Toastmappers
 
     }
     public ObservableCollection<object> Tabs { get { return _tabs; } }
+
+    public void Backup()
+    {
+      DateTime dt = DateTime.Now;
+      var a = dt.ToString("yyyy-MM-dd-HH-mm-ss");
+      var path = _home + "\\Backup";
+      var zipname = Path.ChangeExtension(Path.Combine(path, a), "zip");
+      ZipFile.CreateFromDirectory(Path.Combine(_home, "Data"), zipname);
+    }
   }
 }

@@ -9,11 +9,108 @@
         mc:Ignorable="d"
         Loaded="Window_Loaded"
         WindowStartupLocation="CenterScreen"
-        Title="Club Scheduler" Height="450" Width="800">
+        Icon="./Resources/logo.png"
+  Title="Club Scheduler" Height="650" Width="1000">
   <Window.Resources>
+    <local:MeetingTemplateSelector x:Key="meetingTemplateSelector"/>
     <BooleanToVisibilityConverter x:Key="Bool2Vis" />
     <local:InverseBoolConverter x:Key="InverseBool" />
-    <DataTemplate x:Key="RegularTemplate">
+    <DataTemplate x:Key="FirstThreeTemplate">
+      <Grid>
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition/>
+          <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+          <RowDefinition/>
+          <RowDefinition/>
+          <RowDefinition/>
+          <RowDefinition/>
+          <RowDefinition/>
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="Meeting date"/>
+        <TextBox IsEnabled="False" Grid.Row="0" Grid.Column="1"  Text="{Binding DayOfMeeting}"/>
+        <TextBlock Grid.Row="1" Grid.Column="0" Text="Theme"/>
+        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Theme}"/>
+        <TextBlock Grid.Row="2" Grid.Column="0" Text="Word of the Day"/>
+        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding WOTD}"/>
+        <StackPanel Grid.Row="3" Grid.ColumnSpan="2">
+          <TextBlock  Text="Attendees" HorizontalAlignment="Center"/>
+          <ComboBox Name="AttendeesCombo" ItemsSource="{Binding AttendeesMembersList}" DropDownClosed="ComboBox_DropDownClosed" />
+          <ListBox ItemsSource="{Binding Attendees}" />
+        </StackPanel>
+        <StackPanel Grid.Row="4" Grid.ColumnSpan="2">
+          <TextBlock Text="Guests" HorizontalAlignment="Center"/>
+          <!--<DockPanel LastChildFill="True">-->
+          <!--<Button DockPanel.Dock="Right" Height="16" Width="16">
+              <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="12" Text="&#xE710;" FontWeight="Bold" HorizontalAlignment="Left"  VerticalAlignment="Top"  />
+            </Button>-->
+          <TextBox Name="GuestTextBox"/> 
+          <!--</DockPanel>-->
+          <ListBox ItemsSource="{Binding Guests}" />
+        </StackPanel>
+        <!--<StackPanel>
+        <TextBlock Text="Meeting date"/>
+        <TextBox Text="{Binding CurrentMeetingToResolve.DayOfMeeting}"/>
+        <TextBlock  Text="Theme"/>
+        <TextBox Text="{Binding CurrentMeetingToResolve.Theme}"/>
+        <TextBlock Text="Word of the Day"/>
+        <TextBox Text="{Binding CurrentMeetingToResolve.WOTD}"/>
+      </StackPanel>-->
+      </Grid>
+    </DataTemplate>
+    <DataTemplate x:Key="RegularMeetingTemplate">
+      <Grid>
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition/>
+          <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+          <RowDefinition></RowDefinition>
+          <RowDefinition></RowDefinition>
+          <RowDefinition></RowDefinition>
+          <RowDefinition></RowDefinition>
+          <RowDefinition></RowDefinition>
+          <RowDefinition></RowDefinition>
+          <RowDefinition></RowDefinition>
+          <RowDefinition></RowDefinition>
+          <RowDefinition></RowDefinition>
+          <RowDefinition></RowDefinition>
+          <RowDefinition></RowDefinition>
+          <RowDefinition></RowDefinition>
+          <RowDefinition></RowDefinition>
+          <RowDefinition></RowDefinition>
+          <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" Grid.Column="0"  Text="Toastmaster"/>
+        <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{Binding MembersList}"  SelectedValue="{Binding Toastmaster}"/>
+        <TextBlock Grid.Row="1" Grid.Column="0" Text="Speaker 1"/>
+        <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding MembersList}"  SelectedValue="{Binding Speaker1}"/>
+        <TextBlock Grid.Row="2" Grid.Column="0" Text="Speaker 2"/>
+        <ComboBox Grid.Row="2" Grid.Column="1" ItemsSource="{Binding MembersList}"  SelectedValue="{Binding Speaker2}"/>
+        <TextBlock Grid.Row="3" Grid.Column="0" Text="General Evaluator"/>
+        <ComboBox Grid.Row="3" Grid.Column="1" ItemsSource="{Binding MembersList}"  SelectedValue="{Binding GeneralEvaluator}"/>
+        <TextBlock Grid.Row="4" Grid.Column="0" Text="Evaluator 1"/>
+        <ComboBox Grid.Row="4" Grid.Column="1" ItemsSource="{Binding MembersList}"  SelectedValue="{Binding Evaluator1}" />
+        <TextBlock Grid.Row="5" Grid.Column="0" Text="Evaluator 2"/>
+        <ComboBox Grid.Row="5" Grid.Column="1" ItemsSource="{Binding MembersList}"  SelectedValue="{Binding Evaluator2}" />
+        <TextBlock Grid.Row="6" Grid.Column="0" Text="Table Topics Master"/>
+        <ComboBox Grid.Row="6" Grid.Column="1" ItemsSource="{Binding MembersList}"  SelectedValue="{Binding TableTopics}" />
+        <TextBlock Grid.Row="7" Grid.Column="0" Text="Ah Counter"/>
+        <ComboBox Grid.Row="7" Grid.Column="1" ItemsSource="{Binding MembersList}"  SelectedValue="{Binding AhCounter}" />
+        <TextBlock Grid.Row="8" Grid.Column="0" Text="Timer"/>
+        <ComboBox Grid.Row="8" Grid.Column="1" ItemsSource="{Binding MembersList}"  SelectedValue="{Binding Timer}" />
+        <TextBlock Grid.Row="9" Grid.Column="0" Text="Grammarian"/>
+        <ComboBox Grid.Row="9" Grid.Column="1" ItemsSource="{Binding MembersList}" SelectedValue="{Binding Grammarian}"  />
+        <TextBlock Grid.Row="10" Grid.Column="0" Text="Quiz Master"/>
+        <ComboBox Grid.Row="10" Grid.Column="1" ItemsSource="{Binding MembersList}"  SelectedValue="{Binding QuizMaster}" />
+        <TextBlock Grid.Row="11" Grid.Column="0" Text="Video"/>
+        <ComboBox Grid.Row="11" Grid.Column="1" ItemsSource="{Binding MembersList}" SelectedValue="{Binding Video}"  />
+        <TextBlock Grid.Row="12" Grid.Column="0" Text="Hot Seat"/>
+        <ComboBox Grid.Row="12" Grid.Column="1" ItemsSource="{Binding MembersList}"  SelectedValue="{Binding HotSeat}" />
+      </Grid>
+    </DataTemplate>
+    <!--<DataTemplate x:Key="RegularTemplate">
       <DataGrid ItemsSource="{Binding Meetings}" AutoGenerateColumns="False" >
         <DataGrid.LayoutTransform>
           <TransformGroup>
@@ -60,15 +157,15 @@
           <DataGridTextColumn Header="Quiz" Binding="{Binding Path=Quiz.Name}"/>
           <DataGridTextColumn Header="Video" Binding="{Binding Path=Video.Name}"/>
           <DataGridTextColumn Header="HotSeat" Binding="{Binding Path=HotSeat.Name}"/>
-          <!--public List
+          --><!--public List
               <int>Attendees { get; set; }
     public MemberModel TTWinner { get; set; }
     public List
                 <int>TTContestants { get; set; }-->
-          <!--<DataGridTextColumn Header="Day of Meeting"/>-->
+          <!--<DataGridTextColumn Header="Day of Meeting"/>--><!--
         </DataGrid.Columns>
       </DataGrid>
-    </DataTemplate>
+    </DataTemplate>-->
     <DataTemplate x:Key="MemberInfo">
       <StackPanel>
         <CheckBox Content="Is Current" IsChecked="{Binding CurrentMemberEdit.IsCurrent, Mode=TwoWay}"/>
@@ -92,16 +189,22 @@
               <Grid.ContextMenu>
                 <ContextMenu>
                   <MenuItem Header="Remove" Command="{Binding Path=DataContext.OnDel,RelativeSource={RelativeSource TemplatedParent}}"/>
-                  --><!--<MenuItem Header="{x:Static res:Resources.common_MoveUp}" Command="{Binding Path=DataContext.OnUp,RelativeSource={RelativeSource TemplatedParent}}"/>
+                  -->
+      <!--<MenuItem Header="{x:Static res:Resources.common_MoveUp}" Command="{Binding Path=DataContext.OnUp,RelativeSource={RelativeSource TemplatedParent}}"/>
                   <MenuItem Header="{x:Static res:Resources.common_MoveDown}" Command="{Binding Path=DataContext.OnDown,RelativeSource={RelativeSource TemplatedParent}}"/>
                   <MenuItem Header="{x:Static res:Resources.common_RemoveAll}" Command="{Binding Path=DataContext.OnDelAll,RelativeSource={RelativeSource TemplatedParent}}"/>-->
-                  <!--<MenuItem Header="Remove" Command="{Binding Path=OnDel}"/>--><!--
+      <!--<MenuItem Header="Remove" Command="{Binding Path=OnDel}"/>-->
+      <!--
                 </ContextMenu>
               </Grid.ContextMenu>
               <Rectangle Fill="{TemplateBinding Background}" Width="5" HorizontalAlignment="Left">
-                --><!--<Rectangle.ToolTip>
-                  --><!--<TextBlock Style="{StaticResource rowIDTextStyle}"/>--><!--
-                </Rectangle.ToolTip>--><!--
+                -->
+      <!--<Rectangle.ToolTip>
+                  -->
+      <!--<TextBlock Style="{StaticResource rowIDTextStyle}"/>-->
+      <!--
+                </Rectangle.ToolTip>-->
+      <!--
               </Rectangle>
               <Button Name="btRm" Command="{Binding Path=DataContext.OnDel,RelativeSource={RelativeSource TemplatedParent}}"
                   Focusable="False" Width="14" Height="14" CommandParameter="{Binding}"
@@ -111,21 +214,27 @@
                   HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
                   BorderThickness="0" Content="X"
                   Visibility="Hidden">
-                --><!--<Image Margin="0" Width="12" Height="12" Source="{StaticResource GenericDeleteRed16}" />--><!--
+                -->
+      <!--<Image Margin="0" Width="12" Height="12" Source="{StaticResource GenericDeleteRed16}" />-->
+      <!--
               </Button>
-              --><!-- <ContentPresenter IsHitTestVisible="False" ContentTemplate="{StaticResource IndexColumnTemplate}" Width="8" HorizontalAlignment="Left"/> 
+              -->
+      <!-- <ContentPresenter IsHitTestVisible="False" ContentTemplate="{StaticResource IndexColumnTemplate}" Width="8" HorizontalAlignment="Left"/> 
                    IsEnabled="{Binding Path=DataContext.IsValueEnabled,RelativeSource={RelativeSource TemplatedParent}}"
               -->
-              <!--<ContentPresenter Content="{TemplateBinding Content}"
+      <!--<ContentPresenter Content="{TemplateBinding Content}"
                   ContentTemplate="{TemplateBinding ContentTemplate}"
                   HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                   VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                  PreviewMouseDown="HandlePreviewMouseDown"/>--><!--
+                  PreviewMouseDown="HandlePreviewMouseDown"/>-->
+      <!--
             </Grid>
             <ControlTemplate.Triggers>
               <MultiTrigger>
                 <MultiTrigger.Conditions>
-                  --><!--<Condition Property="Selector.IsSelected" Value="True"/>--><!--
+                  -->
+      <!--<Condition Property="Selector.IsSelected" Value="True"/>-->
+      <!--
                   <Condition Property="IsMouseOver" Value="True"/>
                 </MultiTrigger.Conditions>
                 <Setter TargetName="btRm" Property="Visibility" Value="Visible"/>
@@ -166,13 +275,65 @@
   </Window.Resources>
   <DockPanel>
 
-    <TabControl TabStripPlacement="Left" Margin="0,0,0,10"  >
-      <TabItem Name="General" Header="General" DataContext="{Binding Tabs[0]}">
+    <TabControl TabStripPlacement="Left" Margin="0,0,0,5"  >
+      <TabControl.Resources>
+        <Style TargetType="TabItem">
+          <!--<Style.Triggers>
+            <Trigger Property="TabItem.IsSelected" Value="True">
+              <Setter Property="Foreground" Value="Red"/>
+              <Setter Property="FontSize" Value="18"/>
+            </Trigger>
+          </Style.Triggers>-->
+          <Setter Property="Template">
+            <Setter.Value>
+              <ControlTemplate TargetType="TabItem">
+                <Grid Name="Panel">
+                  <ContentPresenter x:Name="ContentSite"
+                                  VerticalAlignment="Center"
+                                  HorizontalAlignment="Center"
+                                  ContentSource="Header"
+                                  Margin="10,6" />
+                </Grid>
+                <ControlTemplate.Triggers>
+                  <Trigger Property="IsSelected" Value="True">
+                    <Setter TargetName="Panel" Property="Background" Value="LightSkyBlue"/>
+                  </Trigger>
+                  <Trigger Property="IsSelected" Value="False">
+                    <Setter TargetName="Panel" Property="Background" Value="White"/>
+                  </Trigger>
+                  <Trigger Property="IsMouseOver" Value="True">
+                    <Setter TargetName="Panel" Property="Background" Value="lightblue"/>
+                  </Trigger>
+                  <!--<Trigger Property="IsSelected" Value="False">
+                    <Setter TargetName="Panel" Property="Background" Value="White"/>
+                  </Trigger>-->
+                </ControlTemplate.Triggers>
+              </ControlTemplate>
+            </Setter.Value>
+          </Setter>
+        </Style>
+      </TabControl.Resources>
+      <TabItem Name="General" Padding="15" DataContext="{Binding Tabs[0]}">
+        <TabItem.Header>
+          <TextBlock Text="General" FontSize="20"/>
+        </TabItem.Header>
         <!--<Button Margin="10" Width="100" Height="25" HorizontalAlignment="Left" >New Member</Button>-->
+        <Grid>
+          <Image Width="300" Source="pack://application:,,,/Resources/logo.png"/>
+          <Grid HorizontalAlignment="Center" >
+            <StackPanel VerticalAlignment="Center" >
+             <TextBlock FontSize="30" VerticalAlignment="Center" HorizontalAlignment="Center" Text="Toastmappers Scheduler" />
+            <TextBlock FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center" Text="Version 0.2" />             
+            </StackPanel>
 
+          </Grid>
+        </Grid>
       </TabItem>
-      <TabItem Name="Members" Header="Members" DataContext="{Binding Tabs[1]}">
-        <StackPanel>
+      <TabItem Name="Members" DataContext="{Binding Tabs[1]}">
+        <TabItem.Header>
+          <TextBlock Text="Members" FontSize="20"/>
+        </TabItem.Header>
+        <StackPanel Background="Transparent">
           <TextBlock Text="Member Information" Margin="10,10,10,10"/>
           <DockPanel HorizontalAlignment="Left" LastChildFill="False">
             <ComboBox Name="MemberInfoComboBox" Margin="10" Width="150" Height="25" HorizontalAlignment="Left" 
@@ -183,11 +344,13 @@
             <Button Margin="10" Width="100" Height="25" HorizontalAlignment="Left" Content="New Member" 
                     Command="{Binding NewMemberCmd}"/>
             <Button Margin="10" Width="100" Height="25" Content="Save" Command="{Binding SaveMembersCmd}"/>
+            <Button Margin="10" Width="100" Height="25" Content="Backup" Command="{Binding BackupCmd}"/>
+
           </DockPanel>
           <!--members vm-->
-          <TabControl>
+          <TabControl Background="Transparent">
             <TabItem  Header="General" Padding="5">
-              <StackPanel>
+              <StackPanel Background="Transparent">
 
                 <DockPanel HorizontalAlignment="Left" LastChildFill="False">
                   <!--<ComboBox Margin="10" Width="150" Height="25" HorizontalAlignment="Left" 
@@ -221,29 +384,29 @@
                               <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
                               <!--<EventSetter Event="PreviewMouseWheel" Handler="HandlePreviewMouseWheel"/>-->
                               <Setter Property="Template">
-        <Setter.Value>
-          <ControlTemplate TargetType="ListBoxItem">
-            <Grid Margin="0,1,0,1" Focusable="False" Background="Transparent">
-              <Grid.ContextMenu>
-                <ContextMenu>
-                  <MenuItem Header="Remove" Command="{Binding Path=DataContext.OnDel,RelativeSource={RelativeSource TemplatedParent}}"/>
-                  
-                              <MenuItem Header="MoveUp" Command="{Binding Path=DataContext.OnUp,RelativeSource={RelativeSource TemplatedParent}}"/>
-                  <MenuItem Header="MoveDown" Command="{Binding Path=DataContext.OnDown,RelativeSource={RelativeSource TemplatedParent}}"/>
-                  <MenuItem Header="RemoveAll" Command="{Binding Path=DataContext.OnDelAll,RelativeSource={RelativeSource TemplatedParent}}"/>
-                              
-                </ContextMenu>
-              </Grid.ContextMenu>
-              <Rectangle Fill="{TemplateBinding Background}" Width="5" HorizontalAlignment="Left">
-                
-                              <Rectangle.ToolTip>
-                  
-                              <TextBlock />
-                              
-                </Rectangle.ToolTip>
-                              
-              </Rectangle>
-              <Button Name="btRm" Command="{Binding Path=DataContext.OnDel,RelativeSource={RelativeSource TemplatedParent}}"
+                                <Setter.Value>
+                                  <ControlTemplate TargetType="ListBoxItem">
+                                    <Grid Margin="0,1,0,1" Focusable="False" Background="Transparent">
+                                      <Grid.ContextMenu>
+                                        <ContextMenu>
+                                          <MenuItem Header="Remove" Command="{Binding Path=DataContext.OnDel,RelativeSource={RelativeSource TemplatedParent}}"/>
+
+                                          <MenuItem Header="MoveUp" Command="{Binding Path=DataContext.OnUp,RelativeSource={RelativeSource TemplatedParent}}"/>
+                                          <MenuItem Header="MoveDown" Command="{Binding Path=DataContext.OnDown,RelativeSource={RelativeSource TemplatedParent}}"/>
+                                          <MenuItem Header="RemoveAll" Command="{Binding Path=DataContext.OnDelAll,RelativeSource={RelativeSource TemplatedParent}}"/>
+
+                                        </ContextMenu>
+                                      </Grid.ContextMenu>
+                                      <Rectangle Fill="{TemplateBinding Background}" Width="5" HorizontalAlignment="Left">
+
+                                        <Rectangle.ToolTip>
+
+                                          <TextBlock />
+
+                                        </Rectangle.ToolTip>
+
+                                      </Rectangle>
+                                      <Button Name="btRm" Command="{Binding Path=DataContext.OnDel,RelativeSource={RelativeSource TemplatedParent}}"
                   Focusable="False" Width="14" Height="14" CommandParameter="{Binding}"
                   Margin="0" Padding="0"
                   ToolTip="Remove"
@@ -251,34 +414,34 @@
                   HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
                   BorderThickness="0" Content="X"
                   Visibility="Hidden">
-                
-                                                            
-              </Button>
-              
-                               <ContentPresenter IsHitTestVisible="False" Width="8" HorizontalAlignment="Left"/> 
-                   
-              
-                              <ContentPresenter Content="{TemplateBinding Content}"
+
+
+                                      </Button>
+
+                                      <ContentPresenter IsHitTestVisible="False" Width="8" HorizontalAlignment="Left"/>
+
+
+                                      <ContentPresenter Content="{TemplateBinding Content}"
                   ContentTemplate="{TemplateBinding ContentTemplate}"
                   HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                   VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                   />
-                              
-            </Grid>
-            <ControlTemplate.Triggers>
-              <MultiTrigger>
-                <MultiTrigger.Conditions>
-                  
-                              <Condition Property="Selector.IsSelected" Value="True"/>
-                              
-                  <Condition Property="IsMouseOver" Value="True"/>
-                </MultiTrigger.Conditions>
-                <Setter TargetName="btRm" Property="Visibility" Value="Visible"/>
-              </MultiTrigger>
-            </ControlTemplate.Triggers>
-          </ControlTemplate>
-        </Setter.Value>
-      </Setter>
+
+                                    </Grid>
+                                    <ControlTemplate.Triggers>
+                                      <MultiTrigger>
+                                        <MultiTrigger.Conditions>
+
+                                          <Condition Property="Selector.IsSelected" Value="True"/>
+
+                                          <Condition Property="IsMouseOver" Value="True"/>
+                                        </MultiTrigger.Conditions>
+                                        <Setter TargetName="btRm" Property="Visibility" Value="Visible"/>
+                                      </MultiTrigger>
+                                    </ControlTemplate.Triggers>
+                                  </ControlTemplate>
+                                </Setter.Value>
+                              </Setter>
                               <Style.Triggers>
                                 <!--<Trigger Property="Selector.IsSelected" Value="True">
           <Setter Property="Background" Value="{DynamicResource Esri_Blue6}" />
@@ -329,14 +492,14 @@
                     <StackPanel>
                       <ComboBox Name="MeetingRoles" ItemsSource="{Binding Roles}" SelectionChanged="ComboBox_SelectionChanged"/>
                       <ListBox Height="150" Name="MeetingRoleList"/>
-                     </StackPanel>
+                    </StackPanel>
                   </DockPanel>
                 </StackPanel>
 
               </StackPanel>
             </TabItem>
             <TabItem Header="Role History" Padding="5">
-              <StackPanel Width="600" HorizontalAlignment="Left">
+              <StackPanel Width="600" HorizontalAlignment="Left" Background="Transparent">
                 <!--<DockPanel HorizontalAlignment="Left" LastChildFill="False">-->
 
                 <!--<ListBox ItemsSource="{Binding Roles}" Width="80" ></ListBox>-->
@@ -429,8 +592,11 @@
           </FlowDocument>
         </FlowDocumentScrollViewer>
       </TabItem>-->
-      <TabItem Name="Meetings" Header="Meetings" DataContext="{Binding Tabs[2]}" Margin="-2,0,0,-4">
-        <StackPanel>
+      <TabItem Name="Meetings" DataContext="{Binding Tabs[2]}" Margin="-2,0,0,-4">
+        <TabItem.Header>
+          <TextBlock Text="Meetings" FontSize="20"/>
+        </TabItem.Header>
+        <StackPanel Background="Transparent">
           <TextBlock Margin="10" FontSize="14">Meetings</TextBlock>
           <DockPanel Grid.Row="0" HorizontalAlignment="Left" LastChildFill="False">
             <!--<ComboBox ItemsSource="{Binding MeetingTemplates, Mode=OneWay}" SelectedValue="{Binding MeetingTemplate, Mode=TwoWay}"
@@ -457,23 +623,43 @@
                     Margin="10" Width="70" Height="25"  />
           </DockPanel>
           <!--<DockPanel LastChildFill="False" HorizontalAlignment="Left">-->
-            <!--<ListBox Name="lstHeader" DockPanel.Dock="Left" ScrollViewer.HorizontalScrollBarVisibility="Disabled" HorizontalContentAlignment="Stretch"
+          <!--<ListBox Name="lstHeader" DockPanel.Dock="Left" ScrollViewer.HorizontalScrollBarVisibility="Disabled" HorizontalContentAlignment="Stretch"
                      ItemsSource="{Binding CurrentMeetingTemplate}" Visibility="{Binding RoleListVisible, Converter={StaticResource Bool2Vis}}"/>
 
 
             <ListBox Name="lstRoles" ScrollViewer.HorizontalScrollBarVisibility="Disabled" HorizontalContentAlignment="Stretch" 
                      ItemsSource="{Binding CurrentMeeting}" Visibility="{Binding RoleListVisible, Converter={StaticResource Bool2Vis}}"/>
 
-            --><!--<ListBox.ItemTemplate>
+            -->
+          <!--<ListBox.ItemTemplate>
                 <DataTemplate>
                   <ComboBox Name="cmbRole" SelectedValue="{Binding FK_ServiceID,Mode=TwoWay}" ItemsSource="{Binding ElementName=wndMain, Path=DataContext.AllServices,Mode=OneTime}"  SelectedValuePath="ID" DisplayMemberPath="Name"  Grid.Column="0" ></ComboBox>
 
                 </DataTemplate>
-              </ListBox.ItemTemplate>--><!--
+              </ListBox.ItemTemplate>-->
+          <!--
 
           </DockPanel>-->
           <StackPanel>
-          <DataGrid ItemsSource="{Binding CurrentMeeting}" AutoGenerateColumns="False" Visibility="Visible">
+            <Grid>
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+              </Grid.ColumnDefinitions>
+              <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"></RowDefinition>
+              </Grid.RowDefinitions>
+              <!--<ListBox Grid.Row="0" Template="{StaticResource FirstThreeTemplate}"/>-->
+              <!--<ContentControl Grid.Row="1" Template="{StaticResource RegularMeetingTemplate}" Content="{Binding CurrentMeetingToResolve}"/>-->
+              <Grid Grid.Row="0" Grid.Column="0">
+                <ContentControl ContentTemplate="{StaticResource FirstThreeTemplate}" Content="{Binding CurrentMeetingToResolve}" VerticalAlignment="Top"/>
+              </Grid>
+              <Grid Grid.Row="0" Grid.Column="1">
+                <ContentControl Content="{Binding CurrentMeetingToResolve}" ContentTemplateSelector="{StaticResource meetingTemplateSelector}"/>
+              </Grid>
+              <!--<DataGrid ItemsSource="{Binding CurrentMeeting}" AutoGenerateColumns="False" Visibility="Visible">
             <DataGrid.LayoutTransform>
               <TransformGroup>
                 <RotateTransform Angle="90"/>
@@ -522,12 +708,16 @@
               <DataGridTextColumn Header="Day of Meeting"/>
 
             </DataGrid.Columns>
-          </DataGrid>
+          </DataGrid>-->
+            </Grid>
           </StackPanel>
         </StackPanel>
 
       </TabItem>
-      <TabItem Name="Reports" Header="Reports" DataContext="{Binding Tabs[3]}" Margin="-2,2,0,-2">
+      <TabItem Name="Reports"  DataContext="{Binding Tabs[3]}" Margin="-2,2,0,-2">
+        <TabItem.Header>
+          <TextBlock Text="Reports" FontSize="20"/>
+        </TabItem.Header>
         <!--<DataGrid ItemsSource="{Binding Meetings}" AutoGenerateColumns="False" >
           <DataGrid.LayoutTransform>
             <TransformGroup>

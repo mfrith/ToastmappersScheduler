@@ -8,11 +8,12 @@ namespace Toastmappers
 {
   class MembersViewModel : PropertyChangedBase
   {
-
+    private MainViewModel _mainViewModel;
     private string _home = string.Empty;
-    public MembersViewModel(string location)
+    public MembersViewModel(string location, MainViewModel mainViewModel)
     {
       _home = location;
+      _mainViewModel = mainViewModel;
     }
 
     // the only members list
@@ -40,6 +41,17 @@ namespace Toastmappers
     public void SaveMembers()
     {
       Save();
+    }
+
+    private ICommand _backupCommand;
+    public ICommand BackupCmd
+    {
+      get { return _backupCommand ?? (_backupCommand = new RelayCommand(() => Backup(), () => true)); }
+    }
+
+    public void Backup()
+    {
+      _mainViewModel.Backup();
     }
     //public bool CanEditMember
     //{
