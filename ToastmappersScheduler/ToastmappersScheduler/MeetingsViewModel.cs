@@ -10,6 +10,25 @@ using System.Windows.Input;
 
 namespace Toastmappers
 {
+  public class MeetingTemplateSelector : DataTemplateSelector
+  {
+    public override DataTemplate SelectTemplate(object item, DependencyObject container)
+    {
+      FrameworkElement element = container as FrameworkElement;
+
+      if (item != null)
+      {
+
+        var mtg = item as MeetingEditViewModel;
+        if (mtg.MeetingType == 1)
+          return element.FindResource("RegularMeetingTemplate") as DataTemplate;
+        else if (mtg.MeetingType == 2)
+          return element.FindResource("RegularMeetingTemplate2") as DataTemplate;
+
+      }
+      return base.SelectTemplate(item, container);
+    }
+  }
   public class MeetingsViewModel : PropertyChangedBase
   {
     private ObservableCollection<MeetingModelBase> _meetings;// = new ObservableCollection<MeetingModel>();
@@ -99,25 +118,7 @@ namespace Toastmappers
         return _meetingTemplates;
       }
     }
-    public class MeetingTemplateSelector : DataTemplateSelector
-    {
-      public override DataTemplate SelectTemplate(object item, DependencyObject container)
-      {
-        FrameworkElement element = container as FrameworkElement;
 
-        if (item != null)
-        {
-
-          var mtg = item as EditMeetingViewModel;
-          if (mtg.MeetingType == 1)
-            return element.FindResource("RegularMeetingTemplate") as DataTemplate;
-          else if (mtg.MeetingType == 2)
-            return element.FindResource("RegularMeetingTemplate2") as DataTemplate;
-
-        }
-        return base.SelectTemplate(item, container);
-      }
-    }
     public List<string> CurrentMeetingTemplate
     {
       get { return regularTemplate; }
@@ -245,8 +246,8 @@ namespace Toastmappers
       NotifyPropertyChanged(() => ResetButtonEnabled);
     }
 
-    private List<string> _currentMeeting;
-    public List<string> CurrentMeeting
+    private MeetingEditViewModel _currentMeeting;
+    public MeetingEditViewModel CurrentMeeting
     {
       get { return _currentMeeting; }
       set { SetProperty(ref _currentMeeting, value, () => CurrentMeeting); }
@@ -328,8 +329,12 @@ namespace Toastmappers
       {
         //_newMeeting = new MeetingModelRegularVM(MeetingDate.ToString("MM-dd-yyyy", CultureInfo.InvariantCulture), MeetingTemplate, temporarymemberList);
         _newMeeting = new MeetingModelRegularVM(MeetingDate, MeetingTemplate, temporarymemberList);
+        var newMeeting = new MeetingModelBase(MeetingDate, MeetingTemplate, temporarymemberList);
+
+        // generate should be on the model, not the vm
         _newMeeting.Generate();
-        CurrentMeeting = _newMeeting.ToTempMeeting();
+        //_newMeeting.ToTempMeeting();
+        CurrentMeeting = new MeetingEditViewModel(_newMeeting.ToTempMeeting());
         _generateButtonEnabled = false;
         _roleListVisible = true;
         NotifyPropertyChanged(() => RoleListVisible);
@@ -338,15 +343,13 @@ namespace Toastmappers
         NewMeetingView view = new NewMeetingView();
 
         view.DataContext = CurrentMeeting;
-        view.ShowDialog();
+        bool? bsuccess = view.ShowDialog();
+        if (bsuccess != null)
+        {
+
+        }
       }
 
-      //_members = null;
-      //_members = temporarymemberList.Concat(notCurrentMembers);
-      //_members.Sort();
-
-
-      //File.WriteAllText(fileName, JsonConvert.SerializeObject(list, timeFormat));
       return;
     }
 

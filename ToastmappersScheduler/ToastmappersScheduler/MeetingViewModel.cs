@@ -172,7 +172,7 @@ namespace Toastmappers
       //list.Add(Speaker1);
       //list.Add(Speaker2);
       //list.Add()
-      return new List<string>(new string[] {Toastmaster,Speaker1,Speaker2,GeneralEvaluator,
+      return new List<string>(new string[] {DayOfMeeting,Toastmaster,Speaker1,Speaker2,GeneralEvaluator,
                                                                   Evaluator1, Evaluator2, TableTopics, AhCounter,
                                                                   Timer, Grammarian, QuizMaster, Video, HotSeat });
     }

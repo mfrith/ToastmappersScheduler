@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Toastmappers
 {
-  public class EditMeetingViewModel : ViewModelBase
+  public class MeetingEditViewModel : ViewModelBase
   {
     List<string> regularTemplate = new List<string>(new string[] {"DayOfMeeting","Toastmaster","Speaker 1","Speaker 2","General Evaluator",
                                                                   "Evaluator 1", "Evaluator 2", "Table Topics", "Ah Counter",
@@ -144,9 +144,14 @@ namespace Toastmappers
 
     }
 
-    public EditMeetingViewModel()
+    public MeetingEditViewModel()
     { }
 
+    private List<string> _newMeeting;
+    public MeetingEditViewModel(List<string> newMeeting)
+    {
+
+    }
     public List<string> SpeakerEvaluatorLessList
     {
       get
@@ -188,7 +193,7 @@ namespace Toastmappers
 
     private MeetingModelBase _meeting;
 
-    public EditMeetingViewModel(MeetingModelBase mtgToResolve, ObservableCollection<MemberViewModel> members)
+    public MeetingEditViewModel(MeetingModelBase mtgToResolve, ObservableCollection<MemberViewModel> members)
     {
       _meeting = mtgToResolve;
       _members = members;

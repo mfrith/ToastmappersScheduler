@@ -602,9 +602,15 @@
           <TextBlock Text="Meetings" FontSize="20"/>
         </TabItem.Header>
 
-        <StackPanel  Background="Transparent">
+        <Grid Background="Transparent">
+          <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+          </Grid.RowDefinitions>
           <TextBlock Margin="10" FontSize="14">Meetings</TextBlock>
-          <DockPanel Grid.Row="0" HorizontalAlignment="Left" LastChildFill="False">
+          <StackPanel Grid.Row="1">
+          <DockPanel  HorizontalAlignment="Center" LastChildFill="False">
             <!--<ComboBox ItemsSource="{Binding MeetingTemplates, Mode=OneWay}" SelectedValue="{Binding MeetingTemplate, Mode=TwoWay}"
                       SelectedValuePath="Key" DisplayMemberPath="Value" Width="150" Height="26"
                       SelectedValuePath="Key" DisplayMemberPath="Value" Width="150" Height="26"
@@ -613,12 +619,12 @@
             <ComboBox DockPanel.Dock="Left" Margin="10,0,0,0" ItemsSource="{Binding MeetingTemplates}" SelectedIndex="0" SelectedItem="{Binding MeetingTemplate}"/>
             <DatePicker DockPanel.Dock="Left" SelectedDate="{Binding MeetingDate, Mode=TwoWay}" Margin="20, 0,0,0" IsEnabled="{Binding IsGenerateForMonth}"/>
             <CheckBox DockPanel.Dock="Left" Margin="20,5,0,0" IsChecked="{Binding GenerateForMonth, Mode=TwoWay}" Content="Generate for the month"/>
-            <CheckBox DockPanel.Dock="Left" Margin="20,5,0,0" IsChecked="{Binding GenerateForFriday, Mode=TwoWay}" Content="Generate for Friday" IsEnabled="{Binding IsGenerateForMonth, Converter={StaticResource InverseBool}}"/>
+            <CheckBox DockPanel.Dock="Left" Margin="20,5,0,0" IsChecked="{Binding GenerateForFriday, Mode=TwoWay}" Content="Generate for last Friday" IsEnabled="{Binding IsGenerateForMonth, Converter={StaticResource InverseBool}}"/>
             <ComboBox DockPanel.Dock="Left" Margin="10,0,0,0" ItemsSource="{Binding Months}" SelectedIndex="0" SelectedItem="{Binding MonthToGenerateFor}"/>
             <DatePicker DockPanel.Dock="Left" SelectedDate="{Binding MeetingDateMonth, Mode=TwoWay}" Margin="20, 0,0,0"
                         IsEnabled="{Binding IsGenerateForMonth, Converter={StaticResource InverseBool}}" Visibility="Collapsed"/>
           </DockPanel>
-          <DockPanel HorizontalAlignment="Left" LastChildFill="False">
+          <DockPanel HorizontalAlignment="Center" LastChildFill="False">
             <Button Margin="10" Width="130" Height="25" HorizontalAlignment="Left" Command="{Binding GenerateMeetingCmd}" Content="Generate Meeting" 
                   IsEnabled="{Binding GenerateButtonEnabled}"/>
             <Button Name="resetBtn" Content="Reset" Command="{Binding ResetCmd}"
@@ -628,6 +634,7 @@
             <Button Name="okBtn" Content="Save" Command="{Binding OKCmd}"
                     Margin="10" Width="70" Height="25"  />
           </DockPanel>
+          </StackPanel>
           <!--<DockPanel LastChildFill="False" HorizontalAlignment="Left">-->
           <!--<ListBox Name="lstHeader" DockPanel.Dock="Left" ScrollViewer.HorizontalScrollBarVisibility="Disabled" HorizontalContentAlignment="Stretch"
                      ItemsSource="{Binding CurrentMeetingTemplate}" Visibility="{Binding RoleListVisible, Converter={StaticResource Bool2Vis}}"/>
@@ -646,8 +653,8 @@
           <!--
 
           </DockPanel>-->
-          <StackPanel>
-            <Grid>
+
+            <Grid Grid.Row="2">
               <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
@@ -660,10 +667,10 @@
               <!--<ListBox Grid.Row="0" Template="{StaticResource FirstThreeTemplate}"/>-->
               <!--<ContentControl Grid.Row="1" Template="{StaticResource RegularMeetingTemplate}" Content="{Binding CurrentMeetingToResolve}"/>-->
               <Grid Grid.Row="0" Grid.Column="0">
-                <ContentControl ContentTemplate="{StaticResource FirstThreeTemplate}" Content="{Binding CurrentMeetingToResolve}" VerticalAlignment="Top"/>
+                <ContentControl ContentTemplate="{StaticResource FirstThreeTemplate}" Content="{Binding CurrentMeeting}" VerticalAlignment="Top"/>
               </Grid>
               <Grid Grid.Row="0" Grid.Column="1">
-                <ContentControl Content="{Binding CurrentMeetingToResolve}" ContentTemplateSelector="{StaticResource meetingTemplateSelector}"/>
+                <ContentControl Content="{Binding CurrentMeeting}" ContentTemplateSelector="{StaticResource meetingTemplateSelector}"/>
               </Grid>
               <!--<DataGrid ItemsSource="{Binding CurrentMeeting}" AutoGenerateColumns="False" Visibility="Visible">
             <DataGrid.LayoutTransform>
@@ -716,8 +723,13 @@
             </DataGrid.Columns>
           </DataGrid>-->
             </Grid>
+          <StackPanel HorizontalAlignment="Center" Grid.ColumnSpan="2" Grid.Row="2" VerticalAlignment="Bottom"  Orientation="Horizontal" >
+            <Button FontFamily="Segoe MDL2 Assets" FontSize="20" Content="&#xE76B;" HorizontalAlignment="Left"  VerticalAlignment="Top" Width="75" Command="{Binding PreviousMeetingToResolveCmd}"/>
+            <Button FontFamily="Segoe MDL2 Assets" FontSize="20" Content="&#xE76C;" HorizontalAlignment="Left"  VerticalAlignment="Top" Width="75" Command="{Binding NextMeetingToResolveCmd}" />
+            <Button Content="Save" FontSize="16" HorizontalAlignment="Left"  VerticalAlignment="Top" Width="75" Command="{Binding SaveMeetingCmd}"/>
           </StackPanel>
-        </StackPanel>
+
+        </Grid>
 
       </TabItem>
       <TabItem Name="Reports"  DataContext="{Binding Tabs[3]}" Margin="-2,2,0,-2">

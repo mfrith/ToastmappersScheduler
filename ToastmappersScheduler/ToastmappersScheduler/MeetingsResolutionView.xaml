@@ -209,7 +209,7 @@
       <!--<ContentControl Grid.Row="1" Content="{Binding CurrentMeetingToResolve}" ContentTemplate="{StaticResource stuff}"/>-->
       <CheckBox Grid.Row="1" Content="Mark Resolved" IsChecked="{Binding CurrentMeetingToResolve.Resolved}"/>
 
-      <StackPanel Grid.ColumnSpan="2" Grid.Row="2" VerticalAlignment="Bottom"  Orientation="Horizontal" HorizontalAlignment="Stretch">
+      <StackPanel Grid.ColumnSpan="2" Grid.Row="2" VerticalAlignment="Bottom"  Orientation="Horizontal" HorizontalAlignment="Center">
         <Button FontFamily="Segoe MDL2 Assets" FontSize="20" Content="&#xE76B;" HorizontalAlignment="Left"  VerticalAlignment="Top" Width="75" Command="{Binding PreviousMeetingToResolveCmd}"/>
         <Button FontFamily="Segoe MDL2 Assets" FontSize="20" Content="&#xE76C;" HorizontalAlignment="Left"  VerticalAlignment="Top" Width="75" Command="{Binding NextMeetingToResolveCmd}" />
         <Button Content="Save" FontSize="16" HorizontalAlignment="Left"  VerticalAlignment="Top" Width="75" Command="{Binding SaveMeetingCmd}"/>

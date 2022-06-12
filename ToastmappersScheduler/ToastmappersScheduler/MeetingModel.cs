@@ -25,7 +25,7 @@ namespace Toastmappers
 
     public string WOTD { get; set; }
 
-    public string Theme { get; set; } 
+    public string Theme { get; set; }
     public string Speaker1 { get; set; }
     public string Speaker2 { get; set; }
     public string GeneralEvaluator { get; set; }
@@ -49,7 +49,10 @@ namespace Toastmappers
 
     }
 
+    public MeetingModelBase(DateTime meetingDate, string meetingTemplate, ObservableCollection<MemberViewModel> members)
+    {
 
+    }
     public MeetingModelBase Deserialize(string json)
     {
       var options = new JsonSerializerOptions

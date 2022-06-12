@@ -8,28 +8,10 @@ using System.Windows.Input;
 
 namespace Toastmappers
 {
-  public class MeetingTemplateSelector : DataTemplateSelector
-  {
-    public override DataTemplate SelectTemplate(object item, DependencyObject container)
-    {
-      FrameworkElement element = container as FrameworkElement;
-      
-      if (item != null)
-      {
 
-        var mtg = item as EditMeetingViewModel;
-        if (mtg.MeetingType == 1)
-          return element.FindResource("RegularMeetingTemplate") as DataTemplate;
-        else if (mtg.MeetingType == 2)
-          return element.FindResource("RegularMeetingTemplate2") as DataTemplate;
-
-      }
-      return base.SelectTemplate(item, container);
-    }
-  }
   public class MeetingsResolutionViewModel : ViewModelBase
   {
-    private EditMeetingViewModel _currentMeetingToResolveVM;
+    private MeetingEditViewModel _currentMeetingToResolveVM;
     private List<MeetingModelBase> _meetingsToResolve;
     private ObservableCollection<MemberViewModel> _members;
     private int _meetingCount = 0;
@@ -51,13 +33,13 @@ namespace Toastmappers
     {
       MeetingsResolutionView view = new MeetingsResolutionView();
       //MeetingResolutionView view = new MeetingResolutionView();
-      CurrentMeetingToResolve = new EditMeetingViewModel(_meetingsToResolve[0], _members);
+      CurrentMeetingToResolve = new MeetingEditViewModel(_meetingsToResolve[0], _members);
       _currentMeetingIndex++;
       view.DataContext = this;
       view.ShowDialog();
     }
 
-    public EditMeetingViewModel CurrentMeetingToResolve
+    public MeetingEditViewModel CurrentMeetingToResolve
     {
       get { return _currentMeetingToResolveVM; }
       set { _currentMeetingToResolveVM = value; }
@@ -76,7 +58,7 @@ namespace Toastmappers
     {
       _currentMeetingIndex++;
       //
-      _currentMeetingToResolveVM = new EditMeetingViewModel(_meetingsToResolve[_currentMeetingIndex], _members);
+      _currentMeetingToResolveVM = new MeetingEditViewModel(_meetingsToResolve[_currentMeetingIndex], _members);
       NotifyPropertyChanged(() => CurrentMeetingToResolve);
     }
 
@@ -116,7 +98,7 @@ namespace Toastmappers
       var r = mtg.Attendees;
       foreach (var name in r)
         _members.Remove(_members.Single(iterator => iterator.Name == name));
-      _currentMeetingToResolveVM = new EditMeetingViewModel(_meetingsToResolve[_currentMeetingIndex], _members);
+      _currentMeetingToResolveVM = new MeetingEditViewModel(_meetingsToResolve[_currentMeetingIndex], _members);
       NotifyPropertyChanged(() => CurrentMeetingToResolve);
     }
 
