@@ -53,6 +53,11 @@ namespace Toastmappers
     {
 
     }
+
+    void Generate()
+    { 
+      
+    }
     public MeetingModelBase Deserialize(string json)
     {
       var options = new JsonSerializerOptions
