@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Toastmappers" 
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
-        Title="Meetings Resolution" Height="450" Width="600">
+        Title="Meetings Resolution" Height="500" Width="600">
   <Window.Resources>
     <local:MeetingTemplateSelector x:Key="meetingTemplateSelector"/>
     <!--<DataTemplate x:Key="stuff">
@@ -17,12 +17,13 @@
       </StackPanel>
     </DataTemplate>-->
     <DataTemplate x:Key="FirstThreeTemplate">
-      <Grid>
+      <Grid Margin="5">
         <Grid.ColumnDefinitions>
           <ColumnDefinition/>
           <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
+          <RowDefinition/>
           <RowDefinition/>
           <RowDefinition/>
           <RowDefinition/>
@@ -35,12 +36,14 @@
         <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Theme}"/>
         <TextBlock Grid.Row="2" Grid.Column="0" Text="Word of the Day"/>
         <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding WOTD}"/>
-        <StackPanel Grid.Row="3" Grid.ColumnSpan="2">
+        <CheckBox Grid.Row="3" Content="Mark Resolved" IsChecked="{Binding Resolved}"/>
+
+        <StackPanel Grid.Row="4" Grid.ColumnSpan="2">
           <TextBlock  Text="Attendees" HorizontalAlignment="Center"/>
           <ComboBox Name="AttendeesCombo" ItemsSource="{Binding AttendeesMembersList}" DropDownClosed="ComboBox_DropDownClosed" />
           <ListBox ItemsSource="{Binding Attendees}" />
         </StackPanel>
-        <StackPanel Grid.Row="4" Grid.ColumnSpan="2">
+        <StackPanel Grid.Row="5" Grid.ColumnSpan="2">
           <TextBlock Text="Guests" HorizontalAlignment="Center"/>
           <!--<DockPanel LastChildFill="True">-->
             <!--<Button DockPanel.Dock="Right" Height="16" Width="16">
@@ -50,6 +53,7 @@
           <!--</DockPanel>-->
           <ListBox ItemsSource="{Binding Guests}" />
         </StackPanel>
+
         <!--<StackPanel>
         <TextBlock Text="Meeting date"/>
         <TextBox Text="{Binding CurrentMeetingToResolve.DayOfMeeting}"/>
@@ -62,7 +66,7 @@
     </DataTemplate>
 
     <DataTemplate x:Key="RegularMeetingTemplate">
-      <Grid>
+      <Grid Margin="5">
         <Grid.ColumnDefinitions>
           <ColumnDefinition/>
           <ColumnDefinition/>
@@ -84,7 +88,7 @@
           <RowDefinition></RowDefinition>
           <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
-        <TextBlock Grid.Row="0" Grid.Column="0"  Text="Toastmaster"/>
+        <TextBlock Margin="5,0,0,0" Grid.Row="0" Grid.Column="0"  Text="Toastmaster"/>
         <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{Binding MembersList}"  SelectedValue="{Binding Toastmaster}"/>
         <TextBlock Grid.Row="1" Grid.Column="0" Text="Speaker 1"/>
         <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding MembersList}"  SelectedValue="{Binding Speaker1}"/>
@@ -111,11 +115,12 @@
         <TextBlock Grid.Row="12" Grid.Column="0" Text="Hot Seat"/>
         <ComboBox Grid.Row="12" Grid.Column="1" ItemsSource="{Binding MembersList}"  SelectedValue="{Binding HotSeat}" />
         <TextBlock Grid.Row="13" Grid.Column="0" Text="Table Topics Winner"/>
-        <ComboBox Grid.Row="13" Grid.Column="1" ItemsSource="{Binding MembersList}" SelectedValue="{Binding TTWinner}"/>
+        <ComboBox Grid.Row="13" Grid.Column="1" Name="TTWinner_Combobox" ItemsSource="{Binding MembersList}" SelectedValue="{Binding TTWinner}" IsEditable="True" />
         <TextBlock Grid.Row="14" Grid.Column="0" Text="Table Topic Contestants"/>
         <StackPanel Grid.Row="14" Grid.Column="1" >
-          <ComboBox Name="TTContestants_ComboBox" IsEditable="True" ItemsSource="{Binding TTContestantMembersList}" DropDownClosed="TTContestants_ComboBox_DropDownClosed"/>
-          <ListBox ItemsSource="{Binding TTContestants}"/>
+          <ComboBox Name="TTContestants_ComboBox" IsEditable="True" ItemsSource="{Binding TTContestantMembersList}" DropDownClosed="TTContestants_ComboBox_DropDownClosed"
+                    PreviewKeyDown="TTContestants_PreViewKeyDown"/>
+          <ListBox ItemsSource="{Binding TTContestants}" Height="80"/>
         </StackPanel>
       </Grid>
     </DataTemplate>
@@ -182,6 +187,7 @@
       <Grid.RowDefinitions>
         <RowDefinition Height="Auto"></RowDefinition>
         <RowDefinition Height="Auto"/>
+        <RowDefinition Height="Auto"/>
         <RowDefinition Height="*"></RowDefinition>
       </Grid.RowDefinitions>
       <!--<ListBox Grid.Row="0" Template="{StaticResource FirstThreeTemplate}"/>-->
@@ -207,9 +213,8 @@
       </Grid>
 
       <!--<ContentControl Grid.Row="1" Content="{Binding CurrentMeetingToResolve}" ContentTemplate="{StaticResource stuff}"/>-->
-      <CheckBox Grid.Row="1" Content="Mark Resolved" IsChecked="{Binding CurrentMeetingToResolve.Resolved}"/>
 
-      <StackPanel Grid.ColumnSpan="2" Grid.Row="2" VerticalAlignment="Bottom"  Orientation="Horizontal" HorizontalAlignment="Center">
+      <StackPanel Grid.ColumnSpan="2" Grid.Row="3" VerticalAlignment="Bottom"  Orientation="Horizontal" HorizontalAlignment="Center">
         <Button FontFamily="Segoe MDL2 Assets" FontSize="20" Content="&#xE76B;" HorizontalAlignment="Left"  VerticalAlignment="Top" Width="75" Command="{Binding PreviousMeetingToResolveCmd}"/>
         <Button FontFamily="Segoe MDL2 Assets" FontSize="20" Content="&#xE76C;" HorizontalAlignment="Left"  VerticalAlignment="Top" Width="75" Command="{Binding NextMeetingToResolveCmd}" />
         <Button Content="Save" FontSize="16" HorizontalAlignment="Left"  VerticalAlignment="Top" Width="75" Command="{Binding SaveMeetingCmd}"/>

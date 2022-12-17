@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Data.SqlClient;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -49,15 +50,17 @@ namespace Toastmappers
 
     }
 
-    public MeetingModelBase(DateTime meetingDate, string meetingTemplate, ObservableCollection<MemberViewModel> members)
-    {
+    //private ObservableCollection<MemberViewModel>
+    //public MeetingModelBase(DateTime meetingDate, string meetingTemplate, ObservableCollection<MemberViewModel> members)
+    //{
+    //  _members = members;
+    //  _meetingDate = meetingDate;
+    //  _meetingTemplate = meetingTemplate;
+    //}
 
-    }
+    public virtual void Generate()
+    { }
 
-    void Generate()
-    { 
-      
-    }
     public MeetingModelBase Deserialize(string json)
     {
       var options = new JsonSerializerOptions
@@ -87,8 +90,8 @@ namespace Toastmappers
         f = new MeetingModel4Speaker();
       else if (meetingtype == 5)
         f = new MeetingModel5Speaker();
-      //else if (meetingtype == "10" || meetingtype == "20" || meetingtype == "30")
-      //  f = new MeetingContest();
+      else if (meetingtype == 10 || meetingtype == 20 || meetingtype == 30)
+        f = new MeetingModelContest();
       else
         return null;
 
@@ -184,6 +187,9 @@ namespace Toastmappers
               if (propertyName == "TTWinner")
                 (f as MeetingModelRegular).TTWinner = value;
 
+              if (propertyName == "ChiefJudge")
+                (f as MeetingModelContest).ChiefJudge = value;
+
               break;
 
             }
@@ -237,6 +243,19 @@ namespace Toastmappers
 
                 break;
               }
+
+              if (propertyName == "Contestants")
+              {
+                reader.Read();
+                (f as MeetingModelContest).Contestants = new ObservableCollection<string>();
+                while (reader.TokenType != JsonTokenType.EndArray)
+                {
+                  (f as MeetingModelContest).Contestants.Add(reader.GetString());
+                  reader.Read();
+                }
+
+                break;
+              }
               break;
             }
 
@@ -263,14 +282,15 @@ namespace Toastmappers
           if (theMeeting == 1)
             (meeting as MeetingModelRegular).Serialize(writer);
 
-          //if (meeting.Attendees != null)
-          //{
-            writer.WriteStartArray("Attendees");
-            foreach (string m in meeting.Attendees)
-            {
-              writer.WriteStringValue(m);
-            }
-            writer.WriteEndArray();
+          if (theMeeting >= 10)
+            (meeting as MeetingModelContest).Serialize(writer);
+
+          writer.WriteStartArray("Attendees");
+          foreach (string m in meeting.Attendees)
+          {
+            writer.WriteStringValue(m);
+          }
+          writer.WriteEndArray();
           //}
           writer.WriteBoolean("Resolved", meeting.Resolved);
           writer.WriteString("WOTD", meeting.WOTD);
@@ -328,14 +348,26 @@ namespace Toastmappers
     }
   }
 
-  public class MeetingContest : MeetingModelBase
+  public class MeetingModelContest : MeetingModelBase
   {
-    public List<string> Contestants { get; set; }
+    public ObservableCollection<string> Contestants { get; set; }
     public string ChiefJudge { get; set; }
 
-    public MeetingContest()
+    public MeetingModelContest()
     {
 
+    }
+
+    public void Serialize(Utf8JsonWriter writer)
+    {
+      writer.WriteString("ChiefJudge", ChiefJudge);
+      writer.WriteStartArray("Contestants");
+      foreach (string m in Contestants)
+      {
+        writer.WriteStringValue(m);
+      }
+      writer.WriteEndArray();
+      return;
     }
   }
 
@@ -370,6 +402,7 @@ namespace Toastmappers
     private ObservableCollection<string> _ttContestants = new ObservableCollection<string>();
     public ObservableCollection<string> TTContestants { get { return _ttContestants; } set { _ttContestants = value; } }
 
+    //public MeetingModelRegular()
     //public MeetingModelRegular Deserialize(string json)
     //{
     //  var options = new JsonSerializerOptions
@@ -448,6 +481,84 @@ namespace Toastmappers
     //  //return JsonSerializer.Parse<MeetingModelRegular>(json, options);
 
     //}
+
+    public MeetingModelRegular()
+    {
+
+    }
+    private ObservableCollection<MemberViewModel> _members;
+    private readonly DateTime _meetingDate;
+
+    public MeetingModelRegular(DateTime meetingDate, string meetingTemplate, ObservableCollection<MemberViewModel> members)
+    {
+      _members = members;
+      _meetingDate = meetingDate;
+      MeetingType = 1;
+      DayOfMeeting = meetingDate.ToString("MM-dd-yyyy", CultureInfo.InvariantCulture);
+      //_meetingTemplate = meetingTemplate;
+    }
+
+    public override void Generate()
+    {
+      var tempMembers = new ObservableCollection<MemberViewModel>(_members);
+
+      var speaker1 = tempMembers.OrderBy(a => a.Speaker).First();
+      tempMembers.Remove(speaker1);
+      var speaker2 = tempMembers.OrderBy(a => a.Speaker).First();
+      tempMembers.Remove(speaker2);
+      var evaluator1 = tempMembers.Where(a => a.CanBeEvaluator == true).OrderBy(a => a.Evaluator).First();
+      tempMembers.Remove(evaluator1);
+      var evaluator2 = tempMembers.Where(a => a.CanBeEvaluator == true).OrderBy(a => a.Evaluator).First();
+      tempMembers.Remove(evaluator2);
+      var toastmaster = tempMembers.Where(a => a.CanBeToastmaster == true).OrderBy(a => a.Toastmaster).First();
+      tempMembers.Remove(toastmaster);
+      var generalevaluator = tempMembers.Where(a => a.CanBeEvaluator == true).OrderBy(a => a.GeneralEvaluator).First();
+      tempMembers.Remove(generalevaluator);
+      var tt = tempMembers.OrderBy(a => a.TT).First();
+      tempMembers.Remove(tt);
+      var hotseat = tempMembers.OrderBy(a => a.HotSeat).First();
+      tempMembers.Remove(hotseat);
+      var gram = tempMembers.OrderBy(a => a.Gram).First();
+      tempMembers.Remove(gram);
+      var ah = tempMembers.OrderBy(a => a.Ah).First();
+      tempMembers.Remove(ah);
+      var quiz = tempMembers.OrderBy(a => a.Quiz).First();
+      tempMembers.Remove(quiz);
+      var timer = tempMembers.OrderBy(a => a.Timer).First();
+      tempMembers.Remove(timer);
+      var video = tempMembers.OrderBy(a => a.Video).First();
+      tempMembers.Remove(video);
+
+      Toastmaster = toastmaster.Name;
+      Speaker1 = speaker1.Name;
+      Speaker2 = speaker2.Name;
+      GeneralEvaluator = generalevaluator?.Name;
+      Evaluator1 = evaluator1?.Name;
+      Evaluator2 = evaluator2?.Name;
+      TableTopics = tt?.Name;
+      HotSeat = hotseat?.Name;
+      Grammarian = gram?.Name;
+      AhCounter = ah?.Name;
+      QuizMaster = quiz?.Name;
+      Timer = timer?.Name;
+      Video = video?.Name;
+
+
+
+    }
+
+    public List<string> ToTempMeeting()
+    {
+      //var list = new List<string>();
+
+      //list.Add(Toastmaster);
+      //list.Add(Speaker1);
+      //list.Add(Speaker2);
+      //list.Add()
+      return new List<string>(new string[] {DayOfMeeting,Toastmaster,Speaker1,Speaker2,GeneralEvaluator,
+                                                                  Evaluator1, Evaluator2, TableTopics, AhCounter,
+                                                                  Timer, Grammarian, QuizMaster, Video, HotSeat });
+    }
     public string Serialize(MeetingModelBase meeting)
     {
       //var options = new JsonWriterOptions

@@ -5,18 +5,21 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:self="clr"
-        xmlns:local="clr-namespace:Toastmappers"
+        xmlns:local="clr-namespace:Toastmappers" 
         mc:Ignorable="d"
         Loaded="Window_Loaded"
         WindowStartupLocation="CenterScreen"
         Icon="./Resources/logo.png"
   Title="Club Scheduler" Height="650" Width="1000">
+  <Window.InputBindings>
+    <KeyBinding Modifiers="Ctrl" Key="B" Command="{Binding BackupCmd}" />
+  </Window.InputBindings>
   <Window.Resources>
     <local:MeetingTemplateSelector x:Key="meetingTemplateSelector"/>
     <BooleanToVisibilityConverter x:Key="Bool2Vis" />
     <local:InverseBoolConverter x:Key="InverseBool" />
     <DataTemplate x:Key="FirstThreeTemplate">
-      <Grid>
+      <Grid Margin="5">
         <Grid.ColumnDefinitions>
           <ColumnDefinition/>
           <ColumnDefinition/>
@@ -45,7 +48,7 @@
           <!--<Button DockPanel.Dock="Right" Height="16" Width="16">
               <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="12" Text="&#xE710;" FontWeight="Bold" HorizontalAlignment="Left"  VerticalAlignment="Top"  />
             </Button>-->
-          <TextBox Name="GuestTextBox"/> 
+          <TextBox Name="GuestTextBox"/>
           <!--</DockPanel>-->
           <ListBox ItemsSource="{Binding Guests}" />
         </StackPanel>
@@ -60,7 +63,7 @@
       </Grid>
     </DataTemplate>
     <DataTemplate x:Key="RegularMeetingTemplate">
-      <Grid>
+      <Grid Margin="5">
         <Grid.ColumnDefinitions>
           <ColumnDefinition/>
           <ColumnDefinition/>
@@ -108,7 +111,13 @@
         <ComboBox Grid.Row="11" Grid.Column="1" ItemsSource="{Binding MembersList}" SelectedValue="{Binding Video}"  />
         <TextBlock Grid.Row="12" Grid.Column="0" Text="Hot Seat"/>
         <ComboBox Grid.Row="12" Grid.Column="1" ItemsSource="{Binding MembersList}"  SelectedValue="{Binding HotSeat}" />
-      </Grid>
+        <TextBlock Grid.Row="13" Grid.Column="0" Text="Table Topics Winner"/>
+        <ComboBox Grid.Row="13" Grid.Column="1" Name="TTWinner_Combobox" ItemsSource="{Binding MembersList}" SelectedValue="{Binding TTWinner}" IsEditable="True" />
+        <TextBlock Grid.Row="14" Grid.Column="0" Text="Table Topic Contestants"/>
+        <StackPanel Grid.Row="14" Grid.Column="1" >
+          <!--<ComboBox Name="TTContestants_ComboBox" IsEditable="True" ItemsSource="{Binding TTContestantMembersList}" DropDownClosed="TTContestants_ComboBox_DropDownClosed"/>-->
+          <ListBox ItemsSource="{Binding TTContestants}" Height="100"/>
+        </StackPanel>      </Grid>
     </DataTemplate>
     <!--<DataTemplate x:Key="RegularTemplate">
       <DataGrid ItemsSource="{Binding Meetings}" AutoGenerateColumns="False" >
@@ -157,12 +166,14 @@
           <DataGridTextColumn Header="Quiz" Binding="{Binding Path=Quiz.Name}"/>
           <DataGridTextColumn Header="Video" Binding="{Binding Path=Video.Name}"/>
           <DataGridTextColumn Header="HotSeat" Binding="{Binding Path=HotSeat.Name}"/>
-          --><!--public List
+          -->
+    <!--public List
               <int>Attendees { get; set; }
     public MemberModel TTWinner { get; set; }
     public List
                 <int>TTContestants { get; set; }-->
-          <!--<DataGridTextColumn Header="Day of Meeting"/>--><!--
+    <!--<DataGridTextColumn Header="Day of Meeting"/>-->
+    <!--
         </DataGrid.Columns>
       </DataGrid>
     </DataTemplate>-->
@@ -349,7 +360,7 @@
             <Button Margin="10" Width="100" Height="25" HorizontalAlignment="Left" Content="New Member" 
                     Command="{Binding NewMemberCmd}"/>
             <Button Margin="10" Width="100" Height="25" Content="Save" Command="{Binding SaveMembersCmd}"/>
-            <Button Margin="10" Width="100" Height="25" Content="Backup" Command="{Binding BackupCmd}"/>
+            <!--<Button Margin="10" Width="100" Height="25" Content="Backup" Command="{Binding BackupCmd}"/>-->
 
           </DockPanel>
           <!--members vm-->
@@ -364,7 +375,7 @@
 
                   <!--<Button Margin="10" Width="100" Height="25" HorizontalAlignment="Left" Command="{Binding EditMemberCmd}">Edit Member</Button>-->
                 </DockPanel>
-                <StackPanel Width="600" HorizontalAlignment="Left">
+                <StackPanel Width="600" HorizontalAlignment="Left" Height="300">
                   <DockPanel HorizontalAlignment="Left" Width="600" LastChildFill="True">
                     <StackPanel Margin="10,10,0,0" Width="180">
                       <CheckBox Content="Is Current" IsChecked="{Binding SetMemberRoleStatus.IsCurrent, Mode=TwoWay}" IsEnabled="{Binding MemberSet}"/>
@@ -511,6 +522,7 @@
                 <WrapPanel >
                   <TextBlock  Width="100" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="20,0,0,0" Text="Toastmaster"/>
                   <DatePicker   SelectedDate="{Binding SetMemberRoleStatus.Toastmaster}" Width="100" Margin="10,0,0,0"/>
+                  <Button Width="60" Margin="10,0,0,0" Content="Last Time" />
                 </WrapPanel>
 
                 <WrapPanel>
@@ -571,7 +583,7 @@
             </TabItem>
 
             <TabItem Header="Past Members" Padding="7">
-
+              <ListBox Height="150" Name="PastMembersListBox" ItemsSource="{Binding PastMembers}" DisplayMemberPath="Name"/>
             </TabItem>
           </TabControl>
         </StackPanel>
@@ -605,35 +617,35 @@
         <Grid Background="Transparent">
           <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="69*"/>
+            <RowDefinition Height="515*"/>
           </Grid.RowDefinitions>
           <TextBlock Margin="10" FontSize="14">Meetings</TextBlock>
           <StackPanel Grid.Row="1">
-          <DockPanel  HorizontalAlignment="Center" LastChildFill="False">
-            <!--<ComboBox ItemsSource="{Binding MeetingTemplates, Mode=OneWay}" SelectedValue="{Binding MeetingTemplate, Mode=TwoWay}"
+            <DockPanel  HorizontalAlignment="Center" LastChildFill="False">
+              <!--<ComboBox ItemsSource="{Binding MeetingTemplates, Mode=OneWay}" SelectedValue="{Binding MeetingTemplate, Mode=TwoWay}"
                       SelectedValuePath="Key" DisplayMemberPath="Value" Width="150" Height="26"
                       SelectedValuePath="Key" DisplayMemberPath="Value" Width="150" Height="26"
                       IsSynchronizedWithCurrentItem="True" SelectedIndex="0"
                       />-->
-            <ComboBox DockPanel.Dock="Left" Margin="10,0,0,0" ItemsSource="{Binding MeetingTemplates}" SelectedIndex="0" SelectedItem="{Binding MeetingTemplate}"/>
-            <DatePicker DockPanel.Dock="Left" SelectedDate="{Binding MeetingDate, Mode=TwoWay}" Margin="20, 0,0,0" IsEnabled="{Binding IsGenerateForMonth}"/>
-            <CheckBox DockPanel.Dock="Left" Margin="20,5,0,0" IsChecked="{Binding GenerateForMonth, Mode=TwoWay}" Content="Generate for the month"/>
-            <CheckBox DockPanel.Dock="Left" Margin="20,5,0,0" IsChecked="{Binding GenerateForFriday, Mode=TwoWay}" Content="Generate for last Friday" IsEnabled="{Binding IsGenerateForMonth, Converter={StaticResource InverseBool}}"/>
-            <ComboBox DockPanel.Dock="Left" Margin="10,0,0,0" ItemsSource="{Binding Months}" SelectedIndex="0" SelectedItem="{Binding MonthToGenerateFor}"/>
-            <DatePicker DockPanel.Dock="Left" SelectedDate="{Binding MeetingDateMonth, Mode=TwoWay}" Margin="20, 0,0,0"
+              <ComboBox DockPanel.Dock="Left" Margin="10,0,0,0" ItemsSource="{Binding MeetingTemplates}" SelectedIndex="0" SelectedItem="{Binding MeetingTemplate}"/>
+              <DatePicker DockPanel.Dock="Left" SelectedDate="{Binding MeetingDate, Mode=TwoWay}" Margin="20, 0,0,0" IsEnabled="{Binding IsGenerateForMonth}"/>
+              <CheckBox DockPanel.Dock="Left" Margin="20,5,0,0" IsChecked="{Binding GenerateForMonth, Mode=TwoWay}" Content="Generate for the month"/>
+              <CheckBox DockPanel.Dock="Left" Margin="20,5,0,0" IsChecked="{Binding GenerateForFriday, Mode=TwoWay}" Content="Generate for last Friday" IsEnabled="{Binding IsGenerateForMonth, Converter={StaticResource InverseBool}}"/>
+              <ComboBox DockPanel.Dock="Left" Margin="10,0,0,0" ItemsSource="{Binding Months}" SelectedIndex="0" SelectedItem="{Binding MonthToGenerateFor}"/>
+              <DatePicker DockPanel.Dock="Left" SelectedDate="{Binding MeetingDateMonth, Mode=TwoWay}" Margin="20, 0,0,0"
                         IsEnabled="{Binding IsGenerateForMonth, Converter={StaticResource InverseBool}}" Visibility="Collapsed"/>
-          </DockPanel>
-          <DockPanel HorizontalAlignment="Center" LastChildFill="False">
-            <Button Margin="10" Width="130" Height="25" HorizontalAlignment="Left" Command="{Binding GenerateMeetingCmd}" Content="Generate Meeting" 
+            </DockPanel>
+            <DockPanel HorizontalAlignment="Center" LastChildFill="False">
+              <Button Margin="10" Width="130" Height="25" HorizontalAlignment="Left" Command="{Binding GenerateMeetingCmd}" Content="Generate Meeting" 
                   IsEnabled="{Binding GenerateButtonEnabled}"/>
-            <Button Name="resetBtn" Content="Reset" Command="{Binding ResetCmd}"
+              <Button Name="resetBtn" Content="Reset" Command="{Binding ResetCmd}"
                     Margin="10" Width="70" Height="25" IsEnabled="{Binding ResetButtonEnabled}" />
-            <Button Name="clearBtn" Content="Clear" Command="{Binding ClearCmd}"
+              <Button Name="clearBtn" Content="Clear" Command="{Binding ClearCmd}"
                     Margin="10" Width="70" Height="25" IsEnabled="{Binding ResetButtonEnabled}" />
-            <Button Name="okBtn" Content="Save" Command="{Binding OKCmd}"
+              <Button Name="okBtn" Content="Save" Command="{Binding OKCmd}"
                     Margin="10" Width="70" Height="25"  />
-          </DockPanel>
+            </DockPanel>
           </StackPanel>
           <!--<DockPanel LastChildFill="False" HorizontalAlignment="Left">-->
           <!--<ListBox Name="lstHeader" DockPanel.Dock="Left" ScrollViewer.HorizontalScrollBarVisibility="Disabled" HorizontalContentAlignment="Stretch"
@@ -654,25 +666,25 @@
 
           </DockPanel>-->
 
-            <Grid Grid.Row="2">
-              <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-              </Grid.ColumnDefinitions>
-              <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"></RowDefinition>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"></RowDefinition>
-              </Grid.RowDefinitions>
-              <!--<ListBox Grid.Row="0" Template="{StaticResource FirstThreeTemplate}"/>-->
-              <!--<ContentControl Grid.Row="1" Template="{StaticResource RegularMeetingTemplate}" Content="{Binding CurrentMeetingToResolve}"/>-->
-              <Grid Grid.Row="0" Grid.Column="0">
-                <ContentControl ContentTemplate="{StaticResource FirstThreeTemplate}" Content="{Binding CurrentMeeting}" VerticalAlignment="Top"/>
-              </Grid>
-              <Grid Grid.Row="0" Grid.Column="1">
-                <ContentControl Content="{Binding CurrentMeeting}" ContentTemplateSelector="{StaticResource meetingTemplateSelector}"/>
-              </Grid>
-              <!--<DataGrid ItemsSource="{Binding CurrentMeeting}" AutoGenerateColumns="False" Visibility="Visible">
+          <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition/>
+              <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+              <RowDefinition Height="Auto"></RowDefinition>
+              <RowDefinition Height="Auto"/>
+              <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <!--<ListBox Grid.Row="0" Template="{StaticResource FirstThreeTemplate}"/>-->
+            <!--<ContentControl Grid.Row="1" Template="{StaticResource RegularMeetingTemplate}" Content="{Binding CurrentMeetingToResolve}"/>-->
+            <Grid Grid.Row="0" Grid.Column="0">
+              <ContentControl ContentTemplate="{StaticResource FirstThreeTemplate}" Content="{Binding CurrentMeeting}" VerticalAlignment="Top"/>
+            </Grid>
+            <Grid Grid.Row="0" Grid.Column="1">
+              <ContentControl Content="{Binding CurrentMeeting}" ContentTemplateSelector="{StaticResource meetingTemplateSelector}"/>
+            </Grid>
+            <!--<DataGrid ItemsSource="{Binding CurrentMeeting}" AutoGenerateColumns="False" Visibility="Visible">
             <DataGrid.LayoutTransform>
               <TransformGroup>
                 <RotateTransform Angle="90"/>
@@ -722,11 +734,11 @@
 
             </DataGrid.Columns>
           </DataGrid>-->
-            </Grid>
+          </Grid>
           <StackPanel HorizontalAlignment="Center" Grid.ColumnSpan="2" Grid.Row="2" VerticalAlignment="Bottom"  Orientation="Horizontal" >
-            <Button FontFamily="Segoe MDL2 Assets" FontSize="20" Content="&#xE76B;" HorizontalAlignment="Left"  VerticalAlignment="Top" Width="75" Command="{Binding PreviousMeetingToResolveCmd}"/>
-            <Button FontFamily="Segoe MDL2 Assets" FontSize="20" Content="&#xE76C;" HorizontalAlignment="Left"  VerticalAlignment="Top" Width="75" Command="{Binding NextMeetingToResolveCmd}" />
-            <Button Content="Save" FontSize="16" HorizontalAlignment="Left"  VerticalAlignment="Top" Width="75" Command="{Binding SaveMeetingCmd}"/>
+            <Button FontFamily="Segoe MDL2 Assets" FontSize="20" Content="&#xE76B;" HorizontalAlignment="Left"  VerticalAlignment="Top" Width="75" Command="{Binding PreviousMeetingCmd}"/>
+            <Button FontFamily="Segoe MDL2 Assets" FontSize="20" Content="&#xE76C;" HorizontalAlignment="Left"  VerticalAlignment="Top" Width="75" Command="{Binding NextMeetingCmd}" />
+            <!--<Button Content="Save" FontSize="16" HorizontalAlignment="Left"  VerticalAlignment="Top" Width="75" Command="{Binding SaveMeetingCmd}"/>-->
           </StackPanel>
 
         </Grid>
@@ -736,68 +748,57 @@
         <TabItem.Header>
           <TextBlock Text="Reports" FontSize="20"/>
         </TabItem.Header>
-        <!--<DataGrid ItemsSource="{Binding Meetings}" AutoGenerateColumns="False" >
-          <DataGrid.LayoutTransform>
-            <TransformGroup>
-              <RotateTransform Angle="90"/>
-              <MatrixTransform Matrix="-1,0,0,1,0,0"></MatrixTransform>
-            </TransformGroup>
-          </DataGrid.LayoutTransform>
-          <DataGrid.ColumnHeaderStyle>
-            <Style TargetType="{x:Type DataGridColumnHeader}" BasedOn="{StaticResource {x:Type DataGridColumnHeader}}">
-              <Setter Property="LayoutTransform">
-                <Setter.Value>
-                  <TransformGroup>
-                    <RotateTransform Angle="-90"/>
-                    <ScaleTransform ScaleX="1" ScaleY="-1"/>
-                  </TransformGroup>
-                </Setter.Value>
-              </Setter>
-            </Style>
-          </DataGrid.ColumnHeaderStyle>
-          <DataGrid.CellStyle>
-            <Style TargetType="DataGridCell">
-              <Setter Property="LayoutTransform">
-                <Setter.Value>
-                  <TransformGroup>
-                    <RotateTransform Angle="-90"/>
-                    <ScaleTransform ScaleX="1" ScaleY="-1"/>
-                  </TransformGroup>
-                </Setter.Value>
-              </Setter>
-            </Style>
-          </DataGrid.CellStyle>
-          <DataGrid.Columns>
-            <DataGridTextColumn Header="DayOfMeeting" Binding="{Binding Path=DayOfMeeting, StringFormat=d}"/>
-            <DataGridTextColumn Header="Toastmaster" Binding="{Binding Path=Toastmaster}"/>
-            <DataGridTextColumn Header="Speaker 1" Binding="{Binding Path=Speaker1}"/>
-            <DataGridTextColumn Header="Speaker 2" Binding="{Binding Path=Speaker2}"/>
-            <DataGridTextColumn Header="GE" Binding="{Binding Path=GeneralEvaluator}"/>
-            <DataGridTextColumn Header="Evaluator 1" Binding="{Binding Path=Evaluator1}"/>
-            <DataGridTextColumn Header="Evaluator 2" Binding="{Binding Path=Evaluator2}"/>
-            <DataGridTextColumn Header="TT" Binding="{Binding Path=TableTopics}"/>
-            <DataGridTextColumn Header="Ah" Binding="{Binding Path=AhCounter}"/>
-            <DataGridTextColumn Header="Gram" Binding="{Binding Path=Grammarian}"/>
-            <DataGridTextColumn Header="Timer" Binding="{Binding Path=Timer}"/>
-            <DataGridTextColumn Header="Quiz" Binding="{Binding Path=QuizMaster}"/>
-            <DataGridTextColumn Header="Video" Binding="{Binding Path=Video}"/>
-            <DataGridTextColumn Header="HotSeat" Binding="{Binding Path=HotSeat}"/>
-            -->
-        <!--public List
-              <int>Attendees { get; set; }
-    public MemberModel TTWinner { get; set; }
-    public List
-                <int>TTContestants { get; set; }-->
-        <!--<DataGridTextColumn Header="Day of Meeting"/>-->
-        <!--
-          </DataGrid.Columns>
-        </DataGrid>-->
-        <StackPanel>
+        <StackPanel Background="Transparent">
+          <Grid>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="Auto"/>
+              <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            
+            <StackPanel>
+            <DockPanel HorizontalAlignment="Left" LastChildFill="False">
+              <TextBlock Text="Member" Margin="10" FontSize="14"/>
+              <ComboBox Name="Foo" Margin="10" Width="150" Height="25" HorizontalAlignment="Left" 
+                    ItemsSource="{Binding Members}" DisplayMemberPath="Name" 
+                      SelectedValue="{Binding SetMemberRoleStatus}" />
+            </DockPanel>
+            <CheckBox Content="Toastmaster" IsChecked="{Binding Toastmaster}"/>
+            <CheckBox Content="Speaker" IsChecked="{Binding Speaker}" />
+            <CheckBox Content="Evaluator" IsChecked="{Binding Evaluator}"/>
+            <CheckBox Content="General Evaluator" IsChecked="{Binding GeneralEvaluator}"/>
+            <CheckBox Content="Table Topics Master" IsChecked="{Binding TableTopics}"/>
+            <CheckBox Content="Ah Counter" IsChecked="{Binding AhCounter}"/>
+            <CheckBox Content="Timer" IsChecked="{Binding Timer}"/>
+            <CheckBox Content="Grammarian" IsChecked="{Binding Grammarian}"/>
+            <CheckBox Content="Quiz Master" IsChecked="{Binding QuizMaster}"/>
+            <CheckBox Content="Videographer" IsChecked="{Binding Video}"/>
+            <CheckBox Content="Hot Seat" IsChecked="{Binding HotSeat}"/>
+
+            <Button Margin="20,10,0,0" HorizontalAlignment="Left" Width="35" Content="Find" Command="{Binding FindPastRolesCmd}"/>
+          </StackPanel>
+            <ListBox Grid.Column="1" ItemsSource="{Binding FindResults}">
+              <ListBox.ItemTemplate>
+                <DataTemplate>
+                   <Expander Grid.Column="1" Header="{Binding Item1}" >
+                    <ListBox Height="100" ItemsSource="{Binding Item2}"/>
+                  </Expander>                 
+                </DataTemplate>
+              </ListBox.ItemTemplate>
+            </ListBox>
+
+            <!--<TreeView Margin="10" Grid.Column="1" ItemsSource="{Binding Results}" >-->
+             
+            <!--</TreeView>-->
+          </Grid>
           <DockPanel HorizontalAlignment="Left" LastChildFill="False">
-            <Button Margin="10" Width="130" Height="25" HorizontalAlignment="Left" Command="{Binding GenerateReportCmd}" Content="Generate Report" 
-                  />
-          </DockPanel>
+            <Button Margin="10" Width="130" Height="25" HorizontalAlignment="Left" Command="{Binding GenerateReportCmd}" Content="Generate Schedule"/>
+          </DockPanel> 
         </StackPanel>
+
+        <!--<StackPanel>
+
+        </StackPanel>-->
       </TabItem>
     </TabControl>
   </DockPanel>

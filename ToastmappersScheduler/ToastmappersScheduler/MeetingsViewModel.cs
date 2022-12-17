@@ -33,6 +33,7 @@ namespace Toastmappers
   {
     private ObservableCollection<MeetingModelBase> _meetings;// = new ObservableCollection<MeetingModel>();
     private ObservableCollection<MemberViewModel> _members = new ObservableCollection<MemberViewModel>();
+    private int _currentMeetingIndex = -1;
 
     List<string> regularTemplate = new List<string>(new string[] {"Toastmaster","Speaker 1","Speaker 2","General Evaluator",
                                                                   "Evaluator 1", "Evaluator 2", "Table Topics", "Ah Counter",
@@ -253,6 +254,71 @@ namespace Toastmappers
       set { SetProperty(ref _currentMeeting, value, () => CurrentMeeting); }
     }
 
+    private ICommand _nextMeetingCommand;
+    public ICommand NextMeetingCmd
+    {
+      get
+      {
+        return _nextMeetingCommand ?? (_nextMeetingCommand = new RelayCommand(() => NextMeeting(), () => CanExecuteNextMeeting));
+      }
+    }
+
+    public void NextMeeting()
+    {
+      _currentMeetingIndex++;
+      //
+      _currentMeeting = new MeetingEditViewModel(_meetings[_currentMeetingIndex], _members);
+      NotifyPropertyChanged(() => CurrentMeeting);
+    }
+
+    public bool CanExecuteNextMeeting
+    {
+      get
+      {
+        // check if executing is allowed, i.e., validate, check if a process is running, etc. 
+        // has the meeting happened yet?
+        int nextMeeting = _currentMeetingIndex + 1;
+        if (nextMeeting + 1 > _meetingCount)
+          return false;
+        else
+          return true; ;
+      }
+    }
+
+    public bool CanExecutePreviousMeeting
+    {
+      get
+      {
+        // check if executing is allowed, i.e., validate, check if a process is running, etc. 
+        int previousMeeting = _currentMeetingIndex - 1;
+        if (previousMeeting < 0)
+          return false;
+        else
+          return true; ;
+      }
+    }
+    private ICommand _prevMeetingCommand;
+    public ICommand PreviousMeetingCmd
+    {
+      get
+      {
+        return _prevMeetingCommand ?? (_prevMeetingCommand = new RelayCommand(() => PreviousMeeting(), () => CanExecutePreviousMeeting));
+      }
+    }
+
+    public void PreviousMeeting()
+    {
+      _currentMeetingIndex--;
+      // need to reset member list and remove already attended members from the list
+      //LoadMembers();
+      MeetingModelBase mtg = _meetings[_currentMeetingIndex];
+      var r = mtg.Attendees;
+      //foreach (var name in r)
+      //  _members.Remove(_members.Single(iterator => iterator.Name == name));
+      _currentMeeting = new MeetingEditViewModel(_meetings[_currentMeetingIndex], _members);
+      NotifyPropertyChanged(() => CurrentMeeting);
+    }
+
     private MeetingModelRegularVM _newMeeting;
     public void GenerateMeeting()
     {
@@ -261,7 +327,7 @@ namespace Toastmappers
       var b = _meetingDate;
 
       // scenario 1 - generate a meeting for a specific day
-      var meeting1 = GenerateForDay();
+      //var meeting1 = GenerateForDay();
 
       // this won't work the way I want it to.
       //MeetingModelBase c = new MeetingModelBase(MeetingTemplate, MeetingDate);
@@ -280,7 +346,7 @@ namespace Toastmappers
         _newMeeting = new MeetingModelRegularVM(temporarymemberList, _home);
         _newMeeting.Month = MonthToGenerateFor;
         var w = _meetings.Last();
-        list = _newMeeting.GenerateForMonth(GenerateForFriday, (_meetings[_meetings.Count() - 1].ID) + 1);
+        list = _newMeeting.GenerateForMonth(GenerateForFriday, (_meetings[_meetings.Count() - 1].ID) + 1, DateTime.ParseExact(_meetings.Last().DayOfMeeting, "MM-dd-yyyy", System.Globalization.CultureInfo.InvariantCulture));
 
         using (StreamWriter strmWriter = new StreamWriter(_home + "\\Data\\MembersStatus.json"))
         {
@@ -302,39 +368,50 @@ namespace Toastmappers
         //timeFormat.DateTimeFormat = "yyyy-MM-dd";
         //File.WriteAllText(_home + "\\Data\\MembersStatus.json", JsonConvert.SerializeObject(_members, timeFormat));
 
-        string fileName = _home + "\\Data\\Meetings" + MonthToGenerateFor + DateTime.Now.Year.ToString() + ".json";
-        if (!File.Exists(fileName))
+        foreach (var m in list)
         {
-          FileStream fs;
-          fs = File.Create(fileName);
-          fs.Close();
+          _meetings.Add(m);
         }
-        // following is for dev purposes only
-        //int vers = 1;
-        //string meetingFile = _home + "\\Data\\meetings.json";
-        //if (File.Exists (_home + ))
-        using (StreamWriter strmWriter = new StreamWriter(fileName))
-        {
-          // write out all objects(members)
-          strmWriter.AutoFlush = true;
-          string meeting = string.Empty;
-          foreach (var m in list)
-          {
-            meeting = (m as MeetingModelBase).Serialize(m);
-            strmWriter.WriteLine(meeting);
-          }
-        }
+
+        Save();
+
+        //string fileName = _home + "\\Data\\Meetings" + MonthToGenerateFor + DateTime.Now.Year.ToString() + ".json";
+        //if (!File.Exists(fileName))
+        //{
+        //  FileStream fs;
+        //  fs = File.Create(fileName);
+        //  fs.Close();
+        //}
+        //// following is for dev purposes only
+        ////int vers = 1;
+        ////string meetingFile = _home + "\\Data\\meetings.json";
+        ////if (File.Exists (_home + ))
+        //using (StreamWriter strmWriter = new StreamWriter(fileName))
+        //{
+        //  // write out all objects(members)
+        //  strmWriter.AutoFlush = true;
+        //  string meeting = string.Empty;
+        //  foreach (var m in list)
+        //  {
+        //    meeting = (m as MeetingModelBase).Serialize(m);
+        //    strmWriter.WriteLine(meeting);
+        //  }
+        //}
       }
       else
       {
         //_newMeeting = new MeetingModelRegularVM(MeetingDate.ToString("MM-dd-yyyy", CultureInfo.InvariantCulture), MeetingTemplate, temporarymemberList);
         _newMeeting = new MeetingModelRegularVM(MeetingDate, MeetingTemplate, temporarymemberList);
-        var newMeeting = new MeetingModelBase(MeetingDate, MeetingTemplate, temporarymemberList);
 
+        MeetingModelBase newMeeting = null;
+        if (MeetingTemplate == "Regular Meeting")
+          newMeeting = new MeetingModelRegular(MeetingDate, MeetingTemplate, temporarymemberList);
+
+        newMeeting.Generate();
         // generate should be on the model, not the vm
-        _newMeeting.Generate();
+        //_newMeeting.Generate();
         //_newMeeting.ToTempMeeting();
-        CurrentMeeting = new MeetingEditViewModel(_newMeeting.ToTempMeeting());
+        var newMeetingVM = new MeetingEditViewModel(newMeeting, temporarymemberList, false);
         _generateButtonEnabled = false;
         _roleListVisible = true;
         NotifyPropertyChanged(() => RoleListVisible);
@@ -342,11 +419,17 @@ namespace Toastmappers
         NotifyPropertyChanged(() => ResetButtonEnabled);
         NewMeetingView view = new NewMeetingView();
 
-        view.DataContext = CurrentMeeting;
+        view.DataContext = newMeetingVM;
         bool? bsuccess = view.ShowDialog();
-        if (bsuccess != null)
+        if (bsuccess == true)
         {
-
+          //var t = newMeetingVM.Toastmaster;
+          newMeeting.ID = _meetings.Last().ID + 1;
+          // add meeting to list
+          _meetings.Add(newMeeting);
+          //Save();
+          // update member status
+          //newMeetingVM.Toastmaster;
         }
       }
 
@@ -545,18 +628,35 @@ namespace Toastmappers
 
       //}
 
+      // set CurrentMeeting to last resolved meeting, or meetings that are in the future.
+      DateTime today = DateTime.Today.Date;
+      var mtg = _meetings.Where(it => DateTime.ParseExact(it.DayOfMeeting, "MM-dd-yyyy", System.Globalization.CultureInfo.InvariantCulture).CompareTo(today) > 0).FirstOrDefault();
+      if (mtg != null)
+        CurrentMeeting = new MeetingEditViewModel(mtg, _members);
+
+      //var t = DateTime.Now;
+      //var mtgDate = DateTime.Parse(mtg.DayOfMeeting);
+      //var y = mtgDate.AddHours(13);
+      //int rel = DateTime.Compare(y, t);
+      //if (rel < 0)
+      //  meetingsToResolve.Add(mtg);
+
+      //CurrentMeeting = new MeetingEditViewModel(_meetings[mtg.ID], _members);
+      _currentMeetingIndex = mtg.ID - 1;
+      _meetingCount = _meetings.Count;
     }
 
-    private void WriteMeetingToFile(string path, MeetingModelRegular meeting)
-    {
-      System.Runtime.Serialization.Formatters.Binary.BinaryFormatter formatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
-      using (FileStream stream = new FileStream(path, FileMode.Append, FileAccess.Write))
-      {
-        formatter.Serialize(stream, meeting);
-      }
-    }
+    //private void WriteMeetingToFile(string path, MeetingModelRegular meeting)
+    //{
+    //  System.Runtime.Serialization.Formatters.Binary.BinaryFormatter formatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+    //  using (FileStream stream = new FileStream(path, FileMode.Append, FileAccess.Write))
+    //  {
+    //    formatter.Serialize(stream, meeting);
+    //  }
+    //}
     public void Save()
     {
+      _currentMeeting.Save();
       //string json = File.ReadAllText(_home + "\\Data\\meetings5.json");
       if (File.Exists("C:\\Users\\mike\\Documents\\TI\\Meetings.json"))
       {
@@ -600,6 +700,8 @@ namespace Toastmappers
     }
 
     private bool _roleListVisible = false;
+    private int _meetingCount;
+
     public bool RoleListVisible
     {
       get { return _roleListVisible; }

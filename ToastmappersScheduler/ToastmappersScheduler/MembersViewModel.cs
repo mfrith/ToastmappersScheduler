@@ -43,16 +43,17 @@ namespace Toastmappers
       Save();
     }
 
-    private ICommand _backupCommand;
-    public ICommand BackupCmd
-    {
-      get { return _backupCommand ?? (_backupCommand = new RelayCommand(() => Backup(), () => true)); }
-    }
+    //private ICommand _backupCommand;
+    //public ICommand BackupCmd
+    //{
+    //  get { return _backupCommand ?? (_backupCommand = new RelayCommand(() => Backup(), () => true)); }
+    //}
 
-    public void Backup()
-    {
-      _mainViewModel.Backup();
-    }
+    //public void Backup()
+    //{
+    //  _mainViewModel.Backup();
+    //}
+
     //public bool CanEditMember
     //{
     //  get { return string.IsNullOrEmpty(MemberToEdit) ? false : true; }
@@ -229,7 +230,8 @@ namespace Toastmappers
 
       MemberViewModel newvm = new MemberViewModel(n);
       _members.Add(newvm);
-      //Save();
+      Save();
+      NotifyPropertyChanged(() => Members);
 
     }
 

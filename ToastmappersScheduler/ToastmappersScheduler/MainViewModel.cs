@@ -9,6 +9,7 @@ using System.Reflection;
 using System.Windows;
 using System.Windows.Data;
 using System.IO.Compression;
+using System.Windows.Input;
 
 namespace Toastmappers
 {
@@ -90,6 +91,12 @@ namespace Toastmappers
 
     }
     public ObservableCollection<object> Tabs { get { return _tabs; } }
+
+    private ICommand _backupCommand;
+    public ICommand BackupCmd
+    {
+      get { return _backupCommand ?? (_backupCommand = new RelayCommand(() => Backup(), () => true)); }
+    }
 
     public void Backup()
     {

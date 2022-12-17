@@ -21,10 +21,10 @@
       <CheckBox Content="Can be Toastmaster" IsChecked="{Binding CanBeToastmaster, Mode=TwoWay}"/>
       <CheckBox Content="Can Be Evaluator" IsChecked="{Binding CanBeEvaluator, Mode=TwoWay}"/>
       <CheckBox Content="Has been an officer" IsChecked="{Binding HasBeenOfficer}"/>
-      
+
       <DockPanel>
-    <Button IsDefault="True" Content="Ok" HorizontalAlignment="Left"  VerticalAlignment="Top" Width="75" Click="Button_Click"/>
-    <Button IsCancel="True" Content="Cancel" HorizontalAlignment="Left"  VerticalAlignment="Top" Width="75" Click="Button_Click_1"/>
+        <Button IsDefault="True" Content="Ok" HorizontalAlignment="Left"  VerticalAlignment="Top" Width="75" Click="Button_Click"/>
+        <Button IsCancel="True" Content="Cancel" HorizontalAlignment="Left"  VerticalAlignment="Top" Width="75" Click="Button_Click_1"/>
       </DockPanel>
     </StackPanel>
 

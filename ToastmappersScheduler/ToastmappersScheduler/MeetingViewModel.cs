@@ -131,10 +131,10 @@ namespace Toastmappers
       meetingModel = new MeetingModelRegular();
     }
 
-    public List<MeetingModelRegular> GenerateForMonth(bool generateForFriday, int nextMeetingId)
+    public List<MeetingModelRegular> GenerateForMonth(bool generateForFriday, int nextMeetingId, DateTime lastMeeting)
     {
-       
-      List<MeetingModelRegular> list = GetRolesPerMonth(Month, generateForFriday, nextMeetingId);
+
+      List<MeetingModelRegular> list = GetRolesPerMonth(Month, generateForFriday, nextMeetingId, lastMeeting);
 
       // show meetings in dialog for review;
       string fileName = _home + "\\Agendas\\MeetingsPerMonth" + Month + Year + ".csv";
@@ -188,46 +188,46 @@ namespace Toastmappers
       // need flag for monthly grouping
       // base selection for the month, default setting
 
-      var speaker1 = _members.OrderBy(a => a.Speaker).First();
-      _members.Remove(speaker1);
-      var speaker2 = _members.OrderBy(a => a.Speaker).First();
-      _members.Remove(speaker2);
-      var evaluator1 = _members.Where(a => a.CanBeEvaluator == true).OrderBy(a => a.Evaluator).First();
-      _members.Remove(evaluator1);
-      var evaluator2 = _members.Where(a => a.CanBeEvaluator == true).OrderBy(a => a.Evaluator).First();
-      _members.Remove(evaluator2);
-      var toastmaster = _members.Where(a => a.CanBeToastmaster == true).OrderBy(a => a.Toastmaster).First();
-      _members.Remove(toastmaster);
-      var generalEvaluator = _members.Where(a => a.CanBeEvaluator == true).OrderBy(a => a.GeneralEvaluator).First();
-      _members.Remove(generalEvaluator);
-      var tt = _members.OrderBy(a => a.TT).First();
-      _members.Remove(tt);
-      var hotSeat = _members.OrderBy(a => a.HotSeat).First();
-      _members.Remove(hotSeat);
-      var gram = _members.OrderBy(a => a.Gram).First();
-      _members.Remove(gram);
-      var ah = _members.OrderBy(a => a.Ah).First();
-      _members.Remove(ah);
-      var quiz = _members.OrderBy(a => a.Quiz).First();
-      _members.Remove(quiz);
-      var timer = _members.OrderBy(a => a.Timer).First();
-      _members.Remove(timer);
-      var video = _members.OrderBy(a => a.Video).First();
-      _members.Remove(video);
+      //var speaker1 = _members.OrderBy(a => a.Speaker).First();
+      //_members.Remove(speaker1);
+      //var speaker2 = _members.OrderBy(a => a.Speaker).First();
+      //_members.Remove(speaker2);
+      //var evaluator1 = _members.Where(a => a.CanBeEvaluator == true).OrderBy(a => a.Evaluator).First();
+      //_members.Remove(evaluator1);
+      //var evaluator2 = _members.Where(a => a.CanBeEvaluator == true).OrderBy(a => a.Evaluator).First();
+      //_members.Remove(evaluator2);
+      //var toastmaster = _members.Where(a => a.CanBeToastmaster == true).OrderBy(a => a.Toastmaster).First();
+      //_members.Remove(toastmaster);
+      //var generalEvaluator = _members.Where(a => a.CanBeEvaluator == true).OrderBy(a => a.GeneralEvaluator).First();
+      //_members.Remove(generalEvaluator);
+      //var tt = _members.OrderBy(a => a.TT).First();
+      //_members.Remove(tt);
+      //var hotSeat = _members.OrderBy(a => a.HotSeat).First();
+      //_members.Remove(hotSeat);
+      //var gram = _members.OrderBy(a => a.Gram).First();
+      //_members.Remove(gram);
+      //var ah = _members.OrderBy(a => a.Ah).First();
+      //_members.Remove(ah);
+      //var quiz = _members.OrderBy(a => a.Quiz).First();
+      //_members.Remove(quiz);
+      //var timer = _members.OrderBy(a => a.Timer).First();
+      //_members.Remove(timer);
+      //var video = _members.OrderBy(a => a.Video).First();
+      //_members.Remove(video);
 
-      Toastmaster = toastmaster.Name;
-      Speaker1 = speaker1?.Name;
-      Speaker2 = speaker2.Name;
-      GeneralEvaluator = generalEvaluator?.Name;
-      Evaluator1 = evaluator1?.Name;
-      Evaluator2 = evaluator2?.Name;
-      TableTopics = tt?.Name;
-      HotSeat = hotSeat?.Name;
-      Grammarian = gram?.Name;
-      AhCounter = ah?.Name;
-      QuizMaster = quiz?.Name;
-      Timer = timer?.Name;
-      Video = video?.Name;
+      //Toastmaster = toastmaster.Name;
+      //Speaker1 = speaker1?.Name;
+      //Speaker2 = speaker2.Name;
+      //GeneralEvaluator = generalEvaluator?.Name;
+      //Evaluator1 = evaluator1?.Name;
+      //Evaluator2 = evaluator2?.Name;
+      //TableTopics = tt?.Name;
+      //HotSeat = hotSeat?.Name;
+      //Grammarian = gram?.Name;
+      //AhCounter = ah?.Name;
+      //QuizMaster = quiz?.Name;
+      //Timer = timer?.Name;
+      //Video = video?.Name;
 
       //GetMembers(ref members);
       //List<DateTime> theMeetings = GetMonthlyMeetings(new DateTime(2020, 3, 4), true);
@@ -418,30 +418,51 @@ namespace Toastmappers
 
       //}
     }
-    List<DateTime> GetMonthlyMeetings(string month, bool generateForFriday)
+    List<DateTime> GetMonthlyMeetings(string month, bool generateForFriday, DateTime lastMeeting)
     {
       List<DateTime> theMeetings = new List<DateTime>();
-      DateTime now = DateTime.Now;
-      int yearAdjustment = 0;
-      if (now.Month == 12)
-        yearAdjustment = 1;
+      //DateTime now = DateTime.Now;
+      //int yearAdjustment = 0;
+      //if (now.Month == 12)
+      //  yearAdjustment = 1;
 
-      int year = now.Year + yearAdjustment;
-      Year = year.ToString();
-      DateTime dt = DateTime.Parse(month + ", " + year.ToString());
-      // find the first wednesday of the month
-      DayOfWeek day = dt.DayOfWeek;
-      while (day != DayOfWeek.Wednesday)
-      {
-        dt = dt.AddDays(1);
-        day = dt.DayOfWeek;
-      }
+      //int year = now.Year + yearAdjustment;
+      //Year = year.ToString();
+      //DateTime dt = DateTime.Parse(month + ", " + year.ToString());
+      //// find the first wednesday of the month
+      //DayOfWeek day = dt.DayOfWeek;
+      //while (day != DayOfWeek.Wednesday)
+      //{
+      //  dt = dt.AddDays(1);
+      //  day = dt.DayOfWeek;
+      //}
 
-      theMeetings = GetMonthlyMeetings(dt, generateForFriday);
+      theMeetings = GetMonthlyMeetings(lastMeeting.AddDays(7), generateForFriday);
       return theMeetings;
     }
-    List<DateTime> GetMonthlyMeetings(DateTime startDate, bool lastFriday = true)
+    List<DateTime> GetMonthlyMeetings(DateTime lastMeeting, bool lastFriday = true)
     {
+      int yearAdjustment = 0;
+      
+      int nextMonth = lastMeeting.Month + 1;
+      if (lastMeeting.Month == 12)
+      {
+        yearAdjustment = 1;
+        nextMonth = 1;
+      }
+
+      int year = lastMeeting.Year + yearAdjustment;
+
+      DateTime startDate = new DateTime(year, nextMonth, 1);
+      DayOfWeek day = startDate.DayOfWeek;
+
+      while (day != DayOfWeek.Wednesday)
+      {
+        startDate = startDate.AddDays(1);
+        day = startDate.DayOfWeek;
+      }
+
+
       // assume startDate is a wednesday
       DateTime firstWednesday = startDate;
       DateTime secondWednesday = startDate.AddDays(7);
@@ -463,7 +484,11 @@ namespace Toastmappers
       // handle months with holidays differently - November, December, January, July, etc
       if (month == 11) //november
       {
-        // account for Thanksgiving
+        meetings.Add(firstWednesday);
+        meetings.Add(secondWednesday);
+        meetings.Add(thirdWednesday);
+        if (fifthWednesday != null)
+          meetings.Add(fifthWednesday);
       }
 
       if (month == 12) //december
@@ -472,7 +497,7 @@ namespace Toastmappers
         meetings.Add(firstWednesday);
         meetings.Add(secondWednesday);
         meetings.Add(thirdWednesday);
-        meetings.Add(fourthWednesday);
+        //meetings.Add(fourthWednesday);
         return meetings;
       }
 
@@ -511,15 +536,37 @@ namespace Toastmappers
       return meetings;
     }
 
-    List<MeetingModelRegular> GetRolesPerMonth(string month, bool generateForFriday, int nextMeetingID)
+    void ResetMemberList(MeetingModelBase m, ref List<MemberViewModel> members)
+    {
+      members = new List<MemberViewModel>(_members);
+
+      var spkr1 = m.Speaker1;
+      var spkr2 = m.Speaker2;
+
+      foreach (var mmbi in _members)
+      {
+        if (mmbi.Name == spkr1)
+          members.Remove(mmbi);
+
+        if (mmbi.Name == spkr2)
+          members.Remove(mmbi);
+      }
+
+      var iterationMembers = members.Where(it => it.MeetingsOut.Contains(DateTime.Parse(m.DayOfMeeting))).ToList();
+
+      foreach (var im in iterationMembers)
+        members.Remove(im);
+    }
+    List<MeetingModelRegular> GetRolesPerMonth(string month, bool generateForFriday, int nextMeetingID, DateTime lastMeeting)
     {
 
       // need to have the names for each meeting be in a hash set to make them unique.
       // need logic to move names in one meeting to the next or swap with the previous meeting
       // then add them to the meeting 
       int meetingID = nextMeetingID;
-      //List<DateTime> theMeetings = GetMonthlyMeetings(new DateTime(2020, 3, 4), true);
-      List<DateTime> meetingDates = GetMonthlyMeetings(month, generateForFriday);
+
+      List<DateTime> meetingDates = GetMonthlyMeetings(lastMeeting, generateForFriday);
+      
       //List<DateTime> meetingDates = GetMonthlyMeetings(new DateTime(2020, 3, 4), true);
       // get all speakers first, then build up each meeting, grabbing roles one at a time.
       List<MemberViewModel> members = new List<MemberViewModel>(_members);
@@ -563,16 +610,27 @@ namespace Toastmappers
       // add the other roles
       foreach (var m in meetings)
       {
+        // remove speakers for the meeting
+        var spkr1 = m.Speaker1;
+        var spkr2 = m.Speaker2;
 
-        if (members.Count == 0)
-          members = new List<MemberViewModel>(_members);
+        foreach (var mmbi in _members)
+        {
+          if (mmbi.Name == spkr1)
+            members.Remove(mmbi);
+
+          if (mmbi.Name == spkr2)
+            members.Remove(mmbi);
+        }
 
         var iterationMembers = members.Where(it => it.MeetingsOut.Contains(meetingDates[i])).ToList();
 
         foreach (var im in iterationMembers)
           members.Remove(im);
+
         if (members.Count == 0)
-          members = new List<MemberViewModel>(_members);
+          ResetMemberList(m, ref members);
+
         var evaluator = members.Where(a => a.CanBeEvaluator == true)?.OrderBy(a => a.Evaluator).First();
         m.Evaluator1 = evaluator?.Name;
         //enames.Add(evaluator.Name);
@@ -580,12 +638,12 @@ namespace Toastmappers
 
         members.Remove(evaluator);
         if (members.Count == 0)
-          members = new List<MemberViewModel>(_members);
+          ResetMemberList(m, ref members);
 
         evaluator = members.Where(a => a.CanBeEvaluator == true)?.OrderBy(a => a.Evaluator)?.FirstOrDefault();
         if (evaluator == null)
         {
-          members = new List<MemberViewModel>(_members);
+          ResetMemberList(m, ref members);
           evaluator = members.Where(a => a.CanBeEvaluator == true)?.OrderBy(a => a.Evaluator).First();
           m.Evaluator2 = evaluator?.Name;
         }
@@ -595,7 +653,7 @@ namespace Toastmappers
         //enames.Add(evaluator.Name);
         members.Remove(evaluator);
         if (members.Count == 0)
-          members = new List<MemberViewModel>(_members);
+          ResetMemberList(m, ref members);
         evaluator.Evaluator = meetingDates[i];
 
         MemberViewModel genevaluator = null;
@@ -608,7 +666,7 @@ namespace Toastmappers
           m.GeneralEvaluator = genevaluator?.Name;
           members.Remove(genevaluator);
           if (members.Count == 0)
-            members = new List<MemberViewModel>(_members);
+            ResetMemberList(m, ref members);
           //gnames.Add(genevaluator.Name);
           genevaluator.GeneralEvaluator = meetingDates[i];
 
@@ -629,7 +687,7 @@ namespace Toastmappers
 
         //tnames.Add(toastmaster.Name);
         if (members.Count == 0)
-          members = new List<MemberViewModel>(_members);
+          ResetMemberList(m, ref members);
 
         var hotseat = members.OrderBy(a => a.HotSeat).First();
         m.HotSeat = hotseat.Name;
@@ -637,7 +695,7 @@ namespace Toastmappers
         //hnames.Add(hotseat.Name);
         members.Remove(hotseat);
         if (members.Count == 0)
-          members = new List<MemberViewModel>(_members);
+          ResetMemberList(m, ref members);
         hotseat.HotSeat = meetingDates[i];
 
         var tt = members.OrderBy(a => a.TT).First();
@@ -654,7 +712,7 @@ namespace Toastmappers
         //grnames.Add(gram.Name);
         members.Remove(gram);
         if (members.Count == 0)
-          members = new List<MemberViewModel>(_members);
+          ResetMemberList(m, ref members);
         gram.Gram = meetingDates[i];
         m.Grammarian = gram.Name;
         var timer = members.OrderBy(a => a.Timer).First();
@@ -662,7 +720,7 @@ namespace Toastmappers
         //timernames.Add(timer.Name);
         members.Remove(timer);
         if (members.Count == 0)
-          members = new List<MemberViewModel>(_members);
+          ResetMemberList(m, ref members);
         timer.Timer = meetingDates[i];
 
         var ah = members.OrderBy(a => a.Ah).First();
@@ -670,7 +728,7 @@ namespace Toastmappers
         //ahnames.Add(ah.Name);
         members.Remove(ah);
         if (members.Count == 0)
-          members = new List<MemberViewModel>(_members);
+          ResetMemberList(m, ref members);
 
         ah.Ah = meetingDates[i];
         m.AhCounter = ah.Name;
@@ -679,7 +737,7 @@ namespace Toastmappers
         //quiznames.Add(quiz.Name);
         members.Remove(quiz);
         if (members.Count == 0)
-          members = new List<MemberViewModel>(_members);
+          ResetMemberList(m, ref members);
         quiz.Quiz = meetingDates[i];
 
         var video = members.OrderBy(a => a.Video).First();
@@ -687,7 +745,7 @@ namespace Toastmappers
         //videonames.Add(video.Name);
         members.Remove(video);
         if (members.Count == 0)
-          members = new List<MemberViewModel>(_members);
+          ResetMemberList(m, ref members);
         video.Video = meetingDates[i];
         i++;
         foreach (var im in iterationMembers)
@@ -735,29 +793,29 @@ namespace Toastmappers
       List<string> hnames = new List<string>();
 
       while (i <= meetingDates.Count() - 1)
-      foreach (var meetingsout in meetingDates)
-      {
-        //int meetingsout = i + 1;
-        //DateTime meetingsout = meetingDates[]
-        var iterationMembers = members.Where(it => it.MeetingsOut.Contains(meetingsout)).ToList();
-        foreach (var im in iterationMembers)
-          members.Remove(im);
+        foreach (var meetingsout in meetingDates)
+        {
+          //int meetingsout = i + 1;
+          //DateTime meetingsout = meetingDates[]
+          var iterationMembers = members.Where(it => it.MeetingsOut.Contains(meetingsout)).ToList();
+          foreach (var im in iterationMembers)
+            members.Remove(im);
 
-        var speaker = members.OrderBy(a => a.Speaker).First();
-        //firstrole.Add(speaker.Name);
-        snames.Add(speaker.Name);
-        members.Remove(speaker);
-        speaker.Speaker = meetingDates[i];
-        speaker = members.OrderBy(a => a.Speaker).First();
-        //firstrole.Add(speaker.Name);
-        snames.Add(speaker.Name);
-        members.Remove(speaker);
+          var speaker = members.OrderBy(a => a.Speaker).First();
+          //firstrole.Add(speaker.Name);
+          snames.Add(speaker.Name);
+          members.Remove(speaker);
+          speaker.Speaker = meetingDates[i];
+          speaker = members.OrderBy(a => a.Speaker).First();
+          //firstrole.Add(speaker.Name);
+          snames.Add(speaker.Name);
+          members.Remove(speaker);
 
-        speaker.Speaker = meetingDates[i];
-        i++;
-        foreach (var im in iterationMembers)
-          members.Add(im);
-      }
+          speaker.Speaker = meetingDates[i];
+          i++;
+          foreach (var im in iterationMembers)
+            members.Add(im);
+        }
 
       ////"evaluator")
       i = 0;
@@ -803,7 +861,7 @@ namespace Toastmappers
       //else if (role == "generalevaluator")
       i = 0;
       foreach (var meetingsout in meetingDates)
-      { 
+      {
         var iterationMembers = members.Where(it => it.MeetingsOut.Contains(meetingsout)).ToList();
         foreach (var im in iterationMembers)
           members.Remove(im);
@@ -1187,7 +1245,7 @@ namespace Toastmappers
 
       List<MemberViewModel> members = new List<MemberViewModel>(_members.Where(m => m.Name != "Mike Frith").ToList());
 
-      foreach(DateTime m in meetingDates)
+      foreach (DateTime m in meetingDates)
       {
         List<MemberViewModel> iterationMembers = members.Where(it => it.MeetingsOut.Contains(m)).ToList();
         foreach (MemberViewModel im in iterationMembers)

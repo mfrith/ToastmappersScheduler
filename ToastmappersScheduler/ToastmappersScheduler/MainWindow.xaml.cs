@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace Toastmappers
 {
@@ -254,6 +255,17 @@ namespace Toastmappers
       mtg.AddAttendee(a);
     }
 
+    private ICommand _backupCommand;
+    public ICommand BackupCmd
+    {
+      get { return _backupCommand ?? (_backupCommand = new RelayCommand(() => Backup(), () => true)); }
+    }
+
+    public void Backup()
+    {
+      MainViewModel a = (MainViewModel)this.DataContext;
+      a.Backup();
+    }
   }
 
 }

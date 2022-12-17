@@ -54,11 +54,18 @@ namespace Toastmappers
     public int MeetingType { get; set; }
     public string ID { get; set; }
     private string _toastmaster;
-    public string DayOfMeeting { get; set; }
+
+    private string _dayOfMeeting = "";
+
+    public string DayOfMeeting
+    {
+      get { return _dayOfMeeting; } 
+      set { _dayOfMeeting = value; }
+    }
     public string Toastmaster
     {
-      get { return _toastmaster; }
-      set { _toastmaster = value; }
+      get { return _meeting.Toastmaster; }
+      set { _meeting.Toastmaster = value; }
     }
     public string Speaker1 { get; set; }
     public string Speaker2 { get; set; }
@@ -167,6 +174,7 @@ namespace Toastmappers
       {
         var a = _members.Select(iterator => iterator.Name).ToList();
         ObservableCollection<string> newList = new ObservableCollection<string>(a);
+        newList.Add("");
         return newList;
       }
     }
@@ -192,24 +200,27 @@ namespace Toastmappers
     }
 
     private MeetingModelBase _meeting;
-
-    public MeetingEditViewModel(MeetingModelBase mtgToResolve, ObservableCollection<MemberViewModel> members)
+    private bool _bResolve;
+    public MeetingEditViewModel(MeetingModelBase mtgToEdit, ObservableCollection<MemberViewModel> members, bool bResolve = true)
     {
-      _meeting = mtgToResolve;
+      _meeting = mtgToEdit;
       _members = members;
       _attendeemembers = new ObservableCollection<MemberViewModel>(members);
       _ttcontestantmembers = new ObservableCollection<MemberViewModel>(members);
       Toastmaster = _meeting.Toastmaster;
       Speaker1 = _meeting.Speaker1;
       Speaker2 = _meeting.Speaker2;
-      if (mtgToResolve.MeetingType == 2)
+      if (mtgToEdit.MeetingType == 2)
         Speaker3 = "Some speaker";
       GeneralEvaluator = _meeting.GeneralEvaluator;
       Evaluator1 = _meeting.Evaluator1;
       Evaluator2 = _meeting.Evaluator2;
-      TableTopics = (_meeting as MeetingModelRegular).TableTopics;
-      TTWinner = (_meeting as MeetingModelRegular).TTWinner;
-      TTContestants = (_meeting as MeetingModelRegular).TTContestants;
+      if (mtgToEdit.MeetingType == 1)
+      {
+        TableTopics = (_meeting as MeetingModelRegular).TableTopics;
+        TTWinner = (_meeting as MeetingModelRegular).TTWinner;
+        TTContestants = (_meeting as MeetingModelRegular).TTContestants;
+      }
       AhCounter = _meeting.AhCounter;
       Grammarian = _meeting.Grammarian;
       Timer = _meeting.Timer;
@@ -222,6 +233,8 @@ namespace Toastmappers
       MeetingType = _meeting.MeetingType;
       Guests = _meeting.Guests;
       Attendees = _meeting.Attendees;
+      ID = _meeting.ID.ToString();
+      _bResolve = bResolve;
     }
 
     public void Reset()

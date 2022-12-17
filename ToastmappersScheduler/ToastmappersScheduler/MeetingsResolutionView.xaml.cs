@@ -59,5 +59,27 @@ namespace Toastmappers
       string a = t.SelectedItem.ToString();
       mtg.AddTTContestant(a);
     }
+
+        private void ComboBox_DropDownClosed_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void TTWinner_Combobox_DropDownClosed(object sender, EventArgs e)
+        {
+
+        }
+
+    private void TTContestants_PreViewKeyDown(object sender, KeyEventArgs e)
+    {
+      var t = sender as ComboBox;
+      if (e.Key == Key.Enter)// && t != null && string.IsNullOrEmpty(t.Text))
+      {
+        MeetingsResolutionViewModel mtgBeingResolved = (MeetingsResolutionViewModel)this.DataContext;
+        var mtg = mtgBeingResolved.CurrentMeetingToResolve;
+        mtg.AddGuest(t.Text);
+        t.Text = "";
+      }
+    }
   }
 }
