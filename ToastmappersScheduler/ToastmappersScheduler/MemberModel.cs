@@ -107,7 +107,7 @@ namespace Toastmappers
                   propertyName == "TT" || propertyName == "Ah" || propertyName == "Gram" || propertyName == "Timer" || propertyName == "Quiz" ||
                   propertyName == "Video" || propertyName == "HotSeat")
               {
-                var date = DateTime.ParseExact(value, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
+                var date = DateTime.ParseExact(value, "MM-dd-yyyy", System.Globalization.CultureInfo.InvariantCulture);
                 member.GetType().GetProperty(propertyName).SetValue(member, date, null);
                 break;
 
@@ -143,7 +143,10 @@ namespace Toastmappers
                 member.MeetingsOut = new List<DateTime>();
                 while (reader.TokenType != JsonTokenType.EndArray)
                 {
-                  member.MeetingsOut.Add(reader.GetDateTime());
+                  var d = reader.GetString();
+                  var date = DateTime.ParseExact(d, "MM-dd-yyyy", System.Globalization.CultureInfo.InvariantCulture);
+
+                  member.MeetingsOut.Add(date);
                   reader.Read();
                 }
 
@@ -190,17 +193,17 @@ namespace Toastmappers
           writer.WriteStartObject();
           writer.WriteString("Name", member.Name);
           writer.WriteNumber("MemberID", member.MemberID);
-          writer.WriteString("Toastmaster", member.Toastmaster.ToString("yyyy-MM-dd"));
-          writer.WriteString("Speaker", member.Speaker.ToString("yyyy-MM-dd"));
-          writer.WriteString("GeneralEvaluator", member.GeneralEvaluator.ToString("yyyy-MM-dd"));
-          writer.WriteString("Evaluator", member.Evaluator.ToString("yyyy-MM-dd"));
-          writer.WriteString("TT", member.TT.ToString("yyyy-MM-dd"));
-          writer.WriteString("Ah", member.Ah.ToString("yyyy-MM-dd"));
-          writer.WriteString("Gram", member.Gram.ToString("yyyy-MM-dd"));
-          writer.WriteString("Timer", member.Timer.ToString("yyyy-MM-dd"));
-          writer.WriteString("Quiz", member.Quiz.ToString("yyyy-MM-dd"));
-          writer.WriteString("Video", member.Video.ToString("yyyy-MM-dd"));
-          writer.WriteString("HotSeat", member.HotSeat.ToString("yyyy-MM-dd"));
+          writer.WriteString("Toastmaster", member.Toastmaster.ToString("MM-dd-yyyy"));
+          writer.WriteString("Speaker", member.Speaker.ToString("MM-dd-yyyy"));
+          writer.WriteString("GeneralEvaluator", member.GeneralEvaluator.ToString("MM-dd-yyyy"));
+          writer.WriteString("Evaluator", member.Evaluator.ToString("MM-dd-yyyy"));
+          writer.WriteString("TT", member.TT.ToString("MM-dd-yyyy"));
+          writer.WriteString("Ah", member.Ah.ToString("MM-dd-yyyy"));
+          writer.WriteString("Gram", member.Gram.ToString("MM-dd-yyyy"));
+          writer.WriteString("Timer", member.Timer.ToString("MM-dd-yyyy"));
+          writer.WriteString("Quiz", member.Quiz.ToString("MM-dd-yyyy"));
+          writer.WriteString("Video", member.Video.ToString("MM-dd-yyyy"));
+          writer.WriteString("HotSeat", member.HotSeat.ToString("MM-dd-yyyy"));
           writer.WriteBoolean("HasBeenOfficer", member.HasBeenOfficer);
           writer.WriteBoolean("CanBeToastmaster", member.CanBeToastmaster);
           writer.WriteBoolean("CanBeEvaluator", member.CanBeEvaluator);
@@ -208,7 +211,7 @@ namespace Toastmappers
             writer.WriteStartArray("MeetingsOut");
             foreach (DateTime m in member.MeetingsOut)
             {
-              writer.WriteStringValue(m.ToString("yyyy-MM-dd"));
+              writer.WriteStringValue(m.ToString("MM-dd-yyyy"));
             }
             writer.WriteEndArray();
 
