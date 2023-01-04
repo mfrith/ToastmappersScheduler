@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics.Metrics;
 using System.IO;
 using System.Linq;
 using System.Windows.Input;
@@ -113,6 +115,95 @@ namespace Toastmappers
 
     }
 
+    private ICommand _setLastRoleCmd;
+    public ICommand SetLastRoleCmd
+    {
+      get
+      {
+        return _setLastRoleCmd ?? (_setLastRoleCmd = new RelayCommand<object>((param) => SetLastRole(param), (param) => true));
+      }
+    }
+    public void SetLastRole(object param)
+    {
+      var role = param.ToString();
+      if (role == null)
+        return;
+
+      var name = _mme.Name;
+      MeetingsViewModel meetingsVM = (MeetingsViewModel)_mainViewModel.Tabs[2];
+      var meetings = meetingsVM.Meetings;
+      var a = meetings.Where(it => it != null && it.GetType() != null && it.GetType().GetProperty(role) != null && 
+                              it.GetType().GetProperty(role).GetValue(it).ToString() == name).ToList();
+      MeetingModelBase mtg = null;
+      if (a.Count < 1)
+      {
+        // assume the last date is 01/01/0001
+        var date = new DateTime(0001, 01, 01);
+        _mme.GetType().GetProperty(role).SetValue(_mme, date, null);
+      }
+      else
+      {
+        mtg = a.OrderBy(it => it.DayOfMeeting).Last();
+        _mme.GetType().GetProperty(role).SetValue(_mme, mtg.DayOfMeeting, null);
+      }
+      //var meeting = meetings.Where(it => it.Toastmaster == name).ToList();
+      //var date = meetingstocheck.OrderBy();
+      //MeetingRoleList.ItemsSource = c.Members.OrderBy(it => it.GetType()GetType().GetProperty(role).GetValue(it)).Select(x => x.Name).ToList();
+      // = new meeting.DayOfMeeting);
+      //_mme.Toastmaster = DateTime.ParseExact(mtg.DayOfMeeting, "MM-dd-yyyy", System.Globalization.CultureInfo.InvariantCulture);
+      //_mme.Toastmaster = new DateTime(1963, 08, 14);
+      //var a = param.GetType().GetProperty(name).GetValue(par, null);
+
+      switch (role)
+      {
+        case "Toastmaster":
+          NotifyPropertyChanged(() => SetMemberRoleStatus.Toastmaster);
+          break;
+
+        case "Speaker":
+          NotifyPropertyChanged(() => SetMemberRoleStatus.Speaker);
+          break;
+
+        case "GeneralEvaluator":
+          NotifyPropertyChanged(() => SetMemberRoleStatus.GeneralEvaluator);
+          break;
+
+        case "Evaluator":
+          NotifyPropertyChanged(() => SetMemberRoleStatus.Evaluator);
+          break;
+
+        case "TableTopics":
+          NotifyPropertyChanged(() => SetMemberRoleStatus.TT);
+          break;
+
+        case "AhCounter":
+          NotifyPropertyChanged(() => SetMemberRoleStatus.Ah);
+          break;
+
+        case "Timer":
+          NotifyPropertyChanged(() => SetMemberRoleStatus.Timer);
+          break;
+
+        case "Grammarian":
+          NotifyPropertyChanged(() => SetMemberRoleStatus.Gram);
+          break;
+
+        case "QuizMaster":
+          NotifyPropertyChanged(() => SetMemberRoleStatus.Quiz);
+          break;
+
+        case "Video":
+          NotifyPropertyChanged(() => SetMemberRoleStatus.Video);
+          break;
+
+        case "HotSeat":
+          NotifyPropertyChanged(() => SetMemberRoleStatus.HotSeat);
+          break;
+
+        default:
+          break;
+      }
+    }
     // public 
     //public MemberViewModel CurrentMemberEdit
     //{
