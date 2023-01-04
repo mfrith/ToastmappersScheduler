@@ -521,58 +521,68 @@
                 <!--<ListBox ItemsSource="{Binding Roles}" Width="80" ></ListBox>-->
                 <WrapPanel >
                   <TextBlock  Width="100" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="20,0,0,0" Text="Toastmaster"/>
-                  <DatePicker   SelectedDate="{Binding SetMemberRoleStatus.Toastmaster}" Width="100" Margin="10,0,0,0"/>
-                  <Button Width="60" Margin="10,0,0,0" Content="Last Time" />
+                  <DatePicker  SelectedDate="{Binding SetMemberRoleStatus.Toastmaster}" Width="100" Margin="10,0,0,0"/>
+                  <Button Margin="7,0,0,0" Width="92" Content="Set To Last Date" Command="{Binding SetLastRoleCmd}" CommandParameter="Toastmaster" />
                 </WrapPanel>
 
                 <WrapPanel>
                   <TextBlock Width="100" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="20,0,0,0" Text="Speaker"/>
                   <DatePicker SelectedDate="{Binding SetMemberRoleStatus.Speaker}" Width="100" Margin="10,0,0,0"/>
+                  <Button Margin="7,0,0,0" Width="92" Content="Set To Last Date" Command="{Binding SetLastRoleCmd}" CommandParameter="Speaker" />
                 </WrapPanel>
 
                 <WrapPanel >
                   <TextBlock  Width="100" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="20,0,0,0" Text="Evaluator"/>
                   <DatePicker  SelectedDate="{Binding SetMemberRoleStatus.Evaluator}" Width="100" Margin="10,0,0,0"/>
+                  <Button Margin="7,0,0,0" Width="92" Content="Set To Last Date" Command="{Binding SetLastRoleCmd}" CommandParameter="Evaluator" />
                 </WrapPanel>
 
                 <WrapPanel>
                   <TextBlock Width="100" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="20,0,0,0" Text="General Evaluator"/>
                   <DatePicker SelectedDate="{Binding SetMemberRoleStatus.GeneralEvaluator}" Width="100" Margin="10,0,0,0"/>
+                  <Button Margin="7,0,0,0" Width="92" Content="Set To Last Date" Command="{Binding SetLastRoleCmd}" CommandParameter="GeneralEvaluator" />
                 </WrapPanel>
 
                 <WrapPanel >
                   <TextBlock  Width="100" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="20,0,0,0" Text="Table Topics"/>
                   <DatePicker  SelectedDate="{Binding SetMemberRoleStatus.TT}" Width="100" Margin="10,0,0,0"/>
+                  <Button Margin="7,0,0,0" Width="92" Content="Set To Last Date" Command="{Binding SetLastRoleCmd}" CommandParameter="TableTopics" />
                 </WrapPanel>
 
                 <WrapPanel>
                   <TextBlock Width="100" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="20,0,0,0" Text="Ah Counter"/>
                   <DatePicker SelectedDate="{Binding SetMemberRoleStatus.Ah}" Width="100" Margin="10,0,0,0"/>
+                  <Button Margin="7,0,0,0" Width="92" Content="Set To Last Date" Command="{Binding SetLastRoleCmd}" CommandParameter="AhCounter" />
                 </WrapPanel>
 
                 <WrapPanel >
                   <TextBlock  Width="100" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="20,0,0,0" Text="Timer"/>
                   <DatePicker  SelectedDate="{Binding SetMemberRoleStatus.Timer}" Width="100" Margin="10,0,0,0"/>
+                  <Button Margin="7,0,0,0" Width="92" Content="Set To Last Date" Command="{Binding SetLastRoleCmd}" CommandParameter="Timer" />
                 </WrapPanel>
 
                 <WrapPanel>
                   <TextBlock Width="100" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="20,0,0,0" Text="Grammarian"/>
                   <DatePicker SelectedDate="{Binding SetMemberRoleStatus.Gram}" Width="100" Margin="10,0,0,0"/>
+                  <Button Margin="7,0,0,0" Width="92" Content="Set To Last Date" Command="{Binding SetLastRoleCmd}" CommandParameter="Grammarian" />
                 </WrapPanel>
 
                 <WrapPanel>
                   <TextBlock Width="100" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="20,0,0,0" Text="Quiz Master"/>
                   <DatePicker SelectedDate="{Binding SetMemberRoleStatus.Quiz}" Width="100" Margin="10,0,0,0"/>
+                  <Button Margin="7,0,0,0" Width="92" Content="Set To Last Date" Command="{Binding SetLastRoleCmd}" CommandParameter="QuizMaster" />
                 </WrapPanel>
 
                 <WrapPanel >
                   <TextBlock  Width="100" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="20,0,0,0" Text="Video"/>
                   <DatePicker  SelectedDate="{Binding SetMemberRoleStatus.Video}" Width="100" Margin="10,0,0,0"/>
+                  <Button Margin="7,0,0,0" Width="92" Content="Set To Last Date" Command="{Binding SetLastRoleCmd}" CommandParameter="Video" />
                 </WrapPanel>
 
                 <WrapPanel>
                   <TextBlock Width="100" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="20,0,0,0" Text="Hot Seat"/>
                   <DatePicker SelectedDate="{Binding SetMemberRoleStatus.HotSeat}" Width="100" Margin="10,0,0,0"/>
+                  <Button Margin="7,0,0,0" Width="92" Content="Set To Last Date" Command="{Binding SetLastRoleCmd}" CommandParameter="HotSeat" />
                 </WrapPanel>
 
                 <!--<Button Width="50" Margin="20,10,0,0" HorizontalAlignment="Left" Content="Save"/>-->
