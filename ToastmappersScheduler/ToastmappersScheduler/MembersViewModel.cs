@@ -132,19 +132,21 @@ namespace Toastmappers
       var name = _mme.Name;
       MeetingsViewModel meetingsVM = (MeetingsViewModel)_mainViewModel.Tabs[2];
       var meetings = meetingsVM.Meetings;
-      var a = meetings.Where(it => it != null && it.GetType() != null && it.GetType().GetProperty(role) != null && 
-                              it.GetType().GetProperty(role).GetValue(it).ToString() == name).ToList();
+      var a = meetings.Where(it => it != null && it.MeetingType == 1 && it.GetType() != null && it.GetType().GetProperty(role) != null && 
+                             it.GetType().GetProperty(role).GetValue(it).ToString() == name).ToList();
       MeetingModelBase mtg = null;
+      DateTime date;
       if (a.Count < 1)
       {
         // assume the last date is 01/01/0001
-        var date = new DateTime(0001, 01, 01);
-        _mme.GetType().GetProperty(role).SetValue(_mme, date, null);
+        date = new DateTime(0001, 01, 01);
+        //_mme.GetType().GetProperty(role).SetValue(_mme, date, null);
       }
       else
       {
         mtg = a.OrderBy(it => it.DayOfMeeting).Last();
-        _mme.GetType().GetProperty(role).SetValue(_mme, mtg.DayOfMeeting, null);
+        date = DateTime.ParseExact(mtg.DayOfMeeting, "MM-dd-yyyy", System.Globalization.CultureInfo.InvariantCulture);
+        //_mme.GetType().GetProperty(role).SetValue(_mme, date, null);
       }
       //var meeting = meetings.Where(it => it.Toastmaster == name).ToList();
       //var date = meetingstocheck.OrderBy();
@@ -157,46 +159,57 @@ namespace Toastmappers
       switch (role)
       {
         case "Toastmaster":
+          _mme.Toastmaster = date;
           NotifyPropertyChanged(() => SetMemberRoleStatus.Toastmaster);
           break;
 
         case "Speaker":
+          _mme.Speaker = date;
           NotifyPropertyChanged(() => SetMemberRoleStatus.Speaker);
           break;
 
         case "GeneralEvaluator":
+          _mme.GeneralEvaluator = date;
           NotifyPropertyChanged(() => SetMemberRoleStatus.GeneralEvaluator);
           break;
 
         case "Evaluator":
+          _mme.Evaluator = date;
           NotifyPropertyChanged(() => SetMemberRoleStatus.Evaluator);
           break;
 
         case "TableTopics":
+          _mme.TT = date;
           NotifyPropertyChanged(() => SetMemberRoleStatus.TT);
           break;
 
         case "AhCounter":
+          _mme.Ah = date;
           NotifyPropertyChanged(() => SetMemberRoleStatus.Ah);
           break;
 
         case "Timer":
+          _mme.Timer = date;
           NotifyPropertyChanged(() => SetMemberRoleStatus.Timer);
           break;
 
         case "Grammarian":
+          _mme.Gram = date;
           NotifyPropertyChanged(() => SetMemberRoleStatus.Gram);
           break;
 
         case "QuizMaster":
+          _mme.Quiz = date;
           NotifyPropertyChanged(() => SetMemberRoleStatus.Quiz);
           break;
 
         case "Video":
+          _mme.Video = date;
           NotifyPropertyChanged(() => SetMemberRoleStatus.Video);
           break;
 
         case "HotSeat":
+          _mme.HotSeat = date;
           NotifyPropertyChanged(() => SetMemberRoleStatus.HotSeat);
           break;
 
