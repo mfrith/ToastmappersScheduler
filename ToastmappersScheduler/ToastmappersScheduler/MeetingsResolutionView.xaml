@@ -115,7 +115,7 @@
         <TextBlock Grid.Row="12" Grid.Column="0" Text="Hot Seat"/>
         <ComboBox Grid.Row="12" Grid.Column="1" ItemsSource="{Binding MembersList}"  SelectedValue="{Binding HotSeat}" />
         <TextBlock Grid.Row="13" Grid.Column="0" Text="Table Topics Winner"/>
-        <ComboBox Grid.Row="13" Grid.Column="1" Name="TTWinner_Combobox" ItemsSource="{Binding MembersList}" SelectedValue="{Binding TTWinner}" IsEditable="True" />
+        <ComboBox Grid.Row="13" Grid.Column="1" Name="TTWinner_Combobox" ItemsSource="{Binding MembersList}" Text="{Binding TTWinner}" IsEditable="True" />
         <TextBlock Grid.Row="14" Grid.Column="0" Text="Table Topic Contestants"/>
         <StackPanel Grid.Row="14" Grid.Column="1" >
           <ComboBox Name="TTContestants_ComboBox" IsEditable="True" ItemsSource="{Binding TTContestantMembersList}" DropDownClosed="TTContestants_ComboBox_DropDownClosed"

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System;
 
 namespace Toastmappers
 {
@@ -130,6 +131,20 @@ namespace Toastmappers
       //_currentMeetingToResolveVM
       _currentMeetingToResolveVM.Save();
       _meetingsVM.Save();
+
+      // update member status from resolved meeting
+      // find each member's status and see if this the newest date for that role
+      var date = DateTime.ParseExact(_currentMeetingToResolveVM.DayOfMeeting, "mm-dd-yyyy", System.Globalization.CultureInfo.InvariantCulture);
+      //var mtg = DateTime.ParseExact(it.DayOfMeeting, "MM-dd-yyyy", System.Globalization.CultureInfo.InvariantCulture).CompareTo(today) > 0).FirstOrDefault();
+
+      var tm = _currentMeetingToResolveVM.Toastmaster;
+      var member = _members.Where(it => it.Name == tm).First();
+      var newDate = member.Toastmaster.AddMinutes(2); ;
+      var bNewerDate = date.CompareTo(member.Toastmaster.AddMinutes(2)) > 0;
+      if (member != null && bNewerDate)
+      {
+        member.Toastmaster = date;
+      }
       //var t = _currentMeetingToResolveVM.Resolved;
     }
 
