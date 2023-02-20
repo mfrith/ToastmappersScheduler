@@ -39,6 +39,9 @@ namespace Toastmappers
     private void GuestTextBox_KeyDown(object sender, KeyEventArgs e)
     {
       var t = sender as TextBox;
+      if (string.IsNullOrEmpty(t.Text))
+        return;
+
       if (e.Key == Key.Enter)// && t != null && string.IsNullOrEmpty(t.Text))
       {
         MeetingsResolutionViewModel mtgBeingResolved = (MeetingsResolutionViewModel)this.DataContext;
@@ -73,11 +76,26 @@ namespace Toastmappers
     private void TTContestants_PreViewKeyDown(object sender, KeyEventArgs e)
     {
       var t = sender as ComboBox;
+
       if (e.Key == Key.Enter)// && t != null && string.IsNullOrEmpty(t.Text))
       {
         MeetingsResolutionViewModel mtgBeingResolved = (MeetingsResolutionViewModel)this.DataContext;
         var mtg = mtgBeingResolved.CurrentMeetingToResolve;
-        mtg.AddGuest(t.Text);
+        mtg.AddTTContestant(t.Text);
+        t.Text = "";
+      }
+    }
+
+    private void TTContestants_ComboBox_KeyDown(object sender, KeyEventArgs e)
+    {
+      var t = sender as ComboBox;
+      if (string.IsNullOrEmpty(t.Text))
+        return;
+      if (e.Key == Key.Enter)// && t != null && string.IsNullOrEmpty(t.Text))
+      {
+        MeetingsResolutionViewModel mtgBeingResolved = (MeetingsResolutionViewModel)this.DataContext;
+        var mtg = mtgBeingResolved.CurrentMeetingToResolve;
+        mtg.AddTTContestant(t.Text);
         t.Text = "";
       }
     }

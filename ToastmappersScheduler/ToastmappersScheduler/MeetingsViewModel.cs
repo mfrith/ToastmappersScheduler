@@ -674,6 +674,140 @@ namespace Toastmappers
           strmWriter.WriteLine(meeting);
         }
       }
+
+      var date = DateTime.ParseExact(_currentMeeting.DayOfMeeting, "mm-dd-yyyy", System.Globalization.CultureInfo.InvariantCulture);
+
+      // for each meeting role, check if that's newer than the current member status
+      var tm = _currentMeeting.Toastmaster;
+      var member = _members.Where(it => it.Name == tm).First();
+      var newDate = member.Toastmaster.AddMinutes(2); ;
+      var bNewerDate = date.CompareTo(member.Toastmaster.AddMinutes(2)) > 0;
+      if (member != null && bNewerDate)
+      {
+        member.Toastmaster = date;
+      }
+
+      var spkr1 = _currentMeeting.Speaker1;
+      member = _members.Where(it => it.Name == spkr1).First();
+      newDate = member.Speaker.AddMinutes(2); ;
+      bNewerDate = date.CompareTo(member.Speaker.AddMinutes(2)) > 0;
+      if (member != null && bNewerDate)
+      {
+        member.Speaker = date;
+      }
+
+      var spkr2 = _currentMeeting.Speaker2;
+      member = _members.Where(it => it.Name == spkr2).First();
+      newDate = member.Speaker.AddMinutes(2); ;
+      bNewerDate = date.CompareTo(member.Speaker.AddMinutes(2)) > 0;
+      if (member != null && bNewerDate)
+      {
+        member.Speaker = date;
+      }
+
+      var eval1 = _currentMeeting.Evaluator1;
+      member = _members.Where(it => it.Name == eval1).First();
+      newDate = member.Evaluator.AddMinutes(2); ;
+      bNewerDate = date.CompareTo(member.Evaluator.AddMinutes(2)) > 0;
+      if (member != null && bNewerDate)
+      {
+        member.Evaluator = date;
+      }
+
+      var eval2 = _currentMeeting.Evaluator2;
+      member = _members.Where(it => it.Name == eval2).First();
+      newDate = member.Evaluator.AddMinutes(2); ;
+      bNewerDate = date.CompareTo(member.Evaluator.AddMinutes(2)) > 0;
+      if (member != null && bNewerDate)
+      {
+        member.Evaluator = date;
+      }
+
+      var GE = _currentMeeting.GeneralEvaluator;
+      member = _members.Where(it => it.Name == GE).First();
+      newDate = member.GeneralEvaluator.AddMinutes(2); ;
+      bNewerDate = date.CompareTo(member.GeneralEvaluator.AddMinutes(2)) > 0;
+      if (member != null && bNewerDate)
+      {
+        member.GeneralEvaluator = date;
+      }
+
+      var TT = _currentMeeting.TableTopics;
+      member = _members.Where(it => it.Name == TT).First();
+      newDate = member.TT.AddMinutes(2); ;
+      bNewerDate = date.CompareTo(member.TT.AddMinutes(2)) > 0;
+      if (member != null && bNewerDate)
+      {
+        member.TT = date;
+      }
+
+      var gram = _currentMeeting.Grammarian;
+      member = _members.Where(it => it.Name == gram).First();
+      newDate = member.Gram.AddMinutes(2); ;
+      bNewerDate = date.CompareTo(member.Gram.AddMinutes(2)) > 0;
+      if (member != null && bNewerDate)
+      {
+        member.Gram = date;
+      }
+
+      var timer = _currentMeeting.Timer;
+      member = _members.Where(it => it.Name == timer).First();
+      newDate = member.Timer.AddMinutes(2); ;
+      bNewerDate = date.CompareTo(member.Timer.AddMinutes(2)) > 0;
+      if (member != null && bNewerDate)
+      {
+        member.Timer = date;
+      }
+
+      var ah = _currentMeeting.AhCounter;
+      member = _members.Where(it => it.Name == eval1).First();
+      newDate = member.Ah.AddMinutes(2); ;
+      bNewerDate = date.CompareTo(member.Ah.AddMinutes(2)) > 0;
+      if (member != null && bNewerDate)
+      {
+        member.Ah = date;
+      }
+
+      var quiz = _currentMeeting.QuizMaster;
+      if (!string.IsNullOrEmpty(quiz))
+      {
+        member = _members.Where(it => it.Name == quiz).First();
+        newDate = member.Quiz.AddMinutes(2); ;
+        bNewerDate = date.CompareTo(member.Quiz.AddMinutes(2)) > 0;
+        if (member != null && bNewerDate)
+        {
+          member.Quiz = date;
+        }
+      }
+
+      var video = _currentMeeting.Video;
+      if (!string.IsNullOrEmpty(video))
+      {
+        member = _members.Where(it => it.Name == video).First();
+        newDate = member.Video.AddMinutes(2); ;
+        bNewerDate = date.CompareTo(member.Video.AddMinutes(2)) > 0;
+        if (member != null && bNewerDate)
+        {
+          member.Video = date;
+        }
+      }
+
+      var hotseat = _currentMeeting.HotSeat;
+      if (!string.IsNullOrEmpty(hotseat))
+      {
+        member = _members.Where(it => it.Name == hotseat).First();
+        newDate = member.HotSeat.AddMinutes(2); ;
+        bNewerDate = date.CompareTo(member.HotSeat.AddMinutes(2)) > 0;
+        if (member != null && bNewerDate)
+        {
+          member.HotSeat = date;
+        }
+      }
+
+      var t = (MainViewModel)Application.Current.MainWindow.DataContext;
+      MembersViewModel members = (MembersViewModel)t.Tabs[1];
+      members.SaveMembers();
+
     }
 
     private bool _generateButtonVisibility = false;

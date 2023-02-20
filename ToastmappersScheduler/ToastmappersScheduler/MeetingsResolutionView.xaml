@@ -119,7 +119,7 @@
         <TextBlock Grid.Row="14" Grid.Column="0" Text="Table Topic Contestants"/>
         <StackPanel Grid.Row="14" Grid.Column="1" >
           <ComboBox Name="TTContestants_ComboBox" IsEditable="True" ItemsSource="{Binding TTContestantMembersList}" DropDownClosed="TTContestants_ComboBox_DropDownClosed"
-                    PreviewKeyDown="TTContestants_PreViewKeyDown"/>
+                    KeyDown="TTContestants_ComboBox_KeyDown"/>
           <ListBox ItemsSource="{Binding TTContestants}" Height="80"/>
         </StackPanel>
       </Grid>

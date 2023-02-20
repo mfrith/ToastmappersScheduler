@@ -116,12 +116,15 @@ namespace Toastmappers
     public void AddTTContestant(string name)
     {
       TTContestants.Add(name);
-      _ttcontestantmembers.Remove(_ttcontestantmembers.Single(it => it.Name == name));
       NotifyPropertyChanged(() => TTContestants);
+
+      //if (string.IsNullOrEmpty(_ttcontestantmembers.FirstOrDefault(it => it.Name == name).Name.ToString())
+
+       // _ttcontestantmembers.Remove(_ttcontestantmembers.Single(it => it.Name == name));
       NotifyPropertyChanged(() => TTContestantMembersList);
 
     }
-
+    
     private ObservableCollection<MemberViewModel> _ttcontestantmembers;
     public ObservableCollection<string> TTContestantMembersList
     {
