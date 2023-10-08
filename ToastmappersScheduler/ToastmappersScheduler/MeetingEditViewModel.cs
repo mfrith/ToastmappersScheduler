@@ -102,7 +102,14 @@ namespace Toastmappers
     public string Year { get; set; }
     public string WOTD { get; set; }
     public string Theme { get; set; }
-    public string TTWinner { get; set; }
+
+    private string _TTWinner = string.Empty;
+
+    public string TTWinner
+    {
+      get { return _TTWinner; }
+      set { _TTWinner = value; }
+    }
     private ObservableCollection<string> _ttcontestants;
     public ObservableCollection<string> TTContestants
     {
@@ -264,7 +271,7 @@ namespace Toastmappers
     //  return list;
     //}
 
-    public void Save()
+    public void Sync()
     {
       //System.IO.FileStream fileStream = new FileStream("C:\\Users\\mike\\Documents\\TI\\Meetings.dat", FileMode.Append, FileAccess.Write);
       //StreamWriter strmWriter = new StreamWriter(fileStream);

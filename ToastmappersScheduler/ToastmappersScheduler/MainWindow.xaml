@@ -499,7 +499,8 @@
                         <Button Width="50" Content="Clear" Click="Button_Click" IsEnabled="{Binding MemberSet}" />
                       </StackPanel>
                       <Calendar Name="MeetingsOutCalendar" SelectionMode="MultipleRange" DisplayDateStart="" SelectedDatesChanged="Calendar_SelectedDatesChanged"
-                                IsTodayHighlighted="False" IsEnabled="{Binding MemberSet}">
+                                IsTodayHighlighted="False" IsEnabled="{Binding MemberSet}" PreviewMouseUp="MeetingsOutCalendar_PreviewMouseUp"
+                                >
                       </Calendar>
 
 
@@ -514,7 +515,7 @@
 
               </StackPanel>
             </TabItem>
-            <TabItem Header="Role History" Padding="5">
+            <TabItem Header="Role History" Padding="5" HorizontalAlignment="Left" Width="84">
               <StackPanel Width="600" HorizontalAlignment="Left" Background="Transparent">
                 <!--<DockPanel HorizontalAlignment="Left" LastChildFill="False">-->
 
@@ -642,7 +643,7 @@
               <DatePicker DockPanel.Dock="Left" SelectedDate="{Binding MeetingDate, Mode=TwoWay}" Margin="20, 0,0,0" IsEnabled="{Binding IsGenerateForMonth}"/>
               <CheckBox DockPanel.Dock="Left" Margin="20,5,0,0" IsChecked="{Binding GenerateForMonth, Mode=TwoWay}" Content="Generate for the month"/>
               <CheckBox DockPanel.Dock="Left" Margin="20,5,0,0" IsChecked="{Binding GenerateForFriday, Mode=TwoWay}" Content="Generate for last Friday" IsEnabled="{Binding IsGenerateForMonth, Converter={StaticResource InverseBool}}"/>
-              <ComboBox DockPanel.Dock="Left" Margin="10,0,0,0" ItemsSource="{Binding Months}" SelectedIndex="0" SelectedItem="{Binding MonthToGenerateFor}"/>
+              <ComboBox DockPanel.Dock="Left" Margin="10,0,0,0" ItemsSource="{Binding Months}" SelectedIndex="0" SelectedItem="{Binding MonthToGenerateFor}" IsEnabled="{Binding IsGenerateForMonth, Converter={StaticResource InverseBool}}"/>
               <DatePicker DockPanel.Dock="Left" SelectedDate="{Binding MeetingDateMonth, Mode=TwoWay}" Margin="20, 0,0,0"
                         IsEnabled="{Binding IsGenerateForMonth, Converter={StaticResource InverseBool}}" Visibility="Collapsed"/>
             </DockPanel>

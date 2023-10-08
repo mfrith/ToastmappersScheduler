@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 
 namespace Toastmappers
@@ -140,7 +141,7 @@ namespace Toastmappers
       var f = meetings.Where(it => it.Resolved == false).ToList();
 
       List<MeetingModelBase> meetingsToResolve = new List<MeetingModelBase>();
- 
+
       foreach (MeetingModelBase mtg in f)
       {
 
@@ -265,6 +266,14 @@ namespace Toastmappers
     {
       MainViewModel a = (MainViewModel)this.DataContext;
       a.Backup();
+    }
+
+    private void MeetingsOutCalendar_PreviewMouseUp(object sender, MouseButtonEventArgs e)
+    {
+      if (Mouse.Captured is CalendarItem)
+      {
+        Mouse.Capture(null);
+      }
     }
   }
 
