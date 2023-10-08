@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-windows</TargetFramework>
+    <TargetFramework>net7.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
     <DebugType>embedded</DebugType>
@@ -10,6 +10,7 @@
     <UseCommonOutputDirectory>true</UseCommonOutputDirectory>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>true</AppendRuntimeIdentifierToOutputPath>
+    <ApplicationIcon>tm logo.ico</ApplicationIcon>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -23,6 +24,10 @@
   <ItemGroup>
     <None Remove="Resources\logo.png" />
     <None Remove="tm logo.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="tm logo.ico" />
   </ItemGroup>
 
   <ItemGroup>

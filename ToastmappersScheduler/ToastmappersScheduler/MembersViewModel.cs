@@ -25,14 +25,13 @@ namespace Toastmappers
     private ObservableCollection<MemberViewModel> _members = new ObservableCollection<MemberViewModel>();
     public ObservableCollection<MemberViewModel> Members
     {
-      get
-      { return _members; }
+      get => _members;
 
       set {; }
     }
 
     public ObservableCollection<MemberViewModel> PastMembers
-    { get { return _pastMembers; } }
+    { get => _pastMembers; }
 
     private ICommand _saveMembersCommand;
     public ICommand SaveMembersCmd
@@ -43,6 +42,64 @@ namespace Toastmappers
     public void SaveMembers()
     {
       Save();
+    }
+
+    public void Reload()
+    {
+      List<MemberModel> members = new List<MemberModel>();
+      using (StreamReader strmReader = new StreamReader(_home + "\\Data\\MembersStatus.json"))
+      {
+        var t = new List<MemberModel>();
+        string member;
+        while ((member = strmReader.ReadLine()) != null)
+        {
+          MemberModel bah = new MemberModel();
+          var a = bah.Deserialize(member);
+          if (a != null)
+            t.Add(a);
+        }
+
+        members = new List<MemberModel>(t);
+
+      }
+
+      List<MemberViewModel> mvm = new List<MemberViewModel>();
+      foreach (var m in members)
+      {
+        mvm.Add(new MemberViewModel(m));
+      }
+
+      mvm.Sort();
+      _members = new ObservableCollection<MemberViewModel>(mvm);
+
+      NotifyPropertyChanged(() => Members);
+
+      List<MemberModel> pastMembers = new List<MemberModel>();
+      using (StreamReader strmReader = new StreamReader(_home + "\\Data\\PastMembers.json"))
+      {
+        var pt = new List<MemberModel>();
+        string member;
+        while ((member = strmReader.ReadLine()) != null)
+        {
+          MemberModel bah = new MemberModel();
+          var a = bah.Deserialize(member);
+          if (a != null)
+            pt.Add(a);
+        }
+
+        pastMembers = new List<MemberModel>(pt);
+
+      }
+
+      List<MemberViewModel> pmvm = new List<MemberViewModel>();
+      foreach (var m in pastMembers)
+      {
+        pmvm.Add(new MemberViewModel(m));
+      }
+
+      _pastMembers = new ObservableCollection<MemberViewModel>(pmvm);
+      NotifyPropertyChanged(() => PastMembers);
+
     }
 
     //private ICommand _backupCommand;
@@ -129,11 +186,38 @@ namespace Toastmappers
       if (role == null)
         return;
 
+      //role = "Speaker2";
       var name = _mme.Name;
       MeetingsViewModel meetingsVM = (MeetingsViewModel)_mainViewModel.Tabs[2];
       var meetings = meetingsVM.Meetings;
-      var a = meetings.Where(it => it != null && it.MeetingType == 1 && it.GetType() != null && it.GetType().GetProperty(role) != null && 
-                             it.GetType().GetProperty(role).GetValue(it).ToString() == name).ToList();
+      List<MeetingModelBase> a;
+      if (role == "Speaker")
+      {
+        var ones = meetings.Where(it => it != null && it.MeetingType == 1 && it.GetType() != null && it.GetType().GetProperty("Speaker1") != null &&
+                           it.GetType().GetProperty("Speaker1").GetValue(it).ToString() == name).ToList();
+        var twos = meetings.Where(it => it != null && it.MeetingType == 1 && it.GetType() != null && it.GetType().GetProperty("Speaker2") != null &&
+                  it.GetType().GetProperty("Speaker2").GetValue(it).ToString() == name).ToList();
+
+        a = ones.Concat(twos).ToList();
+        //        List<MemberViewModel> SortedList = _members.OrderBy(o => o.Name).ToList();
+
+      }
+      else if (role == "Evaluator")
+      {
+        var ones = meetings.Where(it => it != null && it.MeetingType == 1 && it.GetType() != null && it.GetType().GetProperty("Evaluator1") != null &&
+                            it.GetType().GetProperty("Evaluator1").GetValue(it).ToString() == name).ToList();
+        var twos = meetings.Where(it => it != null && it.MeetingType == 1 && it.GetType() != null && it.GetType().GetProperty("Evaluator2") != null &&
+                  it.GetType().GetProperty("Evaluator2").GetValue(it).ToString() == name).ToList();
+        a = ones.Concat(twos).ToList();
+      }
+      else
+      {
+        //a = meetings.Where(it => it != null && it.MeetingType == 1 && it.GetType() != null && it.GetType().GetProperty(role) != null &&
+        //                   it.GetType().GetProperty(role).GetValue(it).ToString() == name).ToList();
+        a = meetings.Where(it => it != null && it.MeetingType == 1 && it.GetType() != null && it.GetType().GetProperty(role) != null &&
+                   it.GetType().GetProperty(role).GetValue(it) != null && it.GetType().GetProperty(role).GetValue(it).ToString() == name).ToList();
+      }
+
       MeetingModelBase mtg = null;
       DateTime date;
       if (a.Count < 1)
@@ -144,8 +228,17 @@ namespace Toastmappers
       }
       else
       {
-        mtg = a.OrderBy(it => it.DayOfMeeting).Last();
+        a = a.OrderBy(m => m.ID).ToList();
+        int mtgCount = 2;
+        mtg = a.OrderBy(it => it.ID).Last();
+        DateTime now = DateTime.Now;
         date = DateTime.ParseExact(mtg.DayOfMeeting, "MM-dd-yyyy", System.Globalization.CultureInfo.InvariantCulture);
+        while (date.CompareTo(now) > 0)
+        {
+          mtg = a[a.Count - mtgCount];
+          date = DateTime.ParseExact(mtg.DayOfMeeting, "MM-dd-yyyy", System.Globalization.CultureInfo.InvariantCulture);
+          mtgCount++;
+        }
         //_mme.GetType().GetProperty(role).SetValue(_mme, date, null);
       }
       //var meeting = meetings.Where(it => it.Toastmaster == name).ToList();
@@ -236,74 +329,75 @@ namespace Toastmappers
     // move these to class view model loading?
     public void Load()
     {
-      if (!Directory.Exists(_home + "\\Data"))
-        Directory.CreateDirectory(_home + "\\Data");
+      // needs to be in some initialization call
+      //if (!Directory.Exists(_home + "\\Data"))
+      //  Directory.CreateDirectory(_home + "\\Data");
 
-      if (!File.Exists(_home + "\\Data\\MembersStatus.json"))
-      {
-        FileStream fs;
-        fs = File.Create(_home + "\\Data\\MembersStatusjson");
-        fs.Close();
-      }
+      //if (!File.Exists(_home + "\\Data\\MembersStatus.json"))
+      //{
+      //  FileStream fs;
+      //  fs = File.Create(_home + "\\Data\\MembersStatusjson");
+      //  fs.Close();
+      //}
 
-      List<MemberModel> members = new List<MemberModel>();
-      using (StreamReader strmReader = new StreamReader(_home + "\\Data\\MembersStatus.json"))
-      {
-        var t = new List<MemberModel>();
-        string member;
-        while ((member = strmReader.ReadLine()) != null)
-        {
-          MemberModel bah = new MemberModel();
-          var a = bah.Deserialize(member);
-          if (a != null)
-            t.Add(a);
-        }
+      //if (!File.Exists(_home + "\\Data\\PastMembers.json"))
+      //{
+      //  FileStream fs;
+      //  fs = File.Create(_home + "\\Data\\PastMembers");
+      //  fs.Close();
+      //}
 
-        members = new List<MemberModel>(t);
+      //List<MemberModel> members = new List<MemberModel>();
+      //using (StreamReader strmReader = new StreamReader(_home + "\\Data\\MembersStatus.json"))
+      //{
+      //  var t = new List<MemberModel>();
+      //  string member;
+      //  while ((member = strmReader.ReadLine()) != null)
+      //  {
+      //    MemberModel bah = new MemberModel();
+      //    var a = bah.Deserialize(member);
+      //    if (a != null)
+      //      t.Add(a);
+      //  }
 
-      }
+      //  members = new List<MemberModel>(t);
 
-      List<MemberViewModel> mvm = new List<MemberViewModel>();
-      foreach (var m in members)
-      {
-        mvm.Add(new MemberViewModel(m));
-      }
+      //}
 
-      mvm.Sort();
-      _members = new ObservableCollection<MemberViewModel>(mvm);
+      //List<MemberViewModel> mvm = new List<MemberViewModel>();
+      //foreach (var m in members)
+      //{
+      //  mvm.Add(new MemberViewModel(m));
+      //}
 
-      if (!File.Exists(_home + "\\Data\\PastMembers.json"))
-      {
-        FileStream fs;
-        fs = File.Create(_home + "\\Data\\PastMembers");
-        fs.Close();
-      }
+      //mvm.Sort();
+      //_members = new ObservableCollection<MemberViewModel>(mvm);
 
-      List<MemberModel> pastMembers = new List<MemberModel>();
-      using (StreamReader strmReader = new StreamReader(_home + "\\Data\\PastMembers.json"))
-      {
-        var pt = new List<MemberModel>();
-        string member;
-        while ((member = strmReader.ReadLine()) != null)
-        {
-          MemberModel bah = new MemberModel();
-          var a = bah.Deserialize(member);
-          if (a != null)
-            pt.Add(a);
-        }
+      //List<MemberModel> pastMembers = new List<MemberModel>();
+      //using (StreamReader strmReader = new StreamReader(_home + "\\Data\\PastMembers.json"))
+      //{
+      //  var pt = new List<MemberModel>();
+      //  string member;
+      //  while ((member = strmReader.ReadLine()) != null)
+      //  {
+      //    MemberModel bah = new MemberModel();
+      //    var a = bah.Deserialize(member);
+      //    if (a != null)
+      //      pt.Add(a);
+      //  }
 
-        pastMembers = new List<MemberModel>(pt);
+      //  pastMembers = new List<MemberModel>(pt);
 
-      }
+      //}
 
-      List<MemberViewModel> pmvm = new List<MemberViewModel>();
-      foreach (var m in pastMembers)
-      {
-        pmvm.Add(new MemberViewModel(m));
-      }
+      //List<MemberViewModel> pmvm = new List<MemberViewModel>();
+      //foreach (var m in pastMembers)
+      //{
+      //  pmvm.Add(new MemberViewModel(m));
+      //}
 
-      _pastMembers = new ObservableCollection<MemberViewModel>(pmvm);
-
+      //_pastMembers = new ObservableCollection<MemberViewModel>(pmvm);
+      Reload();
     }
     private ICommand _newMemberCmd;
     public ICommand NewMemberCmd
@@ -366,8 +460,13 @@ namespace Toastmappers
       {
         // write out all objects(members)
         string member = string.Empty;
-        //List<MemberModel> SortedList = _members.OrderBy(o => o.Name).ToList();
-        _members.ToList().Sort((x, y) => x.Name.CompareTo(y.Name));
+        List<MemberViewModel> SortedList = _members.OrderBy(o => o.Name).ToList();
+        //_members.Clear();
+        //_members = new ObservableCollection<MemberViewModel>(SortedList);
+
+        //var sortList = new List<MemberViewModel>(_members);
+        //sortList.Sort();
+        //_members.ToList().Sort((x, y) => x.Name.CompareTo(y.Name));
         foreach (var m in _members)
         {
           // need logic to set vm properties into the model before saving, and then need to have the vm not have a reference to the model in the first place
@@ -386,8 +485,8 @@ namespace Toastmappers
         List<MemberViewModel> pastmembers = new List<MemberViewModel>(_pastMembers);
         pastmembers.Sort();
         //_pastMembers.ToList().Sort((x, y) => x.Name.CompareTo(y.Name));
-        _pastMembers.Clear();
-        _pastMembers = new ObservableCollection<MemberViewModel>(pastmembers);
+        //_pastMembers.Clear();
+        //_pastMembers = new ObservableCollection<MemberViewModel>(pastmembers);
 
         foreach (var m in _pastMembers)
         {
@@ -398,8 +497,14 @@ namespace Toastmappers
         }
       }
 
+      //Reload();
+      // update vms to latest list
+      NotifyPropertyChanged(() => Members);
+      NotifyPropertyChanged(() => PastMembers);
+
+
     }
-    
+
     private void SaveMemberInfo(MemberViewModel m)
     {
       m.Member.Name = m.Name;

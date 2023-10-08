@@ -106,5 +106,8 @@ namespace Toastmappers
       var zipname = Path.ChangeExtension(Path.Combine(path, a), "zip");
       ZipFile.CreateFromDirectory(Path.Combine(_home, "Data"), zipname);
     }
+
+    //public void Save(MeetingModelBase meeting)
+    //{ }
   }
 }

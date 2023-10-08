@@ -131,6 +131,13 @@ namespace Toastmappers
       meetingModel = new MeetingModelRegular();
     }
 
+    public MeetingModelRegularVM(DateTime meetingDate, ObservableCollection<MemberViewModel> members)
+    {
+      DateOfMeeting = meetingDate;
+      _members = members;
+      meetingModel = new MeetingModelRegular();
+    }
+
     public List<MeetingModelRegular> GenerateForMonth(bool generateForFriday, int nextMeetingId, DateTime lastMeeting)
     {
 
@@ -491,7 +498,7 @@ namespace Toastmappers
           meetings.Add(fifthWednesday);
       }
 
-      if (month == 12) //december
+      if (month == 12 || month == 10) //december
       {
         // account for Christmas
         meetings.Add(firstWednesday);
@@ -570,7 +577,11 @@ namespace Toastmappers
       //List<DateTime> meetingDates = GetMonthlyMeetings(new DateTime(2020, 3, 4), true);
       // get all speakers first, then build up each meeting, grabbing roles one at a time.
       List<MemberViewModel> members = new List<MemberViewModel>(_members);
+      var kerri = members.Where(it => it.Member.Name == "Kerri Rasmussen").First();
+      var liz = members.Where(it => it.Member.Name == "Liz Graham").First();
 
+      members.Remove(kerri);
+      members.Remove(liz);
       List<string> snames = new List<string>();
       int i = 0;
       List<MeetingModelRegular> meetings = new List<MeetingModelRegular>();
@@ -606,6 +617,8 @@ namespace Toastmappers
           members.Add(im);
       }
 
+      members.Add(kerri);
+      members.Add(liz);
       i = 0;
       // add the other roles
       foreach (var m in meetings)

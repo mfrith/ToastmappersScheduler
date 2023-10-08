@@ -15,7 +15,7 @@
       </DockPanel>
       <DockPanel>
         <TextBlock Text="MemberID"></TextBlock>
-        <TextBox Margin="10,0,0,0" Text="{Binding NemberID}"></TextBox>
+        <TextBox Margin="10,0,0,0" Text="{Binding MemberID}"></TextBox>
       </DockPanel>
       <CheckBox Content="Is Current" IsChecked="{Binding IsCurrent, Mode=TwoWay}"/>
       <CheckBox Content="Can be Toastmaster" IsChecked="{Binding CanBeToastmaster, Mode=TwoWay}"/>
