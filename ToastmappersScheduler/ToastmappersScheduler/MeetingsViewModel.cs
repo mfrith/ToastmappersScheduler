@@ -1,4 +1,5 @@
 ﻿
+using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -92,13 +93,21 @@ namespace Toastmappers
       }
     }
     //ItemsSource="{Binding Months}" SelectedIndex="0" SelectedItem="{Binding MonthToGenerate}"/>
-    private string _monthToGenerateFor = "January";
+    private string _monthToGenerateFor;// = "January";
 
     private List<string> _months = new List<string>(new string[] { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" });
 
     public string MonthToGenerateFor
     {
-      get { return _monthToGenerateFor; }
+      get { if (string.IsNullOrEmpty(_monthToGenerateFor))
+            {
+          var dtNow = DateTime.Now;
+          var monthNow = dtNow.Month;
+          if (monthNow == 12) monthNow = 0;
+          _monthToGenerateFor = _months[monthNow];
+        }
+        return _monthToGenerateFor;
+      }
       set { _monthToGenerateFor = value; }
     }
     public List<string> Months
@@ -345,6 +354,16 @@ namespace Toastmappers
         // write them out when okayed, then show the next one
         _newMeeting = new MeetingModelRegularVM(temporarymemberList, _home);
         _newMeeting.Month = MonthToGenerateFor;
+        var yearGen = (string month) => { 
+          var now = DateTime.Now;
+          var year = now.Year;
+          if (month == "January")
+            year++;
+
+          return year.ToString();
+          };
+
+        _newMeeting.Year = yearGen(MonthToGenerateFor);
         var w = _meetings.Last();
         list = _newMeeting.GenerateForMonth(GenerateForFriday, (_meetings[_meetings.Count() - 1].ID) + 1, DateTime.ParseExact(_meetings.Last().DayOfMeeting, "MM-dd-yyyy", System.Globalization.CultureInfo.InvariantCulture));
 
@@ -687,11 +706,11 @@ namespace Toastmappers
 
       // for each meeting role, check if that's newer than the current member status
       var tm = _currentMeeting.Toastmaster;
-      MemberViewModel member = null;
+      MemberViewModel? member = null;
       DateTime newDate;
       bool bNewerDate;
 
-      if (tm != null)
+      if (tm != null && !string.IsNullOrEmpty(tm))
       {
         member = _members.Where(it => it.Name == tm).First();
         newDate = member.Toastmaster.AddMinutes(2);

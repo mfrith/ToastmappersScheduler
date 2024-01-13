@@ -689,7 +689,7 @@ namespace Toastmappers
 
         //var toastmaster = members.Where(a => a?.CanBeToastmaster == true)?.OrderBy(a => a?.Toastmaster)?.First();
         var toastmasters = members.Where(a => a.CanBeToastmaster == true);
-        MemberViewModel toastmaster = null;
+        MemberViewModel? toastmaster = null;
         if (toastmasters.Count() > 0)
         {
           toastmaster = toastmasters?.OrderBy(a => a.Toastmaster).First();
