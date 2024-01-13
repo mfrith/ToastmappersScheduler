@@ -345,7 +345,7 @@
 
         </Grid>
       </TabItem>
-      <TabItem Name="Members" DataContext="{Binding Tabs[1]}">
+      <TabItem Name="Members" DataContext="{Binding Tabs[1]}" Height="38" VerticalAlignment="Top">
         <TabItem.Header>
           <TextBlock Text="Members" FontSize="20"/>
         </TabItem.Header>
@@ -810,6 +810,13 @@
         <!--<StackPanel>
 
         </StackPanel>-->
+      </TabItem>
+      
+      <TabItem Name="Test">
+        <TabItem.Header>
+          <TextBlock Text="Test" FontSize="20"/>
+        </TabItem.Header>
+        
       </TabItem>
     </TabControl>
   </DockPanel>
