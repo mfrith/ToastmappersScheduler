@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Microsoft.Windows.Input;
+using System.Windows.Input;
+using System;
 
 namespace Toastmappers
 {
@@ -161,6 +164,53 @@ namespace Toastmappers
 
     }
 
+    private ICommand _deleteGuestCommand;
+    public ICommand DeleteGuestCmd
+    {
+      get { return _deleteGuestCommand ?? (_deleteGuestCommand = new RelayCommand((p) => DeleteGuest(p), () => true)); }
+    }
+
+    private void DeleteGuest(object item)
+    {
+      // need to create item or pass name to delete here
+      // which list are we in?
+      var tr = item.ToString();
+      if (string.IsNullOrEmpty(tr))
+        return;
+      Guests.Remove(tr);
+    }
+
+    private ICommand _deleteAttendeeCommand;
+    public ICommand DeleteAttendeeCmd
+    {
+      get { return _deleteAttendeeCommand ?? (_deleteAttendeeCommand = new RelayCommand((p) => DeleteAttendee(p), () => true)); }
+    }
+
+    private void DeleteAttendee(object item)
+    {
+      // need to create item or pass name to delete here
+      // which list are we in?
+      var tr = item.ToString();
+      if (string.IsNullOrEmpty(tr))
+        return;
+      Attendees.Remove(tr);
+    }
+
+    private ICommand _deleteContestantCommand;
+    public ICommand DeleteContestantCmd
+    {
+      get { return _deleteContestantCommand ?? (_deleteContestantCommand = new RelayCommand((p) => DeleteContestant(p), () => true)); }
+    }
+
+    private void DeleteContestant(object item)
+    {
+      // need to create item or pass name to delete here
+      // which list are we in?
+      var tr = item.ToString();
+      if (string.IsNullOrEmpty(tr))
+        return;
+      TTContestants.Remove(tr);
+    }
     public MeetingEditViewModel()
     { }
 

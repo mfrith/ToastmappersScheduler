@@ -11,6 +11,8 @@ namespace Toastmappers
   {
     private Action _action;
     private Func<bool> _canExecute;
+    private Action _execute;
+    readonly Action<object> _executeWithParam;
 
     /// <summary>
     /// Creates instance of the command handler
@@ -44,48 +46,51 @@ namespace Toastmappers
 
     public void Execute(object parameter)
     {
-      _action();
+      if (_action != null)
+        _action();
+      else if (_executeWithParam != null)
+        _executeWithParam(parameter);
     }
+
+    //public class RelayCommand : ICommand
+    //{
+    //  readonly Action<object> _execute;
+    //  //readonly Action<object> _executeWithParam;
+    //  readonly Func<bool> canExecute;
+    //  readonly Action _executeNoParam;
+    //  //readonly Func<Task> _executeTask;
+    //  private event EventHandler CanExecuteChangedInternal;
+
+    //  public RelayCommand(Action<object> execute)
+    //    : this(execute, DefaultCanExecute)
+    //  {
+
+    //  }
+
+    //  public RelayCommand(Action execute)
+    //  {
+    //    if (execute == null)
+    //      throw new ArgumentNullException("execute");
+
+    //    _executeNoParam = execute;
+    //  }
+    public RelayCommand(Action<object> execute, Func<bool> canExecute)
+    {
+      if (execute == null)
+      {
+        throw new ArgumentNullException("execute");
+      }
+
+      if (canExecute == null)
+      {
+        throw new ArgumentNullException("canExecute");
+      }
+
+      this._executeWithParam = execute;
+      this._canExecute = canExecute;
+    }
+
   }
-  //public class RelayCommand : ICommand
-  //{
-  //  readonly Action<object> _execute;
-  //  //readonly Action<object> _executeWithParam;
-  //  readonly Predicate<object> canExecute;
-  //  readonly Action _executeNoParam;
-  //  //readonly Func<Task> _executeTask;
-  //  private event EventHandler CanExecuteChangedInternal;
-
-  //  public RelayCommand(Action<object> execute)
-  //    : this(execute, DefaultCanExecute)
-  //  {
-
-  //  }
-
-  //  public RelayCommand(Action execute)
-  //  {
-  //    if (execute == null)
-  //      throw new ArgumentNullException("execute");
-
-  //    _executeNoParam = execute;
-  //  }
-  //  public RelayCommand(Action<object> execute, Predicate<object> canExecute)
-  //  {
-  //    if (execute == null)
-  //    {
-  //      throw new ArgumentNullException("execute");
-  //    }
-
-  //    if (canExecute == null)
-  //    {
-  //      throw new ArgumentNullException("canExecute");
-  //    }
-
-  //    this._execute = execute;
-  //    this.canExecute = canExecute;
-  //  }
-
-
 
   //  public event EventHandler CanExecuteChanged
   //  {

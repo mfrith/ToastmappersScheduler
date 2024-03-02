@@ -41,7 +41,25 @@
         <StackPanel Grid.Row="4" Grid.ColumnSpan="2">
           <TextBlock  Text="Attendees" HorizontalAlignment="Center"/>
           <ComboBox Name="AttendeesCombo" ItemsSource="{Binding AttendeesMembersList}" DropDownClosed="ComboBox_DropDownClosed" />
-          <ListBox ItemsSource="{Binding Attendees}" />
+          <ListBox ItemsSource="{Binding Attendees}" >
+            <ListBox.ItemTemplate >
+              <DataTemplate>
+                <Border BorderBrush="Black" BorderThickness="1" Margin="1">
+                  <StackPanel Orientation="Horizontal">
+                    <!--<Button x:Name="Delete" Width="20" Visibility="Hidden" />-->
+                    <Button x:Name="Delete" FontFamily="Segoe MDL2 Assets" FontSize="18" Content="&#xE74D;" HorizontalAlignment="Left"  VerticalAlignment="Top" Visibility="Hidden"
+                       CommandParameter="{Binding}" Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBox}}, Path=DataContext.DeleteAttendeeCmd}"/>
+                    <TextBlock Text="{Binding }" Width="120" VerticalAlignment="Center"/>
+                  </StackPanel>
+                </Border>
+                <DataTemplate.Triggers>
+                  <DataTrigger Binding="{Binding IsMouseOver,RelativeSource={RelativeSource TemplatedParent}}" Value="True">
+                    <Setter Property="Visibility" TargetName="Delete" Value="Visible"/>
+                  </DataTrigger>
+                </DataTemplate.Triggers>
+              </DataTemplate>
+            </ListBox.ItemTemplate>
+          </ListBox>
         </StackPanel>
         <StackPanel Grid.Row="5" Grid.ColumnSpan="2">
           <TextBlock Text="Guests" HorizontalAlignment="Center"/>
@@ -51,7 +69,25 @@
             </Button>-->
             <TextBox Name="GuestTextBox" KeyDown="GuestTextBox_KeyDown"/>
           <!--</DockPanel>-->
-          <ListBox ItemsSource="{Binding Guests}" />
+          <ListBox ItemsSource="{Binding Guests}" >
+            <ListBox.ItemTemplate >
+              <DataTemplate>
+                <Border BorderBrush="Black" BorderThickness="1" Margin="1">
+                  <StackPanel Orientation="Horizontal">
+                    <!--<Button x:Name="Delete" Width="20" Visibility="Hidden" />-->
+                    <Button x:Name="Delete" FontFamily="Segoe MDL2 Assets" FontSize="18" Content="&#xE74D;" HorizontalAlignment="Left"  VerticalAlignment="Top" Visibility="Hidden"
+                        CommandParameter="{Binding}" Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBox}}, Path=DataContext.DeleteGuestCmd}"/>
+                    <TextBlock Text="{Binding }" Width="120" VerticalAlignment="Center"/>
+                  </StackPanel>
+                </Border>
+                <DataTemplate.Triggers>
+                  <DataTrigger Binding="{Binding IsMouseOver,RelativeSource={RelativeSource TemplatedParent}}" Value="True">
+                    <Setter Property="Visibility" TargetName="Delete" Value="Visible"/>
+                  </DataTrigger>
+                </DataTemplate.Triggers>
+              </DataTemplate>
+            </ListBox.ItemTemplate>
+          </ListBox>
         </StackPanel>
 
         <!--<StackPanel>
@@ -120,7 +156,25 @@
         <StackPanel Grid.Row="14" Grid.Column="1" >
           <ComboBox Name="TTContestants_ComboBox" IsEditable="True" ItemsSource="{Binding TTContestantMembersList}" DropDownClosed="TTContestants_ComboBox_DropDownClosed"
                     KeyDown="TTContestants_ComboBox_KeyDown"/>
-          <ListBox ItemsSource="{Binding TTContestants}" Height="80"/>
+          <ListBox ItemsSource="{Binding TTContestants}" Height="100">
+            <ListBox.ItemTemplate >
+              <DataTemplate>
+                <Border BorderBrush="Black" BorderThickness="1" Margin="1">
+                  <StackPanel Orientation="Horizontal">
+                    <!--<Button x:Name="Delete" Width="20" Visibility="Hidden" />-->
+                    <Button x:Name="Delete" FontFamily="Segoe MDL2 Assets" FontSize="18" Content="&#xE74D;" HorizontalAlignment="Left"  VerticalAlignment="Top" Visibility="Hidden"
+                        CommandParameter="{Binding}" Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBox}}, Path=DataContext.DeleteContestantCmd}"/>
+                    <TextBlock Text="{Binding }" Width="120" VerticalAlignment="Center"/>
+                  </StackPanel>
+                </Border>
+                <DataTemplate.Triggers>
+                  <DataTrigger Binding="{Binding IsMouseOver,RelativeSource={RelativeSource TemplatedParent}}" Value="True">
+                    <Setter Property="Visibility" TargetName="Delete" Value="Visible"/>
+                  </DataTrigger>
+                </DataTemplate.Triggers>
+              </DataTemplate>
+            </ListBox.ItemTemplate>
+          </ListBox>
         </StackPanel>
       </Grid>
     </DataTemplate>
