@@ -18,6 +18,33 @@
     <local:MeetingTemplateSelector x:Key="meetingTemplateSelector"/>
     <BooleanToVisibilityConverter x:Key="Bool2Vis" />
     <local:InverseBoolConverter x:Key="InverseBool" />
+    <!--<Style x:Key="Style1" TargetType="{x:Type ListBoxItem}">
+      <Setter Property="ContentTemplate">
+        <Setter.Value>
+          <DataTemplate>
+            <Border BorderBrush="Black" BorderThickness="1" Margin="1">
+              <StackPanel Orientation="Horizontal">
+                -->
+    <!--<Button x:Name="Delete" Width="20" Visibility="Hidden" />-->
+    <!--
+                <Button x:Name="Delete" FontFamily="Segoe MDL2 Assets" FontSize="18" Content="&#xE74D;" HorizontalAlignment="Left"  VerticalAlignment="Top" Visibility="Hidden"
+                        CommandParameter="{Binding}" Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBox}}, Path=DataContext.DeleteCmd}"/>
+                <TextBlock Text="{Binding }" Width="120" VerticalAlignment="Center"/>
+              </StackPanel>
+            </Border>
+            <DataTemplate.Triggers>
+              <DataTrigger Binding="{Binding IsMouseOver,RelativeSource={RelativeSource TemplatedParent}}" Value="True">
+                <Setter Property="Visibility" TargetName="Delete" Value="Visible"/>
+              </DataTrigger>
+            </DataTemplate.Triggers>
+          </DataTemplate>
+        </Setter.Value>
+      </Setter>
+    </Style>
+    <Style x:Key="Style2" TargetType="ListBoxItem" BasedOn="{StaticResource Style1}"/>-->
+    <DataTemplate x:Key="AttendeeTemplate">
+      <TextBlock Text="{Binding }"/>
+    </DataTemplate>
     <DataTemplate x:Key="FirstThreeTemplate">
       <Grid Margin="5">
         <Grid.ColumnDefinitions>
@@ -40,7 +67,25 @@
         <StackPanel Grid.Row="3" Grid.ColumnSpan="2">
           <TextBlock  Text="Attendees" HorizontalAlignment="Center"/>
           <ComboBox Name="AttendeesCombo" ItemsSource="{Binding AttendeesMembersList}" DropDownClosed="ComboBox_DropDownClosed" />
-          <ListBox ItemsSource="{Binding Attendees}" />
+          <ListBox ItemsSource="{Binding Attendees}" >
+            <ListBox.ItemTemplate >
+              <DataTemplate>
+                <Border BorderBrush="Black" BorderThickness="1" Margin="1">
+                  <StackPanel Orientation="Horizontal">
+                    <!--<Button x:Name="Delete" Width="20" Visibility="Hidden" />-->
+                    <Button x:Name="Delete" FontFamily="Segoe MDL2 Assets" FontSize="18" Content="&#xE74D;" HorizontalAlignment="Left"  VerticalAlignment="Top" Visibility="Hidden"
+                        CommandParameter="{Binding}" Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBox}}, Path=DataContext.DeleteAttendeeCmd}"/>
+                    <TextBlock Text="{Binding }" Width="120" VerticalAlignment="Center"/>
+                  </StackPanel>
+                </Border>
+                <DataTemplate.Triggers>
+                  <DataTrigger Binding="{Binding IsMouseOver,RelativeSource={RelativeSource TemplatedParent}}" Value="True">
+                    <Setter Property="Visibility" TargetName="Delete" Value="Visible"/>
+                  </DataTrigger>
+                </DataTemplate.Triggers>
+              </DataTemplate>
+            </ListBox.ItemTemplate>
+          </ListBox>
         </StackPanel>
         <StackPanel Grid.Row="4" Grid.ColumnSpan="2">
           <TextBlock Text="Guests" HorizontalAlignment="Center"/>
@@ -50,7 +95,25 @@
             </Button>-->
           <TextBox Name="GuestTextBox"/>
           <!--</DockPanel>-->
-          <ListBox ItemsSource="{Binding Guests}" />
+          <ListBox ItemsSource="{Binding Guests}" >
+            <ListBox.ItemTemplate >
+              <DataTemplate>
+                <Border BorderBrush="Black" BorderThickness="1" Margin="1">
+                  <StackPanel Orientation="Horizontal">
+                    <!--<Button x:Name="Delete" Width="20" Visibility="Hidden" />-->
+                    <Button x:Name="Delete" FontFamily="Segoe MDL2 Assets" FontSize="18" Content="&#xE74D;" HorizontalAlignment="Left"  VerticalAlignment="Top" Visibility="Hidden"
+                        CommandParameter="{Binding}" Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBox}}, Path=DataContext.DeleteGuestCmd}"/>
+                    <TextBlock Text="{Binding }" Width="120" VerticalAlignment="Center"/>
+                  </StackPanel>
+                </Border>
+                <DataTemplate.Triggers>
+                  <DataTrigger Binding="{Binding IsMouseOver,RelativeSource={RelativeSource TemplatedParent}}" Value="True">
+                    <Setter Property="Visibility" TargetName="Delete" Value="Visible"/>
+                  </DataTrigger>
+                </DataTemplate.Triggers>
+              </DataTemplate>
+            </ListBox.ItemTemplate>
+          </ListBox>
         </StackPanel>
         <!--<StackPanel>
         <TextBlock Text="Meeting date"/>
@@ -112,12 +175,32 @@
         <TextBlock Grid.Row="12" Grid.Column="0" Text="Hot Seat"/>
         <ComboBox Grid.Row="12" Grid.Column="1" ItemsSource="{Binding MembersList}"  SelectedValue="{Binding HotSeat}" />
         <TextBlock Grid.Row="13" Grid.Column="0" Text="Table Topics Winner"/>
-        <ComboBox Grid.Row="13" Grid.Column="1" Name="TTWinner_Combobox" ItemsSource="{Binding MembersList}" SelectedValue="{Binding TTWinner}" IsEditable="True" />
+        <ComboBox Grid.Row="13" Grid.Column="1" Name="TTWinner_Combobox" ItemsSource="{Binding MembersList}" SelectedValue="{Binding TTWinner}" IsEditable="True" 
+                  Text="{Binding TTWinner, Mode=TwoWay}"/>
         <TextBlock Grid.Row="14" Grid.Column="0" Text="Table Topic Contestants"/>
         <StackPanel Grid.Row="14" Grid.Column="1" >
           <!--<ComboBox Name="TTContestants_ComboBox" IsEditable="True" ItemsSource="{Binding TTContestantMembersList}" DropDownClosed="TTContestants_ComboBox_DropDownClosed"/>-->
-          <ListBox ItemsSource="{Binding TTContestants}" Height="100"/>
-        </StackPanel>      </Grid>
+          <ListBox ItemsSource="{Binding TTContestants}" Height="100">
+            <ListBox.ItemTemplate >
+              <DataTemplate>
+                <Border BorderBrush="Black" BorderThickness="1" Margin="1">
+                  <StackPanel Orientation="Horizontal">
+                    <!--<Button x:Name="Delete" Width="20" Visibility="Hidden" />-->
+                    <Button x:Name="Delete" FontFamily="Segoe MDL2 Assets" FontSize="18" Content="&#xE74D;" HorizontalAlignment="Left"  VerticalAlignment="Top" Visibility="Hidden"
+                        CommandParameter="{Binding}" Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBox}}, Path=DataContext.DeleteContestantCmd}"/>
+                    <TextBlock Text="{Binding }" Width="120" VerticalAlignment="Center"/>
+                  </StackPanel>
+                </Border>
+                <DataTemplate.Triggers>
+                  <DataTrigger Binding="{Binding IsMouseOver,RelativeSource={RelativeSource TemplatedParent}}" Value="True">
+                    <Setter Property="Visibility" TargetName="Delete" Value="Visible"/>
+                  </DataTrigger>
+                </DataTemplate.Triggers>
+              </DataTemplate>
+            </ListBox.ItemTemplate>
+          </ListBox>
+        </StackPanel>
+      </Grid>
     </DataTemplate>
     <!--<DataTemplate x:Key="RegularTemplate">
       <DataGrid ItemsSource="{Binding Meetings}" AutoGenerateColumns="False" >
@@ -766,57 +849,57 @@
               <ColumnDefinition/>
             </Grid.ColumnDefinitions>
 
-            
+
             <StackPanel>
-            <DockPanel HorizontalAlignment="Left" LastChildFill="False">
-              <TextBlock Text="Member" Margin="10" FontSize="14"/>
-              <ComboBox Name="Foo" Margin="10" Width="150" Height="25" HorizontalAlignment="Left" 
+              <DockPanel HorizontalAlignment="Left" LastChildFill="False">
+                <TextBlock Text="Member" Margin="10" FontSize="14"/>
+                <ComboBox Name="Foo" Margin="10" Width="150" Height="25" HorizontalAlignment="Left" 
                     ItemsSource="{Binding Members}" DisplayMemberPath="Name" 
                       SelectedValue="{Binding SetMemberRoleStatus}" />
-            </DockPanel>
-            <CheckBox Content="Toastmaster" IsChecked="{Binding Toastmaster}"/>
-            <CheckBox Content="Speaker" IsChecked="{Binding Speaker}" />
-            <CheckBox Content="Evaluator" IsChecked="{Binding Evaluator}"/>
-            <CheckBox Content="General Evaluator" IsChecked="{Binding GeneralEvaluator}"/>
-            <CheckBox Content="Table Topics Master" IsChecked="{Binding TableTopics}"/>
-            <CheckBox Content="Ah Counter" IsChecked="{Binding AhCounter}"/>
-            <CheckBox Content="Timer" IsChecked="{Binding Timer}"/>
-            <CheckBox Content="Grammarian" IsChecked="{Binding Grammarian}"/>
-            <CheckBox Content="Quiz Master" IsChecked="{Binding QuizMaster}"/>
-            <CheckBox Content="Videographer" IsChecked="{Binding Video}"/>
-            <CheckBox Content="Hot Seat" IsChecked="{Binding HotSeat}"/>
+              </DockPanel>
+              <CheckBox Content="Toastmaster" IsChecked="{Binding Toastmaster}"/>
+              <CheckBox Content="Speaker" IsChecked="{Binding Speaker}" />
+              <CheckBox Content="Evaluator" IsChecked="{Binding Evaluator}"/>
+              <CheckBox Content="General Evaluator" IsChecked="{Binding GeneralEvaluator}"/>
+              <CheckBox Content="Table Topics Master" IsChecked="{Binding TableTopics}"/>
+              <CheckBox Content="Ah Counter" IsChecked="{Binding AhCounter}"/>
+              <CheckBox Content="Timer" IsChecked="{Binding Timer}"/>
+              <CheckBox Content="Grammarian" IsChecked="{Binding Grammarian}"/>
+              <CheckBox Content="Quiz Master" IsChecked="{Binding QuizMaster}"/>
+              <CheckBox Content="Videographer" IsChecked="{Binding Video}"/>
+              <CheckBox Content="Hot Seat" IsChecked="{Binding HotSeat}"/>
 
-            <Button Margin="20,10,0,0" HorizontalAlignment="Left" Width="35" Content="Find" Command="{Binding FindPastRolesCmd}"/>
-          </StackPanel>
+              <Button Margin="20,10,0,0" HorizontalAlignment="Left" Width="35" Content="Find" Command="{Binding FindPastRolesCmd}"/>
+            </StackPanel>
             <ListBox Grid.Column="1" ItemsSource="{Binding FindResults}">
               <ListBox.ItemTemplate>
                 <DataTemplate>
-                   <Expander Grid.Column="1" Header="{Binding Item1}" >
+                  <Expander Grid.Column="1" Header="{Binding Item1}" >
                     <ListBox Height="100" ItemsSource="{Binding Item2}"/>
-                  </Expander>                 
+                  </Expander>
                 </DataTemplate>
               </ListBox.ItemTemplate>
             </ListBox>
 
             <!--<TreeView Margin="10" Grid.Column="1" ItemsSource="{Binding Results}" >-->
-             
+
             <!--</TreeView>-->
           </Grid>
           <DockPanel HorizontalAlignment="Left" LastChildFill="False">
             <Button Margin="10" Width="130" Height="25" HorizontalAlignment="Left" Command="{Binding GenerateReportCmd}" Content="Generate Schedule"/>
-          </DockPanel> 
+          </DockPanel>
         </StackPanel>
 
         <!--<StackPanel>
 
         </StackPanel>-->
       </TabItem>
-      
+
       <TabItem Name="Test">
         <TabItem.Header>
           <TextBlock Text="Test" FontSize="20"/>
         </TabItem.Header>
-        
+
       </TabItem>
     </TabControl>
   </DockPanel>
