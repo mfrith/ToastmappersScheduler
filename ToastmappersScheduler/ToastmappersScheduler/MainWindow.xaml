@@ -269,13 +269,13 @@
       <CheckBox Content="Is Current" IsChecked="{Binding IsCurrent, Mode=TwoWay}"/>-->
       </StackPanel>
     </DataTemplate>
-    <Style x:Key="MentorListStyle" TargetType="{x:Type ListBoxItem}">
+    <!--<Style x:Key="MentorListStyle" TargetType="{x:Type ListBoxItem}">
       <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
       <Setter Property="VerticalContentAlignment" Value="Stretch"/>
       <Setter Property="IsSelected" Value="{Binding Mode=TwoWay, Path=IsSelected}"/>
-      <!--Setter Property="FocusManager.FocusedElement" Value="{Binding RelativeSource={RelativeSource Self}}"/-->
+      --><!--Setter Property="FocusManager.FocusedElement" Value="{Binding RelativeSource={RelativeSource Self}}"/--><!--
       <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
-      <!--<EventSetter Event="PreviewMouseWheel" Handler="HandlePreviewMouseWheel"/>-->
+      --><!--<EventSetter Event="PreviewMouseWheel" Handler="HandlePreviewMouseWheel"/>-->
       <!--<Setter Property="Template">
         <Setter.Value>
           <ControlTemplate TargetType="ListBoxItem">
@@ -336,15 +336,15 @@
             </ControlTemplate.Triggers>
           </ControlTemplate>
         </Setter.Value>
-      </Setter>-->
+      </Setter>--><!--
       <Style.Triggers>
-        <!--<Trigger Property="Selector.IsSelected" Value="True">
+        --><!--<Trigger Property="Selector.IsSelected" Value="True">
           <Setter Property="Background" Value="{DynamicResource Esri_Blue6}" />
         </Trigger>-->
         <!-- IsKeyboardFocusWithin
         <Trigger Property="Selector.IsSelectionActive" Value="False">
           <Setter Property="Background" Value="{DynamicResource Esri_Gray100}" />
-        </Trigger>-->
+        </Trigger>--><!--
         <MultiTrigger>
           <MultiTrigger.Conditions>
             <Condition Property="Selector.IsSelected" Value="True"/>
@@ -365,7 +365,7 @@
         </MultiTrigger>
       </Style.Triggers>
 
-    </Style>
+    </Style>-->
   </Window.Resources>
   <DockPanel>
 
@@ -773,7 +773,12 @@
             <!--<ListBox Grid.Row="0" Template="{StaticResource FirstThreeTemplate}"/>-->
             <!--<ContentControl Grid.Row="1" Template="{StaticResource RegularMeetingTemplate}" Content="{Binding CurrentMeetingToResolve}"/>-->
             <Grid Grid.Row="0" Grid.Column="0">
-              <ContentControl ContentTemplate="{StaticResource FirstThreeTemplate}" Content="{Binding CurrentMeeting}" VerticalAlignment="Top"/>
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="73*"/>
+                <ColumnDefinition Width="4*"/>
+                <ColumnDefinition Width="34*"/>
+              </Grid.ColumnDefinitions>
+              <ContentControl ContentTemplate="{StaticResource FirstThreeTemplate}" Content="{Binding CurrentMeeting}" VerticalAlignment="Center" Grid.ColumnSpan="3"/>
             </Grid>
             <Grid Grid.Row="0" Grid.Column="1">
               <ContentControl Content="{Binding CurrentMeeting}" ContentTemplateSelector="{StaticResource meetingTemplateSelector}"/>

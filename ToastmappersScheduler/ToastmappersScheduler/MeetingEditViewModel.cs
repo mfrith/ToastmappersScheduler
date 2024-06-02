@@ -10,21 +10,21 @@ namespace Toastmappers
 {
   public class MeetingEditViewModel : ViewModelBase
   {
-    List<string> regularTemplate = new List<string>(new string[] {"DayOfMeeting","Toastmaster","Speaker 1","Speaker 2","General Evaluator",
+    readonly List<string> regularTemplate = new(["DayOfMeeting","Toastmaster","Speaker 1","Speaker 2","General Evaluator",
                                                                   "Evaluator 1", "Evaluator 2", "Table Topics", "Ah Counter",
-                                                                  "Timer", "Grammarian", "Quiz Master", "Video", "Hot Seat" });
+                                                                  "Timer", "Grammarian", "Quiz Master", "Video", "Hot Seat" ]);
 
-    List<string> regularTemplateOutput = new List<string>(new string[] {"DayOfMeeting","Toastmaster","Speaker1","Speaker2","GeneralEvaluator",
+    readonly List<string> regularTemplateOutput = new(["DayOfMeeting","Toastmaster","Speaker1","Speaker2","GeneralEvaluator",
                                                                   "Evaluator1", "Evaluator2", "TableTopics", "AhCounter",
-                                                                  "Timer", "Grammarian", "QuizMaster", "Video", "HotSeat" });
-    List<string> threeSpeakerTemplate = new List<string>(new string[] {"Toastmaster","Speaker 1","Speaker 2", "Speaker 3", "General Evaluator",
+                                                                  "Timer", "Grammarian", "QuizMaster", "Video", "HotSeat" ]);
+    readonly List<string> threeSpeakerTemplate = new(["Toastmaster","Speaker 1","Speaker 2", "Speaker 3", "General Evaluator",
                                                                   "Evaluator 1", "Evaluator 2", "Evaluator 3", "Ah Counter",
-                                                                  "Timer", "Grammarian", "Quiz Master", "Video", "Hot Seat" });
+                                                                  "Timer", "Grammarian", "Quiz Master", "Video", "Hot Seat" ]);
 
-    List<string> speakathonTemplate = new List<string>(new string[] {"Toastmaster","Speaker 1","Speaker 2", "Speaker 3", "Speaker 4",
+    readonly List<string> speakathonTemplate = new(["Toastmaster","Speaker 1","Speaker 2", "Speaker 3", "Speaker 4",
                                                                   "Speaker 5", "General Evaluator", "Evaluator 1", "Evaluator 2", "Evaluator 3",
                                                                   "Evaluator 4", "Evaluator 5", "Ah Counter",
-                                                                  "Timer", "Grammarian", "Quiz Master", "Video", "Hot Seat" });
+                                                                  "Timer", "Grammarian", "Quiz Master", "Video", "Hot Seat" ]);
     #region privates
     private static readonly KeyValuePair<string, string>[] meetingTemplates =
     {
@@ -141,7 +141,7 @@ namespace Toastmappers
       get
       {
         var a = _ttcontestantmembers.Select(iterator => iterator.Name).ToList();
-        ObservableCollection<string> newList = new ObservableCollection<string>(a);
+        ObservableCollection<string> newList = new(a);
         return newList;
       }
     } 
@@ -167,7 +167,7 @@ namespace Toastmappers
     private ICommand _deleteGuestCommand;
     public ICommand DeleteGuestCmd
     {
-      get { return _deleteGuestCommand ?? (_deleteGuestCommand = new RelayCommand((p) => DeleteGuest(p), () => true)); }
+      get { return _deleteGuestCommand ??= new RelayCommand((p) => DeleteGuest(p), () => true); }
     }
 
     private void DeleteGuest(object item)
@@ -183,7 +183,7 @@ namespace Toastmappers
     private ICommand _deleteAttendeeCommand;
     public ICommand DeleteAttendeeCmd
     {
-      get { return _deleteAttendeeCommand ?? (_deleteAttendeeCommand = new RelayCommand((p) => DeleteAttendee(p), () => true)); }
+      get { return _deleteAttendeeCommand ??= new RelayCommand((p) => DeleteAttendee(p), () => true); }
     }
 
     private void DeleteAttendee(object item)
@@ -199,7 +199,7 @@ namespace Toastmappers
     private ICommand _deleteContestantCommand;
     public ICommand DeleteContestantCmd
     {
-      get { return _deleteContestantCommand ?? (_deleteContestantCommand = new RelayCommand((p) => DeleteContestant(p), () => true)); }
+      get { return _deleteContestantCommand ??= new RelayCommand((p) => DeleteContestant(p), () => true); }
     }
 
     private void DeleteContestant(object item)
@@ -233,8 +233,10 @@ namespace Toastmappers
       get
       {
         var a = _members.Select(iterator => iterator.Name).ToList();
-        ObservableCollection<string> newList = new ObservableCollection<string>(a);
-        newList.Add("");
+        ObservableCollection<string> newList = new(a)
+        {
+          ""
+        };
         return newList;
       }
     }
@@ -245,7 +247,7 @@ namespace Toastmappers
       get
       {
         var a = _attendeemembers.Select(iterator => iterator.Name).ToList();
-        ObservableCollection<string> newList = new ObservableCollection<string>(a);
+        ObservableCollection<string> newList = new(a);
         return newList;
       }
     }

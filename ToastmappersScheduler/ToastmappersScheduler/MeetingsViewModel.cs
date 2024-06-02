@@ -600,7 +600,7 @@ namespace Toastmappers
           else
           {
             // what is a?
-            var r = t.Count();
+            var r = t.Count;
           }
         }
 

@@ -460,7 +460,7 @@ namespace Toastmappers
 
       int year = lastMeeting.Year + yearAdjustment;
 
-      DateTime startDate = new DateTime(year, nextMonth, 1);
+      DateTime startDate = new(year, nextMonth, 1);
       DayOfWeek day = startDate.DayOfWeek;
 
       while (day != DayOfWeek.Wednesday)
@@ -485,10 +485,24 @@ namespace Toastmappers
         g = g.AddDays(-1);
       }
       DateTime fridayMeeting = g;
-      List<DateTime> meetings = new List<DateTime>();
+      List<DateTime> meetings = [];
 
       var month = startDate.Month;
-      // handle months with holidays differently - November, December, January, July, etc
+      // handle months with holidays differently - November, December, January, July, June etc
+
+      if (month == 6) // Juneteenth
+      {
+        DateTime juneteenth = new(year, 6, 19);
+        meetings.Add(firstWednesday);
+        meetings.Add(secondWednesday);
+        if (thirdWednesday != juneteenth)
+          meetings.Add(thirdWednesday);
+        meetings.Add(fourthWednesday);
+        if (fifthWednesday.Month == 6)
+          meetings.Add(fifthWednesday);
+        return meetings;
+      }
+
       if (month == 11) //november
       {
         meetings.Add(firstWednesday);
@@ -496,6 +510,7 @@ namespace Toastmappers
         meetings.Add(thirdWednesday);
         if (fifthWednesday != null)
           meetings.Add(fifthWednesday);
+        return meetings;
       }
 
       if (month == 12 || month == 10) //december
@@ -752,7 +767,7 @@ namespace Toastmappers
         if (members.Count == 0)
           ResetMemberList(m, ref members);
         quiz.Quiz = meetingDates[i];
-
+         
         var video = members.OrderBy(a => a.Video).First();
         m.Video = video.Name;
         //videonames.Add(video.Name);
