@@ -1,5 +1,4 @@
-﻿using Toastmappers;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
@@ -27,15 +26,22 @@ namespace Toastmappers
   }
   public class MainViewModel
   {
-    ObservableCollection<object> _tabs;
-    string _home;
+    ObservableCollection<object>? _tabs;
+    string? _home;
+    //public MainViewModel()
+    //{ }
     public MainViewModel()
     {
-      _tabs = new ObservableCollection<object>();
-      var t = Assembly.GetExecutingAssembly().Location;
-      var e = Path.GetDirectoryName(t);
 
-      _home = Path.GetDirectoryName(e);
+      //if (mode == "debug")
+        //_home = "C:\\ETS-test";
+      //else
+        _home = "C:\\ETS";
+
+      //var t = Assembly.GetExecutingAssembly().Location;d
+      //var e = Path.GetDirectoryName(t);
+
+      //_home = Path.GetDirectoryName(e);
       
       GeneralViewModel generalVM = new GeneralViewModel(_home);
       MembersViewModel membersVM = new MembersViewModel(_home, this);
@@ -45,6 +51,7 @@ namespace Toastmappers
 
       ReportsViewModel reportsVM = new ReportsViewModel(meetingsVM.Meetings.ToList(), membersVM.Members, _home);
 
+      _tabs = new ObservableCollection<object>();
       _tabs.Add(generalVM);
       _tabs.Add(membersVM);
       _tabs.Add(meetingsVM);
@@ -92,10 +99,10 @@ namespace Toastmappers
     }
     public ObservableCollection<object> Tabs { get { return _tabs; } }
 
-    private ICommand _backupCommand;
+    private ICommand? _backupCommand;
     public ICommand BackupCmd
     {
-      get { return _backupCommand ?? (_backupCommand = new RelayCommand(() => Backup(), () => true)); }
+      get { return _backupCommand ??= new RelayCommand(() => Backup(), () => true); }
     }
 
     public void Backup()

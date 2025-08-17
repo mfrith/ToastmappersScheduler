@@ -28,14 +28,14 @@ namespace Toastmappers
                                                                   "Evaluator 1", "Evaluator 2", "Table Topics", "Ah Counter",
                                                                   "Timer", "Grammarian", "Quiz Master", "Video", "Hot Seat" });
 
-    List<string> regularTemplateOutput = new List<string>(new string[] {"DayOfMeeting","Toastmaster","Speaker1","Speaker2","GeneralEvaluator",
+    List<string> regularTemplateOutput = new(new string[] {"DayOfMeeting","Toastmaster","Speaker1","Speaker2","GeneralEvaluator",
                                                                   "Evaluator1", "Evaluator2", "TableTopics", "AhCounter",
                                                                   "Timer", "Grammarian", "QuizMaster", "Video", "HotSeat" });
-    List<string> threeSpeakerTemplate = new List<string>(new string[] {"Toastmaster","Speaker 1","Speaker 2", "Speaker 3", "General Evaluator",
+    List<string> threeSpeakerTemplate = new(new string[] {"Toastmaster","Speaker 1","Speaker 2", "Speaker 3", "General Evaluator",
                                                                   "Evaluator 1", "Evaluator 2", "Evaluator 3", "Ah Counter",
                                                                   "Timer", "Grammarian", "Quiz Master", "Video", "Hot Seat" });
 
-    List<string> speakathonTemplate = new List<string>(new string[] {"Toastmaster","Speaker 1","Speaker 2", "Speaker 3", "Speaker 4",
+    List<string> speakathonTemplate = new(new string[] {"Toastmaster","Speaker 1","Speaker 2", "Speaker 3", "Speaker 4",
                                                                   "Speaker 5", "General Evaluator", "Evaluator 1", "Evaluator 2", "Evaluator 3",
                                                                   "Evaluator 4", "Evaluator 5", "Ah Counter",
                                                                   "Timer", "Grammarian", "Quiz Master", "Video", "Hot Seat" });
@@ -460,7 +460,7 @@ namespace Toastmappers
 
       int year = lastMeeting.Year + yearAdjustment;
 
-      DateTime startDate = new DateTime(year, nextMonth, 1);
+      DateTime startDate = new(year, nextMonth, 1);
       DayOfWeek day = startDate.DayOfWeek;
 
       while (day != DayOfWeek.Wednesday)
@@ -485,17 +485,44 @@ namespace Toastmappers
         g = g.AddDays(-1);
       }
       DateTime fridayMeeting = g;
-      List<DateTime> meetings = new List<DateTime>();
+      List<DateTime> meetings = [];
 
       var month = startDate.Month;
-      // handle months with holidays differently - November, December, January, July, etc
-      if (month == 11) //november
+      // handle months with holidays differently - November, December, January, July, June etc
+
+      if (month == 1)
       {
-        meetings.Add(firstWednesday);
+        if (firstWednesday.Day != 1)
+          meetings.Add(firstWednesday);
         meetings.Add(secondWednesday);
         meetings.Add(thirdWednesday);
-        if (fifthWednesday != null)
+        meetings.Add(fourthWednesday);
+        if (fifthWednesday <= lastDayOfMonth)
           meetings.Add(fifthWednesday);
+        return meetings;
+      }
+      if (month == 6) // Juneteenth
+      {
+        DateTime juneteenth = new(year, 6, 19);
+        meetings.Add(firstWednesday);
+        meetings.Add(secondWednesday);
+        if (thirdWednesday != juneteenth)
+          meetings.Add(thirdWednesday);
+        meetings.Add(fourthWednesday);
+        if (fifthWednesday.Month == 6)
+          meetings.Add(fifthWednesday);
+        return meetings;
+      }
+
+      if (month == 11) //november
+      {
+        //meetings.Add(firstWednesday);
+        meetings.Add(secondWednesday);
+        meetings.Add(thirdWednesday);
+        meetings.Add(fourthWednesday);
+        if (fifthWednesday <= lastDayOfMonth)
+          meetings.Add(fifthWednesday);
+        return meetings;
       }
 
       if (month == 12 || month == 10) //december
@@ -511,9 +538,10 @@ namespace Toastmappers
       if (month == 7) //UC - need a date flag for UC and for other events?
       {
         meetings.Add(firstWednesday);
-        meetings.Add(thirdWednesday);
+        meetings.Add(secondWednesday);
+        //meetings.Add(thirdWednesday);
         meetings.Add(fourthWednesday);
-        return meetings;
+        //return meetings;
       }
       meetings.Add(firstWednesday);
       meetings.Add(secondWednesday);
@@ -752,7 +780,7 @@ namespace Toastmappers
         if (members.Count == 0)
           ResetMemberList(m, ref members);
         quiz.Quiz = meetingDates[i];
-
+         
         var video = members.OrderBy(a => a.Video).First();
         m.Video = video.Name;
         //videonames.Add(video.Name);

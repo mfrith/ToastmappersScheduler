@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 
+
 namespace Toastmappers
 {
   /// <summary>
@@ -14,13 +15,22 @@ namespace Toastmappers
   /// </summary>
   public partial class MainWindow : Window
   {
-    public MainWindow()
+    private static MainViewModel _mainViewModel;
+    private string _mode;
+
+    //public MainWindow()
+    //{ }
+    public MainWindow(/*string mode*/)
     {
+      //_mode = mode;
       InitializeComponent();
-      this.DataContext = new MainViewModel();
+      //String[] args = App.mode;
+      //var arr = args[0];
+      _mainViewModel = new MainViewModel(/*_mode*/);
+      DataContext = _mainViewModel;
       MainViewModel a = (MainViewModel)this.DataContext;
-      a.CheckDataFiles();
-      MeetingsViewModel b = (MeetingsViewModel)a.Tabs[2];
+      _mainViewModel.CheckDataFiles();
+      MeetingsViewModel b = (MeetingsViewModel)_mainViewModel.Tabs[2];
       //ObservableCollection<MeetingModelBase> meetings = b.Meetings;
       //DateTime lastMeeting = DateTime.ParseExact(meetings[0].DayOfMeeting, "MM-dd-yyyy", System.Globalization.CultureInfo.InvariantCulture);
       //bool resolved = "1" == meetings[0].Resolved;
@@ -132,12 +142,12 @@ namespace Toastmappers
 
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
-      MainViewModel a = (MainViewModel)this.DataContext;
-      a.CheckDataFiles();
-      MeetingsViewModel b = (MeetingsViewModel)a.Tabs[2];
+
+      //_mainViewModel.CheckDataFiles();
+      MeetingsViewModel b = (MeetingsViewModel)_mainViewModel.Tabs[2];
       ObservableCollection<MeetingModelBase> meetings = b.Meetings;
 
-      MembersViewModel c = (MembersViewModel)a.Tabs[1];
+      MembersViewModel c = (MembersViewModel)_mainViewModel.Tabs[1];
       var f = meetings.Where(it => it.Resolved == false).ToList();
 
       List<MeetingModelBase> meetingsToResolve = new List<MeetingModelBase>();
@@ -148,7 +158,7 @@ namespace Toastmappers
         DateTime today = DateTime.Today.Date;
         var t = DateTime.Now;
         var mtgDate = DateTime.Parse(mtg.DayOfMeeting);
-        var y = mtgDate.AddHours(13);
+        var y = mtgDate.AddHours(13); // meeting time is 12:00 AM and we add 13 hours to get past 1:00 PM
         int rel = DateTime.Compare(y, t);
         if (rel < 0)
           meetingsToResolve.Add(mtg);
@@ -166,7 +176,7 @@ namespace Toastmappers
           //{
           //  //var meetingsR = meetingsToResolve.OrderBy
           //MeetingResolutionViewModel mtg2resolve = new MeetingResolutionViewModel(meeting, c.Members);
-          MeetingsResolutionViewModel mrvm = new MeetingsResolutionViewModel(meetingsToResolve, c.Members, b);
+          MeetingsResolutionViewModel mrvm = new MeetingsResolutionViewModel(meetingsToResolve, c.Members, c.PastMembers, b);
           mrvm.Resolve();
           //MeetingResolutionView view = new MeetingResolutionView();
           //view.DataContext = mtg2resolve;
@@ -275,6 +285,28 @@ namespace Toastmappers
         Mouse.Capture(null);
       }
     }
-  }
+
+    private void Button_ClearAll(object sender, RoutedEventArgs e)
+    {
+      //MemberViewModel member = (MemberViewModel)MemberInfoComboBox.SelectedItem;
+      //if (member == null)
+      //  return;
+      //_inDropDownClosed = true;
+      //MeetingsOutCalendar.SelectedDates.Clear();
+      //member.MeetingsOut.Clear();
+      //_inDropDownClosed = false;
+      MainViewModel a = (MainViewModel)this.DataContext;
+      MembersViewModel c = (MembersViewModel)a.Tabs[1];
+      foreach (MemberViewModel m in c.Members)
+      {
+        m.MeetingsOut.Clear();
+      }
+    }
+
+    private void TTContestants_ComboBox_DropDownClosed(object sender, EventArgs e)
+    {
+
+        }
+    }
 
 }

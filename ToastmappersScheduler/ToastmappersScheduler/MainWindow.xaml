@@ -6,11 +6,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:self="clr"
         xmlns:local="clr-namespace:Toastmappers" 
+        Loaded="Window_Loaded" 
         mc:Ignorable="d"
-        Loaded="Window_Loaded"
         WindowStartupLocation="CenterScreen"
         Icon="./Resources/logo.png"
   Title="Club Scheduler" Height="650" Width="1000">
+
   <Window.InputBindings>
     <KeyBinding Modifiers="Ctrl" Key="B" Command="{Binding BackupCmd}" />
   </Window.InputBindings>
@@ -179,7 +180,7 @@
                   Text="{Binding TTWinner, Mode=TwoWay}"/>
         <TextBlock Grid.Row="14" Grid.Column="0" Text="Table Topic Contestants"/>
         <StackPanel Grid.Row="14" Grid.Column="1" >
-          <!--<ComboBox Name="TTContestants_ComboBox" IsEditable="True" ItemsSource="{Binding TTContestantMembersList}" DropDownClosed="TTContestants_ComboBox_DropDownClosed"/>-->
+          <ComboBox Name="TTContestants_ComboBox" IsEditable="True" ItemsSource="{Binding TTContestantMembersList}" DropDownClosed="TTContestants_ComboBox_DropDownClosed"/>
           <ListBox ItemsSource="{Binding TTContestants}" Height="100">
             <ListBox.ItemTemplate >
               <DataTemplate>
@@ -269,13 +270,13 @@
       <CheckBox Content="Is Current" IsChecked="{Binding IsCurrent, Mode=TwoWay}"/>-->
       </StackPanel>
     </DataTemplate>
-    <Style x:Key="MentorListStyle" TargetType="{x:Type ListBoxItem}">
+    <!--<Style x:Key="MentorListStyle" TargetType="{x:Type ListBoxItem}">
       <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
       <Setter Property="VerticalContentAlignment" Value="Stretch"/>
       <Setter Property="IsSelected" Value="{Binding Mode=TwoWay, Path=IsSelected}"/>
-      <!--Setter Property="FocusManager.FocusedElement" Value="{Binding RelativeSource={RelativeSource Self}}"/-->
+      --><!--Setter Property="FocusManager.FocusedElement" Value="{Binding RelativeSource={RelativeSource Self}}"/--><!--
       <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
-      <!--<EventSetter Event="PreviewMouseWheel" Handler="HandlePreviewMouseWheel"/>-->
+      --><!--<EventSetter Event="PreviewMouseWheel" Handler="HandlePreviewMouseWheel"/>-->
       <!--<Setter Property="Template">
         <Setter.Value>
           <ControlTemplate TargetType="ListBoxItem">
@@ -336,15 +337,15 @@
             </ControlTemplate.Triggers>
           </ControlTemplate>
         </Setter.Value>
-      </Setter>-->
+      </Setter>--><!--
       <Style.Triggers>
-        <!--<Trigger Property="Selector.IsSelected" Value="True">
+        --><!--<Trigger Property="Selector.IsSelected" Value="True">
           <Setter Property="Background" Value="{DynamicResource Esri_Blue6}" />
         </Trigger>-->
         <!-- IsKeyboardFocusWithin
         <Trigger Property="Selector.IsSelectionActive" Value="False">
           <Setter Property="Background" Value="{DynamicResource Esri_Gray100}" />
-        </Trigger>-->
+        </Trigger>--><!--
         <MultiTrigger>
           <MultiTrigger.Conditions>
             <Condition Property="Selector.IsSelected" Value="True"/>
@@ -365,7 +366,7 @@
         </MultiTrigger>
       </Style.Triggers>
 
-    </Style>
+    </Style>-->
   </Window.Resources>
   <DockPanel>
 
@@ -580,6 +581,8 @@
 
                         <TextBlock Text="Meetings Out" Padding="10,0,10,0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         <Button Width="50" Content="Clear" Click="Button_Click" IsEnabled="{Binding MemberSet}" />
+                        <Button Width="50" Margin="5,0,0,0" Content="Clear All" Click="Button_ClearAll" />
+
                       </StackPanel>
                       <Calendar Name="MeetingsOutCalendar" SelectionMode="MultipleRange" DisplayDateStart="" SelectedDatesChanged="Calendar_SelectedDatesChanged"
                                 IsTodayHighlighted="False" IsEnabled="{Binding MemberSet}" PreviewMouseUp="MeetingsOutCalendar_PreviewMouseUp"
@@ -773,7 +776,12 @@
             <!--<ListBox Grid.Row="0" Template="{StaticResource FirstThreeTemplate}"/>-->
             <!--<ContentControl Grid.Row="1" Template="{StaticResource RegularMeetingTemplate}" Content="{Binding CurrentMeetingToResolve}"/>-->
             <Grid Grid.Row="0" Grid.Column="0">
-              <ContentControl ContentTemplate="{StaticResource FirstThreeTemplate}" Content="{Binding CurrentMeeting}" VerticalAlignment="Top"/>
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="73*"/>
+                <ColumnDefinition Width="4*"/>
+                <ColumnDefinition Width="34*"/>
+              </Grid.ColumnDefinitions>
+              <ContentControl ContentTemplate="{StaticResource FirstThreeTemplate}" Content="{Binding CurrentMeeting}" VerticalAlignment="Center" Grid.ColumnSpan="3"/>
             </Grid>
             <Grid Grid.Row="0" Grid.Column="1">
               <ContentControl Content="{Binding CurrentMeeting}" ContentTemplateSelector="{StaticResource meetingTemplateSelector}"/>
@@ -837,6 +845,12 @@
 
         </Grid>
 
+      </TabItem>
+      <TabItem Name="Agendas" DataContext="{Binding Tabs[2]}" Margin="-2,0,0,-4">
+        <TabItem.Header>
+          <TextBlock Text="Agendas" FontSize="20"/>
+        </TabItem.Header>
+        <Button Margin="20,10,0,0" HorizontalAlignment="Left" Width="35" Height="25" Content="Print" Command="{Binding PrintMeetingsCmd}"/>
       </TabItem>
       <TabItem Name="Reports"  DataContext="{Binding Tabs[3]}" Margin="-2,2,0,-2">
         <TabItem.Header>

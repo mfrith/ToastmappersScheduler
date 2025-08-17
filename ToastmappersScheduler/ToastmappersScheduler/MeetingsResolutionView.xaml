@@ -235,7 +235,7 @@
   <DockPanel>
     <Grid>
       <Grid.ColumnDefinitions>
-        <ColumnDefinition/>
+        <ColumnDefinition Width=".7*"/>
         <ColumnDefinition/>
       </Grid.ColumnDefinitions>
       <Grid.RowDefinitions>
