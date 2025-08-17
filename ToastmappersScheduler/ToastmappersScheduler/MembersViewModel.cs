@@ -5,18 +5,14 @@ using System.Diagnostics.Metrics;
 using System.IO;
 using System.Linq;
 using System.Windows.Input;
+using Toastmappers;
 
 namespace Toastmappers
 {
-  class MembersViewModel : PropertyChangedBase
+  class MembersViewModel(string location, MainViewModel mainViewModel) : PropertyChangedBase
   {
-    private MainViewModel _mainViewModel;
-    private string _home = string.Empty;
-    public MembersViewModel(string location, MainViewModel mainViewModel)
-    {
-      _home = location;
-      _mainViewModel = mainViewModel;
-    }
+    private MainViewModel _mainViewModel = mainViewModel;
+    private string _home = location;
 
     // the only members list
     //private List<MemberViewModel> _members = new List<MemberViewModel>();

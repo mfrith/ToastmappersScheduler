@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
+using Toastmappers;
 
 namespace Toastmappers
 {
@@ -13,6 +14,7 @@ namespace Toastmappers
     private MeetingEditViewModel _currentMeetingToResolveVM;
     private List<MeetingModelBase> _meetingsToResolve;
     private ObservableCollection<MemberViewModel> _members;
+    private ObservableCollection<MemberViewModel> _pastMembers;
     private int _meetingCount = 0;
     private int _currentMeetingIndex = -1;
     private MeetingsViewModel _meetingsVM;
@@ -20,12 +22,14 @@ namespace Toastmappers
     {
 
     }
-    public MeetingsResolutionViewModel(List<MeetingModelBase> meetingsToResolve, ObservableCollection<MemberViewModel> members, MeetingsViewModel meetingsVM)
+    public MeetingsResolutionViewModel(List<MeetingModelBase> meetingsToResolve, ObservableCollection<MemberViewModel> members,
+                                       ObservableCollection<MemberViewModel> pastMembers, MeetingsViewModel meetingsVM)
     {
       _meetingsToResolve = meetingsToResolve;
       _meetingCount = _meetingsToResolve.Count;
       _meetingsVM = meetingsVM;
       _members = members;
+      _pastMembers = pastMembers;
     }
     public void Resolve()
     {
@@ -135,47 +139,74 @@ namespace Toastmappers
       // for each meeting role, check if that's newer than the current member status
       // also need to check for members who didn't show up for their role and role them back to their previous date. 
       var tm = _currentMeetingToResolveVM.Toastmaster;
-      var member = _members.Where(it => it.Name == tm).First();
-      var newDate = member.Toastmaster.AddMinutes(2);
-      var bNewerDate = date.CompareTo(member.Toastmaster.AddMinutes(2)) > 0;
-      if (member != null && bNewerDate)
+      var member = _members.Where(it => it.Name == tm).FirstOrDefault();
+      DateTime newDate;
+      bool bNewerDate;
+      if (member != null)
       {
-        member.Toastmaster = date;
+        member = _pastMembers.Where(it => it.Name == tm).FirstOrDefault();
+      }
+      if (member != null)
+      {
+
+        newDate = member.Toastmaster.AddMinutes(2);
+        bNewerDate = date.CompareTo(member.Toastmaster.AddMinutes(2)) > 0;
+        if (member != null && bNewerDate)
+        {
+          member.Toastmaster = date;
+        }
       }
 
       var spkr1 = _currentMeetingToResolveVM.Speaker1;
       if (!string.IsNullOrEmpty(spkr1))
       {
-        member = _members.Where(it => it.Name == spkr1).First();
-        newDate = member.Speaker.AddMinutes(2); 
-        bNewerDate = date.CompareTo(member.Speaker.AddMinutes(2)) > 0;
-        if (member != null && bNewerDate)
+        member = _members.Where(it => it.Name == spkr1).FirstOrDefault();
+        if (member is null)
         {
-          member.Speaker = date;
+          // check past member list.
+          member = _pastMembers.Where(it => it.Name == spkr1).FirstOrDefault();
+
         }
+        
+        if (member != null)
+        {
+          newDate = member.Speaker.AddMinutes(2);
+          bNewerDate = date.CompareTo(member.Speaker.AddMinutes(2)) > 0;
+          if (bNewerDate)
+          {
+            member.Speaker = date;
+          }
+        }
+        // need to handle guest speaker that isn't in the list
       }
 
       var spkr2 = _currentMeetingToResolveVM.Speaker2;
       if (!string.IsNullOrEmpty(spkr2))
       {
-        member = _members.Where(it => it.Name == spkr2).First();
-        newDate = member.Speaker.AddMinutes(2); 
-        bNewerDate = date.CompareTo(member.Speaker.AddMinutes(2)) > 0;
-        if (member != null && bNewerDate)
+        member = _members.Where(it => it.Name == spkr2).FirstOrDefault();
+        if (member != null)
         {
-          member.Speaker = date;
+          newDate = member.Speaker.AddMinutes(2);
+          bNewerDate = date.CompareTo(member.Speaker.AddMinutes(2)) > 0;
+          if (bNewerDate)
+          {
+            member.Speaker = date;
+          }
         }
       }
 
       var eval1 = _currentMeetingToResolveVM.Evaluator1;
       if (!string.IsNullOrEmpty(eval1))
       {
-        member = _members.Where(it => it.Name == eval1).First();
-        newDate = member.Evaluator.AddMinutes(2); 
-        bNewerDate = date.CompareTo(member.Evaluator.AddMinutes(2)) > 0;
-        if (member != null && bNewerDate)
+        member = _members.Where(it => it.Name == eval1).FirstOrDefault();
+        if (member != null)
         {
-          member.Evaluator = date;
+          newDate = member.Evaluator.AddMinutes(2);
+          bNewerDate = date.CompareTo(member.Evaluator.AddMinutes(2)) > 0;
+          if (bNewerDate)
+          {
+            member.Evaluator = date;
+          }
         }
       }
 
@@ -183,12 +214,15 @@ namespace Toastmappers
       var eval2 = _currentMeetingToResolveVM.Evaluator2;
       if (!string.IsNullOrEmpty(eval2))
       {
-        member = _members.Where(it => it.Name == eval2).First();
-        newDate = member.Evaluator.AddMinutes(2); 
-        bNewerDate = date.CompareTo(member.Evaluator.AddMinutes(2)) > 0;
-        if (member != null && bNewerDate)
+        member = _members.Where(it => it.Name == eval2).FirstOrDefault();
+        if (member != null)
         {
-          member.Evaluator = date;
+          newDate = member.Evaluator.AddMinutes(2);
+          bNewerDate = date.CompareTo(member.Evaluator.AddMinutes(2)) > 0;
+          if (bNewerDate)
+          {
+            member.Evaluator = date;
+          }
         }
       }
 
@@ -196,12 +230,15 @@ namespace Toastmappers
       var GE = _currentMeetingToResolveVM.GeneralEvaluator;
       if (!string.IsNullOrEmpty(GE))
       {
-        member = _members.Where(it => it.Name == GE).First();
-        newDate = member.GeneralEvaluator.AddMinutes(2); 
-        bNewerDate = date.CompareTo(member.GeneralEvaluator.AddMinutes(2)) > 0;
-        if (member != null && bNewerDate)
+        member = _members.Where(it => it.Name == GE).FirstOrDefault();
+        if (member != null)
         {
-          member.GeneralEvaluator = date;
+          newDate = member.GeneralEvaluator.AddMinutes(2);
+          bNewerDate = date.CompareTo(member.GeneralEvaluator.AddMinutes(2)) > 0;
+          if (bNewerDate)
+          {
+            member.GeneralEvaluator = date;
+          }
         }
       }
 
@@ -209,12 +246,15 @@ namespace Toastmappers
       var TT = _currentMeetingToResolveVM.TableTopics;
       if (!string.IsNullOrEmpty(TT))
       {
-        member = _members.Where(it => it.Name == TT).First();
-        newDate = member.TT.AddMinutes(2); 
-        bNewerDate = date.CompareTo(member.TT.AddMinutes(2)) > 0;
-        if (member != null && bNewerDate)
+        member = _members.Where(it => it.Name == TT).FirstOrDefault();
+        if (member != null)
         {
-          member.TT = date;
+          newDate = member.TT.AddMinutes(2);
+          bNewerDate = date.CompareTo(member.TT.AddMinutes(2)) > 0;
+          if (bNewerDate)
+          {
+            member.TT = date;
+          }
         }
       }
 
@@ -222,24 +262,30 @@ namespace Toastmappers
       var gram = _currentMeetingToResolveVM.Grammarian;
       if (!string.IsNullOrEmpty(gram))
       {
-        member = _members.Where(it => it.Name == gram).First();
-        newDate = member.Gram.AddMinutes(2); 
-        bNewerDate = date.CompareTo(member.Gram.AddMinutes(2)) > 0;
-        if (member != null && bNewerDate)
+        member = _members.Where(it => it.Name == gram).FirstOrDefault();
+        if (member != null)
         {
-          member.Gram = date;
+          newDate = member.Gram.AddMinutes(2);
+          bNewerDate = date.CompareTo(member.Gram.AddMinutes(2)) > 0;
+          if (bNewerDate)
+          {
+            member.Gram = date;
+          }
         }
       }
 
       var timer = _currentMeetingToResolveVM.Timer;
       if (!string.IsNullOrEmpty(timer))
       {
-        member = _members.Where(it => it.Name == timer).First();
-        newDate = member.Timer.AddMinutes(2); 
-        bNewerDate = date.CompareTo(member.Timer.AddMinutes(2)) > 0;
-        if (member != null && bNewerDate)
+        member = _members.Where(it => it.Name == timer).FirstOrDefault();
+        if (member != null)
         {
-          member.Timer = date;
+          newDate = member.Timer.AddMinutes(2);
+          bNewerDate = date.CompareTo(member.Timer.AddMinutes(2)) > 0;
+          if (bNewerDate)
+          {
+            member.Timer = date;
+          }
         }
       }
 
@@ -247,12 +293,15 @@ namespace Toastmappers
       var ah = _currentMeetingToResolveVM.AhCounter;
       if (!string.IsNullOrEmpty(ah))
       {
-        member = _members.Where(it => it.Name == ah).First();
-        newDate = member.Ah.AddMinutes(2); 
-        bNewerDate = date.CompareTo(member.Ah.AddMinutes(2)) > 0;
-        if (member != null && bNewerDate)
+        member = _members.Where(it => it.Name == ah).FirstOrDefault();
+        if (member != null)
         {
-          member.Ah = date;
+          newDate = member.Ah.AddMinutes(2);
+          bNewerDate = date.CompareTo(member.Ah.AddMinutes(2)) > 0;
+          if (bNewerDate)
+          {
+            member.Ah = date;
+          }
         }
       }
 
@@ -260,36 +309,45 @@ namespace Toastmappers
       var quiz = _currentMeetingToResolveVM.QuizMaster;
       if (!string.IsNullOrEmpty(quiz))
       {
-        member = _members.Where(it => it.Name == quiz).First();
-        newDate = member.Quiz.AddMinutes(2); 
-        bNewerDate = date.CompareTo(member.Quiz.AddMinutes(2)) > 0;
-        if (member != null && bNewerDate)
+        member = _members.Where(it => it.Name == quiz).FirstOrDefault();
+        if (member != null)
         {
-          member.Quiz = date;
+          newDate = member.Quiz.AddMinutes(2);
+          bNewerDate = date.CompareTo(member.Quiz.AddMinutes(2)) > 0;
+          if (bNewerDate)
+          {
+            member.Quiz = date;
+          }
         }
       }
 
       var video = _currentMeetingToResolveVM.Video;
       if (!string.IsNullOrEmpty(video))
       {
-        member = _members.Where(it => it.Name == video).First();
-        newDate = member.Video.AddMinutes(2); 
-        bNewerDate = date.CompareTo(member.Video.AddMinutes(2)) > 0;
-        if (member != null && bNewerDate)
+        member = _members.Where(it => it.Name == video).FirstOrDefault();
+        if (member != null)
         {
-          member.Video = date;
+          newDate = member.Video.AddMinutes(2);
+          bNewerDate = date.CompareTo(member.Video.AddMinutes(2)) > 0;
+          if (bNewerDate)
+          {
+            member.Video = date;
+          }
         }
       }
 
       var hotseat = _currentMeetingToResolveVM.HotSeat;
       if (!string.IsNullOrEmpty(hotseat))
       {
-        member = _members.Where(it => it.Name == hotseat).First();
-        newDate = member.HotSeat.AddMinutes(2); 
-        bNewerDate = date.CompareTo(member.HotSeat.AddMinutes(2)) > 0;
-        if (member != null && bNewerDate)
+        member = _members.Where(it => it.Name == hotseat).FirstOrDefault();
+        if (member != null)
         {
-          member.HotSeat = date;
+          newDate = member.HotSeat.AddMinutes(2);
+          bNewerDate = date.CompareTo(member.HotSeat.AddMinutes(2)) > 0;
+          if (bNewerDate)
+          {
+            member.HotSeat = date;
+          }
         }
       }
 

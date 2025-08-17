@@ -19,13 +19,11 @@ namespace Toastmappers
 
       if (item != null)
       {
-
         var mtg = item as MeetingEditViewModel;
         if (mtg.MeetingType == 1)
           return element.FindResource("RegularMeetingTemplate") as DataTemplate;
         else if (mtg.MeetingType == 2)
           return element.FindResource("RegularMeetingTemplate2") as DataTemplate;
-
       }
       return base.SelectTemplate(item, container);
     }
@@ -99,8 +97,10 @@ namespace Toastmappers
 
     public string MonthToGenerateFor
     {
-      get { if (string.IsNullOrEmpty(_monthToGenerateFor))
-            {
+      get
+      {
+        if (string.IsNullOrEmpty(_monthToGenerateFor))
+        {
           var dtNow = DateTime.Now;
           var monthNow = dtNow.Month;
           if (monthNow == 12) monthNow = 0;
@@ -234,6 +234,63 @@ namespace Toastmappers
       }
     }
 
+    private ICommand _printCommand;
+    public ICommand PrintMeetingsCmd
+    {
+      get
+      {
+        return _printCommand ?? (_printCommand = new RelayCommand(() => PrintMeetings(), () => true));
+      }
+    }
+
+    public static Object GetListValue(Object obj, string name)
+    {
+      return obj.GetType().GetProperty(name).GetValue(obj, null);
+
+    }
+
+    List<string> regularTemplateOutput = new(new string[] {"DayOfMeeting","Toastmaster","Speaker1","Speaker2","GeneralEvaluator",
+                                                                  "Evaluator1", "Evaluator2", "TableTopics", "AhCounter",
+                                                                  "Timer", "Grammarian", "QuizMaster", "Video", "HotSeat" });
+
+    public void PrintMeetings()
+    {
+      var one = _meetings[_meetings.Count - 1];
+      var two = _meetings[_meetings.Count - 2];
+      var three = _meetings[_meetings.Count - 3];
+      var four = _meetings[_meetings.Count - 4];
+      List<MeetingModelRegular> list = [];
+      list.Add(four as MeetingModelRegular);
+      list.Add(three as MeetingModelRegular);
+      list.Add(two as MeetingModelRegular);
+      list.Add(one as MeetingModelRegular);
+
+      // show meetings in dialog for review;
+      // need better file name to designate where temporally ->  "Aug 1 - Aug 31.csv" type of name?
+      string fileName = _home + "\\Agendas\\MeetingsPerMonth" + "Aug" + "2025" + ".csv";
+      if (File.Exists(fileName))
+      {
+        File.Delete(fileName);
+      }
+
+      using (StreamWriter file = new StreamWriter(fileName))
+      {
+        foreach (var role in regularTemplateOutput)
+        {
+          string row;
+          if (list.Count() == 5)
+            row = role + "," + GetListValue(list[0], role) + "," + GetListValue(list[1], role) + "," + GetListValue(list[2], role) + "," + GetListValue(list[3], role) + "," + GetListValue(list[4], role);
+          else if (list.Count() == 4)
+            row = role + "," + GetListValue(list[0], role) + "," + GetListValue(list[1], role) + "," + GetListValue(list[2], role) + "," + GetListValue(list[3], role);
+          else
+            row = role + "," + GetListValue(list[0], role) + "," + GetListValue(list[1], role) + "," + GetListValue(list[2], role);
+          file.WriteLine(row);
+        }
+
+      }
+      
+    }
+
     public void OK()
     {
       //push values into meeting model and save
@@ -354,18 +411,19 @@ namespace Toastmappers
         // write them out when okayed, then show the next one
         _newMeeting = new MeetingModelRegularVM(temporarymemberList, _home);
         _newMeeting.Month = MonthToGenerateFor;
-        var yearGen = (string month) => { 
+        var yearGen = (string month) =>
+        {
           var now = DateTime.Now;
           var year = now.Year;
           if (month == "January")
             year++;
 
           return year.ToString();
-          };
+        };
 
         _newMeeting.Year = yearGen(MonthToGenerateFor);
         var w = _meetings.Last();
-        list = _newMeeting.GenerateForMonth(GenerateForFriday, (_meetings[_meetings.Count() - 1].ID) + 1, DateTime.ParseExact(_meetings.Last().DayOfMeeting, "MM-dd-yyyy", System.Globalization.CultureInfo.InvariantCulture));
+        list = _newMeeting.GenerateForMonth(GenerateForFriday, _meetings[_meetings.Count() - 1].ID + 1, DateTime.ParseExact(_meetings.Last().DayOfMeeting, "MM-dd-yyyy", System.Globalization.CultureInfo.InvariantCulture));
 
         using (StreamWriter strmWriter = new StreamWriter(_home + "\\Data\\MembersStatus.json"))
         {
@@ -420,13 +478,13 @@ namespace Toastmappers
       else
       {
         //_newMeeting = new MeetingModelRegularVM(MeetingDate.ToString("MM-dd-yyyy", CultureInfo.InvariantCulture), MeetingTemplate, temporarymemberList);
-        _newMeeting = new MeetingModelRegularVM(MeetingDate, MeetingTemplate, temporarymemberList);
+        //MeetingModelRegularVM newMeetingVM1 = new MeetingModelRegularVM(MeetingDate, MeetingTemplate, temporarymemberList);
 
-        MeetingModelBase newMeeting = null;
-       // if (MeetingTemplate == "Regular Meeting")
-       //   newMeeting = new MeetingModelRegularVM();
+        MeetingModelRegular newMeeting = new MeetingModelRegular(MeetingDate, MeetingTemplate, temporarymemberList);
+        // if (MeetingTemplate == "Regular Meeting")
+        //   newMeeting = new MeetingModelRegularVM();
 
-       // newMeeting.Generate(MeetingDate, temporarymemberList);
+        newMeeting.Generate();
         // generate should be on the model, not the vm
         //_newMeeting.Generate();
         //_newMeeting.ToTempMeeting();
@@ -436,25 +494,73 @@ namespace Toastmappers
         NotifyPropertyChanged(() => RoleListVisible);
         NotifyPropertyChanged(() => GenerateButtonEnabled);
         NotifyPropertyChanged(() => ResetButtonEnabled);
-        NewMeetingView view = new NewMeetingView();
+        NewMeetingView view = new()
+        { DataContext = newMeetingVM };
 
-        view.DataContext = newMeetingVM;
         bool? bsuccess = view.ShowDialog();
         if (bsuccess == true)
         {
-          //var t = newMeetingVM.Toastmaster;
           newMeeting.ID = _meetings.Last().ID + 1;
           // add meeting to list
-          _meetings.Add(newMeeting);
+          //_meetings.Add(newMeeting);
+          // probably need a check for meeting date and current date to make sure we're in the future.
+          // Should do this in the editing vm not after we've closed the dialog
+          //DateTime dateTime = DateTime.Now;
+          //DateTime dayOfMeeting = DateTime.ParseExact(newMeetingVM.DayOfMeeting, "MM-dd-yyyy", System.Globalization.CultureInfo.InvariantCulture);
+
+          // save roles out for members
+          //var t = newMeetingVM.Toastmaster;
+
+          Meetings.Add(newMeeting);
+          //newMeeting.
           //Save();
           // update member status
           //newMeetingVM.Toastmaster;
+          NotifyPropertyChanged(() => Meetings);
+          _meetingCount = Meetings.Count();
+          UpdateMemberStatus(newMeeting);
+          //Save();
         }
       }
-
+      NotifyPropertyChanged(() => Meetings);
+      _generateButtonEnabled = true;
+      NotifyPropertyChanged(() => GenerateButtonEnabled);
+     
       return;
     }
 
+    private void UpdateMemberStatus(MeetingModelBase meeting)
+    {
+      DateTime dayOfMeeting = DateTime.ParseExact(meeting.DayOfMeeting, "MM-dd-yyyy", System.Globalization.CultureInfo.InvariantCulture);
+      var type = meeting.MeetingType;
+      var m = _members.First(it => it.Name == meeting.Toastmaster);
+      if (m != null) { m.Toastmaster = dayOfMeeting; }
+      m = _members.First(it => it.Name == meeting.Speaker1);
+      if (m != null) { m.Speaker = dayOfMeeting; }
+      m = _members.First(it => it.Name == meeting.Speaker2);
+      if (m != null) { m.Speaker = dayOfMeeting; }
+      m = _members.First(it => it.Name == meeting.GeneralEvaluator);
+      if (m != null) { m.GeneralEvaluator = dayOfMeeting; }
+      m = _members.First(it => it.Name == meeting.Evaluator1);
+      if (m != null) { m.Evaluator = dayOfMeeting; }
+      m = _members.First(it => it.Name == meeting.Evaluator2);
+      if (m != null) { m.Evaluator = dayOfMeeting; }
+      m = _members.First(it => it.Name == meeting.Grammarian);
+      if (m != null) { m.Gram = dayOfMeeting; }
+      m = _members.First(it => it.Name == meeting.AhCounter);
+      if (m != null) { m.Ah = dayOfMeeting; }
+      m = _members.First(it => it.Name == meeting.Timer);
+      if (m != null) { m.Timer = dayOfMeeting; }
+      m = _members.First(it => it.Name == meeting.HotSeat);
+      if (m != null) { m.HotSeat = dayOfMeeting; }
+      m = _members.First(it => it.Name == meeting.Video);
+      if (m != null) { m.Video = dayOfMeeting; }
+      m = _members.First(it => it.Name == (meeting as MeetingModelRegular).TableTopics);
+      if (m != null) { m.TT = dayOfMeeting; }
+      m = _members.First(it => it.Name == meeting.QuizMaster);
+      if (m != null) { m.Quiz = dayOfMeeting; }
+
+    }
     private void SaveMemberInfo(MemberViewModel m)
     {
       m.Member.Name = m.Name;
@@ -489,7 +595,7 @@ namespace Toastmappers
     {
       _members = members;
       _home = location;
-      
+
     }
 
     private bool _showMeeting;
@@ -511,7 +617,7 @@ namespace Toastmappers
     }
 
     public void Reload()
-    { 
+    {
       //List<MeetingModel> theList = new List<MeetingModel>();
       //using (StreamReader strmReader = new StreamReader("C:\\Users\\mike\\Documents\\TI\\Meetings.dat"))//, FileMode.Open, FileAccess.Read))
       //{
@@ -655,7 +761,9 @@ namespace Toastmappers
       // set CurrentMeeting to last resolved meeting, or meetings that are in the future.
       DateTime today = DateTime.Today.Date;
       var mtg = _meetings.Where(it => DateTime.ParseExact(it.DayOfMeeting, "MM-dd-yyyy", System.Globalization.CultureInfo.InvariantCulture).CompareTo(today) > 0).FirstOrDefault();
-      if (mtg != null)
+      if (mtg == null)
+        mtg = _meetings.Last();
+      else
         CurrentMeeting = new MeetingEditViewModel(mtg, _members);
 
       //var t = DateTime.Now;
@@ -680,7 +788,8 @@ namespace Toastmappers
     //}
     public void Save(bool fromResolve = false)
     {
-      _currentMeeting.Sync();
+
+      //_currentMeeting.Sync();
       //string json = File.ReadAllText(_home + "\\Data\\meetings5.json");
       if (File.Exists("C:\\Users\\mike\\Documents\\TI\\Meetings.json"))
       {
@@ -712,50 +821,62 @@ namespace Toastmappers
 
       if (tm != null && !string.IsNullOrEmpty(tm))
       {
-        member = _members.Where(it => it.Name == tm).First();
-        newDate = member.Toastmaster.AddMinutes(2);
-        bNewerDate = date.CompareTo(member.Toastmaster.AddMinutes(2)) > 0;
-        if (!string.IsNullOrEmpty(tm))
+        // member = _members.Where(it => it.Name == spkr1).FirstOrDefault();
+        member = _members.Where(it => it.Name == tm).FirstOrDefault();
+        if (member != null)
         {
-          if (member != null && bNewerDate)
+
+          //newDate = member.Toastmaster.AddMinutes(2);
+          bNewerDate = date.CompareTo(member.Toastmaster.AddMinutes(2)) > 0;
+          if (!string.IsNullOrEmpty(tm))
           {
-            member.Toastmaster = date;
+            if (bNewerDate)
+            {
+              member.Toastmaster = date;
+            }
           }
         }
       }
       var spkr1 = _currentMeeting.Speaker1;
       if (!string.IsNullOrEmpty(spkr1))
       {
-        member = _members.Where(it => it.Name == spkr1).First();
-        newDate = member.Speaker.AddMinutes(2);
-        bNewerDate = date.CompareTo(member.Speaker.AddMinutes(2)) > 0;
-        if (member != null && bNewerDate)
+        member = _members.Where(it => it.Name == spkr1).FirstOrDefault();
+        if (member != null)
         {
-          member.Speaker = date;
+          newDate = member.Speaker.AddMinutes(2);
+          bNewerDate = date.CompareTo(member.Speaker.AddMinutes(2)) > 0;
+          if (bNewerDate)
+            member.Speaker = date;
         }
       }
 
       var spkr2 = _currentMeeting.Speaker2;
       if (!string.IsNullOrEmpty(spkr2))
       {
-        member = _members.Where(it => it.Name == spkr2).First();
-        newDate = member.Speaker.AddMinutes(2);
-        bNewerDate = date.CompareTo(member.Speaker.AddMinutes(2)) > 0;
-        if (member != null && bNewerDate)
+        member = _members.Where(it => it.Name == spkr2).FirstOrDefault();
+        if (member != null)
         {
-          member.Speaker = date;
+          newDate = member.Speaker.AddMinutes(2);
+          bNewerDate = date.CompareTo(member.Speaker.AddMinutes(2)) > 0;
+          if (bNewerDate)
+          {
+            member.Speaker = date;
+          }
         }
       }
 
       var eval1 = _currentMeeting.Evaluator1;
       if (!string.IsNullOrEmpty(eval1))
       {
-        member = _members.Where(it => it.Name == eval1).First();
-        newDate = member.Evaluator.AddMinutes(2);
-        bNewerDate = date.CompareTo(member.Evaluator.AddMinutes(2)) > 0;
-        if (member != null && bNewerDate)
+        member = _members.Where(it => it.Name == eval1).FirstOrDefault();
+        if (member != null)
         {
-          member.Evaluator = date;
+          newDate = member.Evaluator.AddMinutes(2);
+          bNewerDate = date.CompareTo(member.Evaluator.AddMinutes(2)) > 0;
+          if (bNewerDate)
+          {
+            member.Evaluator = date;
+          }
         }
       }
 
@@ -763,109 +884,136 @@ namespace Toastmappers
       var eval2 = _currentMeeting.Evaluator2;
       if (!string.IsNullOrEmpty(eval2))
       {
-        member = _members.Where(it => it.Name == eval2).First();
-        newDate = member.Evaluator.AddMinutes(2);
-        bNewerDate = date.CompareTo(member.Evaluator.AddMinutes(2)) > 0;
-        if (member != null && bNewerDate)
+        member = _members.Where(it => it.Name == eval2).FirstOrDefault();
+        if (member != null)
         {
-          member.Evaluator = date;
+          newDate = member.Evaluator.AddMinutes(2);
+          bNewerDate = date.CompareTo(member.Evaluator.AddMinutes(2)) > 0;
+          if (member != null && bNewerDate)
+          {
+            member.Evaluator = date;
+          }
         }
       }
 
       var GE = _currentMeeting.GeneralEvaluator;
       if (!string.IsNullOrEmpty(GE))
       {
-        member = _members.Where(it => it.Name == GE).First();
-        newDate = member.GeneralEvaluator.AddMinutes(2); 
-        bNewerDate = date.CompareTo(member.GeneralEvaluator.AddMinutes(2)) > 0;
-        if (member != null && bNewerDate)
+        member = _members.Where(it => it.Name == GE).FirstOrDefault();
+        if (member != null)
         {
-          member.GeneralEvaluator = date;
+          newDate = member.GeneralEvaluator.AddMinutes(2);
+          bNewerDate = date.CompareTo(member.GeneralEvaluator.AddMinutes(2)) > 0;
+          if (member != null && bNewerDate)
+          {
+            member.GeneralEvaluator = date;
+          }
         }
       }
 
       var TT = _currentMeeting.TableTopics;
       if (!string.IsNullOrEmpty(TT))
       {
-        member = _members.Where(it => it.Name == TT).First();
-        newDate = member.TT.AddMinutes(2); 
-        bNewerDate = date.CompareTo(member.TT.AddMinutes(2)) > 0;
-        if (member != null && bNewerDate)
+        member = _members.Where(it => it.Name == TT).FirstOrDefault();
+        if (member != null)
         {
-          member.TT = date;
+          newDate = member.TT.AddMinutes(2);
+          bNewerDate = date.CompareTo(member.TT.AddMinutes(2)) > 0;
+          if (member != null && bNewerDate)
+          {
+            member.TT = date;
+          }
         }
       }
 
       var gram = _currentMeeting.Grammarian;
       if (!string.IsNullOrEmpty(gram))
       {
-        member = _members.Where(it => it.Name == gram).First();
-        newDate = member.Gram.AddMinutes(2); 
-        bNewerDate = date.CompareTo(member.Gram.AddMinutes(2)) > 0;
-        if (member != null && bNewerDate)
+        member = _members.Where(it => it.Name == gram).FirstOrDefault();
+        if (member != null)
         {
-          member.Gram = date;
-        }        
+          newDate = member.Gram.AddMinutes(2);
+          bNewerDate = date.CompareTo(member.Gram.AddMinutes(2)) > 0;
+          if (member != null && bNewerDate)
+          {
+            member.Gram = date;
+          }
+        }
       }
 
 
       var timer = _currentMeeting.Timer;
       if (!string.IsNullOrEmpty(timer))
       {
-        member = _members.Where(it => it.Name == timer).First();
-        newDate = member.Timer.AddMinutes(2); 
-        bNewerDate = date.CompareTo(member.Timer.AddMinutes(2)) > 0;
-        if (member != null && bNewerDate)
+        member = _members.Where(it => it.Name == timer).FirstOrDefault();
+        if (member != null)
         {
-          member.Timer = date;
+          newDate = member.Timer.AddMinutes(2);
+          bNewerDate = date.CompareTo(member.Timer.AddMinutes(2)) > 0;
+          if (member != null && bNewerDate)
+          {
+            member.Timer = date;
+          }
         }
       }
 
       var ah = _currentMeeting.AhCounter;
       if (!string.IsNullOrEmpty(ah))
       {
-        member = _members.Where(it => it.Name == ah).First();
-        newDate = member.Ah.AddMinutes(2); 
-        bNewerDate = date.CompareTo(member.Ah.AddMinutes(2)) > 0;
-        if (member != null && bNewerDate)
+        member = _members.Where(it => it.Name == ah).FirstOrDefault();
+        if (member != null)
         {
-          member.Ah = date;
+          newDate = member.Ah.AddMinutes(2);
+          bNewerDate = date.CompareTo(member.Ah.AddMinutes(2)) > 0;
+          if (member != null && bNewerDate)
+          {
+            member.Ah = date;
+          }
         }
       }
 
       var quiz = _currentMeeting.QuizMaster;
       if (!string.IsNullOrEmpty(quiz))
       {
-        member = _members.Where(it => it.Name == quiz).First();
-        newDate = member.Quiz.AddMinutes(2); 
-        bNewerDate = date.CompareTo(member.Quiz.AddMinutes(2)) > 0;
-        if (member != null && bNewerDate)
+        member = _members.Where(it => it.Name == quiz).FirstOrDefault();
+        if (member != null)
         {
-          member.Quiz = date;
+          newDate = member.Quiz.AddMinutes(2);
+          bNewerDate = date.CompareTo(member.Quiz.AddMinutes(2)) > 0;
+          if (member != null && bNewerDate)
+          {
+            member.Quiz = date;
+          }
         }
       }
 
       var video = _currentMeeting.Video;
       if (!string.IsNullOrEmpty(video))
       {
-        member = _members.Where(it => it.Name == video).First();
-        newDate = member.Video.AddMinutes(2); 
-        bNewerDate = date.CompareTo(member.Video.AddMinutes(2)) > 0;
-        if (member != null && bNewerDate)
+        member = _members.Where(it => it.Name == video).FirstOrDefault();
+        if (member != null)
         {
-          member.Video = date;
+          newDate = member.Video.AddMinutes(2);
+          bNewerDate = date.CompareTo(member.Video.AddMinutes(2)) > 0;
+          if (member != null && bNewerDate)
+          {
+            member.Video = date;
+          }
         }
       }
 
       var hotseat = _currentMeeting.HotSeat;
       if (!string.IsNullOrEmpty(hotseat))
       {
-        member = _members.Where(it => it.Name == hotseat).First();
-        newDate = member.HotSeat.AddMinutes(2); 
-        bNewerDate = date.CompareTo(member.HotSeat.AddMinutes(2)) > 0;
-        if (member != null && bNewerDate)
+        member = _members.Where(it => it.Name == hotseat).FirstOrDefault();
+        if (member != null)
         {
-          member.HotSeat = date;
+          newDate = member.HotSeat.AddMinutes(2);
+          bNewerDate = date.CompareTo(member.HotSeat.AddMinutes(2)) > 0;
+          if (member != null && bNewerDate)
+          {
+            member.HotSeat = date;
+          }
         }
       }
 

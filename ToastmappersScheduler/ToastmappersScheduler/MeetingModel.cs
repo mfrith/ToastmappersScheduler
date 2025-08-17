@@ -58,8 +58,8 @@ namespace Toastmappers
     //  _meetingTemplate = meetingTemplate;
     //}
 
-    public virtual void Generate()
-    { }
+    //public virtual void Generate()
+    //{ }
 
     public MeetingModelBase Deserialize(string json)
     {
@@ -498,9 +498,19 @@ namespace Toastmappers
       //_meetingTemplate = meetingTemplate;
     }
 
-    public override void Generate()
+    public void Generate()
     {
       var tempMembers = new ObservableCollection<MemberViewModel>(_members);
+      var liz = tempMembers.Where(it => it.Member.Name == "Liz Graham").First();
+
+      var iterationMembers = tempMembers.Where(it => it.MeetingsOut.Contains(_meetingDate)).ToList();
+      foreach (var im in iterationMembers)
+        tempMembers.Remove(im);
+
+      var kerri = tempMembers.Where(it => it.Member.Name == "Kerri Rasmussen").First();
+
+      tempMembers.Remove(kerri);
+      tempMembers.Remove(liz);
 
       var speaker1 = tempMembers.OrderBy(a => a.Speaker).First();
       tempMembers.Remove(speaker1);
@@ -542,7 +552,6 @@ namespace Toastmappers
       QuizMaster = quiz?.Name;
       Timer = timer?.Name;
       Video = video?.Name;
-
 
 
     }

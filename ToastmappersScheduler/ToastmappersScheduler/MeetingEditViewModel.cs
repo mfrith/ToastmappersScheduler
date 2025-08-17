@@ -1,5 +1,4 @@
-﻿using Toastmappers;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Microsoft.Windows.Input;
@@ -59,7 +58,9 @@ namespace Toastmappers
     private string _toastmaster;
 
     private string _dayOfMeeting = "";
-
+    private void setBorderFlag(string role)
+    {
+    }
     public string DayOfMeeting
     {
       get { return _dayOfMeeting; } 
@@ -68,25 +69,82 @@ namespace Toastmappers
     public string Toastmaster
     {
       get { return _meeting.Toastmaster; }
-      set { _meeting.Toastmaster = value; }
+      set { _meeting.Toastmaster = value; if (CheckDuplicateRole(value)) setBorderFlag("Toastmaster"); }
     }
-    public string Speaker1 { get; set; }
-    public string Speaker2 { get; set; }
+
+    public string Speaker1
+    {
+      get { return _meeting.Speaker1; }
+      set { _meeting.Speaker1 = value; }
+    }
+
+    public string Speaker2
+    {
+      get { return _meeting.Speaker2; }
+      set { _meeting.Speaker2 = value; }
+    }
     public string Speaker3 { get; set; }
     public string Speaker4 { get; set; }
     public string Speaker5 { get; set; }
-    public string GeneralEvaluator { get; set; }
-    public string Evaluator1 { get; set; }
-    public string Evaluator2 { get; set; }
+    public string GeneralEvaluator
+    {
+      get { return _meeting.GeneralEvaluator; }
+      set { _meeting.GeneralEvaluator = value; }
+    }
+    public string Evaluator1
+    {
+      get { return _meeting.Evaluator1; }
+      set { _meeting.Evaluator1 = value; }
+    }
+    public string Evaluator2
+    {
+      get { return _meeting.Evaluator2; }
+      set { _meeting.Evaluator2 = value; }
+    }
     public string Evaluator3 { get; set; }
     public string Evaluator4 { get; set; }
     public string Evaluator5 { get; set; }
-    public string AhCounter { get; set; }
-    public string Grammarian { get; set; }
-    public string Timer { get; set; }
-    public string QuizMaster { get; set; }
-    public string Video { get; set; }
-    public string HotSeat { get; set; }
+    public string AhCounter
+    {
+      get { return _meeting.AhCounter; }
+      set { _meeting.AhCounter = value; }
+    }
+
+    public string Grammarian
+    {
+      get { return _meeting.Grammarian; }
+      set { _meeting.Grammarian = value; }
+    }
+
+    public string Timer
+    {
+      get { return _meeting.Timer; }
+      set { _meeting.Timer = value; }
+    }
+
+    public string QuizMaster
+    {
+      get { return _meeting.QuizMaster; }
+      set { _meeting.QuizMaster = value; }
+    }
+
+    public string Video
+    {
+      get { return _meeting.Video; }
+      set { _meeting.Video = value; }
+    }
+
+    public string HotSeat
+    {
+      get { return _meeting.HotSeat; }
+      set { _meeting.HotSeat = value; }
+    }
+    private bool CheckDuplicateRole(string name)
+    {
+      
+      return _namesWithRole.Contains(name);
+    }
+
     private ObservableCollection<string> _attendees;
 
     public ObservableCollection<string> Attendees
@@ -260,15 +318,21 @@ namespace Toastmappers
       NotifyPropertyChanged(() => AttendeesMembersList);
 
     }
+    private List<string> _namesWithRole = new List<string>();
 
     private MeetingModelBase _meeting;
     private bool _bResolve;
     public MeetingEditViewModel(MeetingModelBase mtgToEdit, ObservableCollection<MemberViewModel> members, bool bResolve = true)
     {
-      _meeting = mtgToEdit;
       _members = members;
-      _attendeemembers = new ObservableCollection<MemberViewModel>(members);
-      _ttcontestantmembers = new ObservableCollection<MemberViewModel>(members);
+      //var iterationMembers = members.Where(it => it.MeetingsOut.Contains(DateTime.ParseExact(mtgToEdit.DayOfMeeting, "MM-dd-yyyy", System.Globalization.CultureInfo.InvariantCulture))).ToList();
+      //foreach (var im in iterationMembers)
+      //  _members.Remove(im);
+      
+      _meeting = mtgToEdit;
+
+      _attendeemembers = new ObservableCollection<MemberViewModel>(_members);
+      _ttcontestantmembers = new ObservableCollection<MemberViewModel>(_members);
       Toastmaster = _meeting.Toastmaster;
       Speaker1 = _meeting.Speaker1;
       Speaker2 = _meeting.Speaker2;
@@ -297,6 +361,22 @@ namespace Toastmappers
       Attendees = _meeting.Attendees;
       ID = _meeting.ID.ToString();
       _bResolve = bResolve;
+
+      _namesWithRole.Add(Toastmaster);
+      _namesWithRole.Add(Speaker1);
+      _namesWithRole.Add(Speaker2);
+      _namesWithRole.Add(GeneralEvaluator);
+      _namesWithRole.Add(Evaluator1);
+      _namesWithRole.Add(Evaluator2);
+      if (mtgToEdit.MeetingType == 1)
+        _namesWithRole.Add(TableTopics);
+      _namesWithRole.Add(HotSeat);
+      _namesWithRole.Add(Grammarian);
+      _namesWithRole.Add(AhCounter);
+      _namesWithRole.Add(QuizMaster);
+      _namesWithRole.Add(Timer);
+      _namesWithRole.Add(Video);
+
     }
 
     public void Reset()
