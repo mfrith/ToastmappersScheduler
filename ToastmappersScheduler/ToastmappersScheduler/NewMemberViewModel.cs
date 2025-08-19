@@ -14,6 +14,7 @@ namespace Toastmappers
       view.Owner = System.Windows.Application.Current.MainWindow;
       view.DataContext = this;
       bool ret = false;
+
       bool? success = view.ShowDialog();
       if (success == true)
       {
@@ -64,6 +65,14 @@ namespace Toastmappers
     {
       get { return _hasBeenOfficer; }
       set { SetProperty(ref _hasBeenOfficer, value, () => HasBeenOfficer); }
+    }
+
+    private List<string> _mentors;
+    public List<string> Mentors
+    {
+      get { return _mentors; }
+      set { SetProperty(ref _mentors, value); }
+
     }
   }
 }
