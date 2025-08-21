@@ -516,6 +516,8 @@ namespace Toastmappers
       tempMembers.Remove(speaker1);
       var speaker2 = tempMembers.OrderBy(a => a.Speaker).First();
       tempMembers.Remove(speaker2);
+      tempMembers.Add(liz);
+      tempMembers.Add(kerri);
       var evaluator1 = tempMembers.Where(a => a.CanBeEvaluator == true).OrderBy(a => a.Evaluator).First();
       tempMembers.Remove(evaluator1);
       var evaluator2 = tempMembers.Where(a => a.CanBeEvaluator == true).OrderBy(a => a.Evaluator).First();
