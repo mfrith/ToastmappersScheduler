@@ -6,26 +6,159 @@
         xmlns:local="clr-namespace:Toastmappers"
         mc:Ignorable="d"
         WindowStartupLocation="CenterOwner"
-        Title="New Member" Height="200" Width="200">
+        Title="New Member" Height="300" Width="300">
     <Grid>
     <StackPanel Margin="10,10,0,0">
       <DockPanel>
-        <TextBlock Text="Name"></TextBlock>
-        <TextBox Margin="10,0,0,0" Text="{Binding Name}"/>
+        <TextBlock Margin="0,5" Text="Name" Height="20"/>
+        <TextBox Margin="5" Text="{Binding Name}" Height="20"/>
       </DockPanel>
       <DockPanel>
-        <TextBlock Text="MemberID"></TextBlock>
-        <TextBox Margin="10,0,0,0" Text="{Binding MemberID}"></TextBox>
+        <TextBlock Margin="0,5" Text="MemberID"></TextBlock>
+        <TextBox Margin="5" Text="{Binding MemberID}"></TextBox>
       </DockPanel>
-      <CheckBox Content="Is Current" IsChecked="{Binding IsCurrent, Mode=TwoWay}"/>
-      <CheckBox Content="Can be Toastmaster" IsChecked="{Binding CanBeToastmaster, Mode=TwoWay}"/>
-      <CheckBox Content="Can Be Evaluator" IsChecked="{Binding CanBeEvaluator, Mode=TwoWay}"/>
-      <CheckBox Content="Has been an officer" IsChecked="{Binding HasBeenOfficer}"/>
+      <DockPanel>
 
-      <DockPanel>
-        <Button IsDefault="True" Content="Ok" HorizontalAlignment="Left"  VerticalAlignment="Top" Width="75" Click="Button_Click"/>
-        <Button IsCancel="True" Content="Cancel" HorizontalAlignment="Left"  VerticalAlignment="Top" Width="75" Click="Button_Click_1"/>
-      </DockPanel>
+        <StackPanel >
+          <TextBlock  Text="Mentors" HorizontalAlignment="Center"/>
+          <ComboBox Name="MentorsCombo" ItemsSource="{Binding Members}" DropDownClosed="MentorsCombo_DropDownClosed" />
+          <ListBox x:Name="newMemberListBox" ItemsSource="{Binding Mentors}" Height="45">
+            <ListBox.ItemTemplate >
+              <DataTemplate>
+                <Border BorderBrush="Black" BorderThickness="1" Margin="1">
+                  <StackPanel Orientation="Horizontal">
+                    <!--<Button x:Name="Delete" Width="20" Visibility="Hidden" />-->
+                    <Button x:Name="Delete" FontFamily="Segoe MDL2 Assets" FontSize="18" Content="&#xE74D;" HorizontalAlignment="Left"  VerticalAlignment="Top" Visibility="Hidden"
+                       CommandParameter="{Binding}" Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBox}}, Path=DataContext.DeleteMentorCmd}"/>
+                    <TextBlock Text="{Binding }" Width="120" VerticalAlignment="Center"/>
+                  </StackPanel>
+                </Border>
+                <DataTemplate.Triggers>
+                  <DataTrigger Binding="{Binding IsMouseOver,RelativeSource={RelativeSource TemplatedParent}}" Value="True">
+                    <Setter Property="Visibility" TargetName="Delete" Value="Visible"/>
+                  </DataTrigger>
+                </DataTemplate.Triggers>
+              </DataTemplate>
+            </ListBox.ItemTemplate>
+          </ListBox>
+        </StackPanel>
+
+        <!--<StackPanel Grid.Row="3" Grid.ColumnSpan="2">
+          <TextBlock  Text="Mentors" HorizontalAlignment="Center"/>
+          <ComboBox Name="MentorsCombo" ItemsSource="{Binding MentorsMembersList}" DropDownClosed="MentorsCombo_DropDownClosed"/>
+
+          <ListBox ItemsSource="{Binding SetMemberRoleStatus.Mentors}">
+            <ListBox.ItemContainerStyle>
+              <Style TargetType="{x:Type ListBoxItem}">
+                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                <Setter Property="IsSelected" Value="{Binding Mode=TwoWay, Path=IsSelected}"/>
+                --><!--Setter Property="FocusManager.FocusedElement" Value="{Binding RelativeSource={RelativeSource Self}}"/--><!--
+                <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                --><!--<EventSetter Event="PreviewMouseWheel" Handler="HandlePreviewMouseWheel"/>--><!--
+                <Setter Property="Template">
+                  <Setter.Value>
+                    <ControlTemplate TargetType="ListBoxItem">
+                      <Grid Margin="0,1,0,1" Focusable="False" Background="Transparent">
+                        <Grid.ContextMenu>
+                          <ContextMenu>
+                            <MenuItem Header="Remove" Command="{Binding Path=DataContext.OnDel,RelativeSource={RelativeSource TemplatedParent}}"/>
+
+                            <MenuItem Header="MoveUp" Command="{Binding Path=DataContext.OnUp,RelativeSource={RelativeSource TemplatedParent}}"/>
+                            <MenuItem Header="MoveDown" Command="{Binding Path=DataContext.OnDown,RelativeSource={RelativeSource TemplatedParent}}"/>
+                            <MenuItem Header="RemoveAll" Command="{Binding Path=DataContext.OnDelAll,RelativeSource={RelativeSource TemplatedParent}}"/>
+
+                          </ContextMenu>
+                        </Grid.ContextMenu>
+                        <Rectangle Fill="{TemplateBinding Background}" Width="5" HorizontalAlignment="Left">
+
+                          <Rectangle.ToolTip>
+
+                            <TextBlock />
+
+                          </Rectangle.ToolTip>
+
+                        </Rectangle>
+                        <Button Name="btRm" Command="{Binding Path=DataContext.OnDel,RelativeSource={RelativeSource TemplatedParent}}"
+                  Focusable="False" Width="14" Height="14" CommandParameter="{Binding}"
+                  Margin="0" Padding="0"
+                  ToolTip="Remove"
+                  VerticalAlignment="Center" HorizontalAlignment="Left"
+                  HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                  BorderThickness="0" Content="X"
+                  Visibility="Hidden">
+
+
+                        </Button>
+
+                        <ContentPresenter IsHitTestVisible="False" Width="8" HorizontalAlignment="Left"/>
+
+
+                        <ContentPresenter Content="{TemplateBinding Content}"
+                  ContentTemplate="{TemplateBinding ContentTemplate}"
+                  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                  />
+
+                      </Grid>
+                      <ControlTemplate.Triggers>
+                        <MultiTrigger>
+                          <MultiTrigger.Conditions>
+
+                            <Condition Property="Selector.IsSelected" Value="True"/>
+
+                            <Condition Property="IsMouseOver" Value="True"/>
+                          </MultiTrigger.Conditions>
+                          <Setter TargetName="btRm" Property="Visibility" Value="Visible"/>
+                        </MultiTrigger>
+                      </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                  </Setter.Value>
+                </Setter>
+                <Style.Triggers>
+                  --><!--<Trigger Property="Selector.IsSelected" Value="True">
+          <Setter Property="Background" Value="{DynamicResource Esri_Blue6}" />
+        </Trigger>-->
+                  <!-- IsKeyboardFocusWithin
+        <Trigger Property="Selector.IsSelectionActive" Value="False">
+          <Setter Property="Background" Value="{DynamicResource Esri_Gray100}" />
+        </Trigger>--><!--
+                  <MultiTrigger>
+                    <MultiTrigger.Conditions>
+                      <Condition Property="Selector.IsSelected" Value="True"/>
+                      <Condition Property="Selector.IsSelectionActive" Value="False"/>
+                    </MultiTrigger.Conditions>
+                    <Setter Property="Background" Value="Gray"/>
+                  </MultiTrigger>
+
+                  <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="Blue" />
+                  </Trigger>
+                  <MultiTrigger>
+                    <MultiTrigger.Conditions>
+                      <Condition Property="IsMouseOver" Value="True"/>
+                      <Condition Property="Selector.IsSelected" Value="True"/>
+                    </MultiTrigger.Conditions>
+                    <Setter Property="Background" Value="Blue"/>
+                  </MultiTrigger>
+                </Style.Triggers>
+
+              </Style>
+            </ListBox.ItemContainerStyle>
+
+          </ListBox>
+        </StackPanel>-->
+    <!--</StackPanel>-->
+    </DockPanel>
+      <CheckBox Margin="0,2" Content="Is Current" IsChecked="{Binding IsCurrent, Mode=TwoWay}"/>
+      <CheckBox Margin="0,2" Content="Can be Toastmaster" IsChecked="{Binding CanBeToastmaster, Mode=TwoWay}"/>
+      <CheckBox Margin="0,2" Content="Can Be Evaluator" IsChecked="{Binding CanBeEvaluator, Mode=TwoWay}"/>
+      <CheckBox Margin="0,2" Content="Has been an officer" IsChecked="{Binding HasBeenOfficer}"/>
+
+      <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+        <Button Margin="5" IsDefault="True" Content="Ok"  Width="75" Click="Button_Click"/>
+        <Button Margin="5" IsCancel="True" Content="Cancel" Width="75" Click="Button_Click_1"/>
+      </StackPanel>
     </StackPanel>
 
 
