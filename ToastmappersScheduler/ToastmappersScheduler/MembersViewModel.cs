@@ -404,9 +404,20 @@ namespace Toastmappers
       }
     }
 
+    public List<string> MembersNames()
+    {
+      List<string> names = [];
+      foreach (var member in _members)
+      {
+        names.Add(member.Name);
+      }
+      return names;
+    }
+
     public void NewMember()
     {
-      NewMemberViewModel newMember = new NewMemberViewModel();
+
+      NewMemberViewModel newMember = new NewMemberViewModel(MembersNames());
       newMember.IsCurrent = true;
       bool success = newMember.ShowDialog();
       if (!success)
@@ -419,8 +430,8 @@ namespace Toastmappers
       n.MemberID = newMember.MemberID;
       n.HasBeenOfficer = newMember.HasBeenOfficer;
       n.IsCurrentMember = newMember.IsCurrent;
+      n.Mentors = newMember.Mentors;
       n.MeetingsOut = new List<System.DateTime>();
-      n.Mentors = new ObservableCollection<string>();
 
       MemberViewModel newvm = new MemberViewModel(n);
       _members.Add(newvm);

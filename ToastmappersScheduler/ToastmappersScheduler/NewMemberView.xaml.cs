@@ -12,7 +12,7 @@ namespace Toastmappers
     public NewMemberView()
     {
       InitializeComponent();
-      MainViewModel a = (MainViewModel)this.DataContext;
+      //NewMemberViewModel a = (NewMemberViewModel)this.DataContext;
     }
 
     private void Button_Click(object sender, RoutedEventArgs e)
@@ -32,9 +32,12 @@ namespace Toastmappers
       var t = sender as ComboBox;
       if (t == null || t.SelectedItem == null)
         return;
-      
-      string a = t.SelectedItem.ToString();
+
+      NewMemberViewModel a = (NewMemberViewModel)this.DataContext;
+      a.Mentors.Add(t.Text);
+      //newMemberListBox.Items.Add(t.Text);
 
     }
   }
+
 }
