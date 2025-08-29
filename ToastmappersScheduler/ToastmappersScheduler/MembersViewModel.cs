@@ -26,6 +26,7 @@ namespace Toastmappers
       set {; }
     }
 
+    
     public ObservableCollection<MemberViewModel> PastMembers
     { get => _pastMembers; }
 
@@ -168,6 +169,21 @@ namespace Toastmappers
 
     }
 
+    private ICommand _deleteMentorCommand;
+    public ICommand DeleteMentorCmd
+    {
+      get { return _deleteMentorCommand ??= new RelayCommand((p) => DeleteMentor(p), () => true); }
+    }
+
+    private void DeleteMentor(object item)
+    {
+      // need to create item or pass name to delete here
+      // which list are we in?
+      var tr = item.ToString();
+      if (string.IsNullOrEmpty(tr))
+        return;
+      _mme.Mentors.Remove(tr);
+    }
     private ICommand _setLastRoleCmd;
     public ICommand SetLastRoleCmd
     {
@@ -404,6 +420,11 @@ namespace Toastmappers
       }
     }
 
+    public List<string> MemberNames
+    {
+      get => MembersNames();
+
+    }
     public List<string> MembersNames()
     {
       List<string> names = [];

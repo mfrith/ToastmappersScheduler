@@ -256,14 +256,15 @@ namespace Toastmappers
 
     private void MentorsCombo_DropDownClosed(object sender, EventArgs e)
     {
+      MemberViewModel member = (MemberViewModel)MemberInfoComboBox.SelectedItem;
+      if (member == null)
+        return;
+
       var t = sender as ComboBox;
       if (t == null || t.SelectedItem == null)
         return;
 
-      MeetingsResolutionViewModel mtgBeingResolved = (MeetingsResolutionViewModel)this.DataContext;
-      var mtg = mtgBeingResolved.CurrentMeetingToResolve;
-      string a = t.SelectedItem.ToString();
-      mtg.AddAttendee(a);
+      member.Mentors.Add(t.Text);
     }
 
     private ICommand _backupCommand;
