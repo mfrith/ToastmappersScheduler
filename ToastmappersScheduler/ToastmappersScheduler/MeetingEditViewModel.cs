@@ -157,8 +157,11 @@ namespace Toastmappers
       }
     }
     public bool Resolved { get; set; }
-    public string TableTopics { get; set; }
-
+    public string TableTopics
+    {
+      get { return (_meeting as MeetingModelRegular).TableTopics; }
+      set { (_meeting as MeetingModelRegular).TableTopics = value; }
+    }
     public string Month { get; set; }
     public string Year { get; set; }
     public string WOTD { get; set; }

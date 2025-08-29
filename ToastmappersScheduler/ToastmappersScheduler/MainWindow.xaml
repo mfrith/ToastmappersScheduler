@@ -472,17 +472,38 @@
                       </DockPanel>
                       <StackPanel Grid.Row="3" Grid.ColumnSpan="2">
                         <TextBlock  Text="Mentors" HorizontalAlignment="Center"/>
-                        <ComboBox Name="MentorsCombo" ItemsSource="{Binding MentorsMembersList}" DropDownClosed="MentorsCombo_DropDownClosed"/>
+                        <ComboBox Name="MentorsCombo" ItemsSource="{Binding MemberNames}" DropDownClosed="MentorsCombo_DropDownClosed"/>
 
-                        <ListBox ItemsSource="{Binding SetMemberRoleStatus.Mentors}">
+                        <ListBox x:Name="newMemberListBox" ItemsSource="{Binding SetMemberRoleStatus.Mentors}" Height="45">
+                          <ListBox.ItemTemplate >
+                            <DataTemplate>
+                              <Border BorderBrush="Black" BorderThickness="1" Margin="1">
+                                <StackPanel Orientation="Horizontal">
+                                  <!--<Button x:Name="Delete" Width="20" Visibility="Hidden" />-->
+                                  <Button x:Name="Delete" FontFamily="Segoe MDL2 Assets" FontSize="18" Content="&#xE74D;" HorizontalAlignment="Left"  VerticalAlignment="Top" Visibility="Hidden"
+                       CommandParameter="{Binding}" Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBox}}, Path=DataContext.DeleteMentorCmd}"/>
+                                  <TextBlock Text="{Binding }" Width="120" VerticalAlignment="Center"/>
+                                </StackPanel>
+                              </Border>
+                              <DataTemplate.Triggers>
+                                <DataTrigger Binding="{Binding IsMouseOver,RelativeSource={RelativeSource TemplatedParent}}" Value="True">
+                                  <Setter Property="Visibility" TargetName="Delete" Value="Visible"/>
+                                </DataTrigger>
+                              </DataTemplate.Triggers>
+                            </DataTemplate>
+                          </ListBox.ItemTemplate>
+                        </ListBox>
+                        
+                        
+                        <!--<ListBox ItemsSource="{Binding SetMemberRoleStatus.Mentors}">
                           <ListBox.ItemContainerStyle>
                             <Style TargetType="{x:Type ListBoxItem}">
                               <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                               <Setter Property="VerticalContentAlignment" Value="Stretch"/>
                               <Setter Property="IsSelected" Value="{Binding Mode=TwoWay, Path=IsSelected}"/>
-                              <!--Setter Property="FocusManager.FocusedElement" Value="{Binding RelativeSource={RelativeSource Self}}"/-->
+                              --><!--Setter Property="FocusManager.FocusedElement" Value="{Binding RelativeSource={RelativeSource Self}}"/--><!--
                               <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
-                              <!--<EventSetter Event="PreviewMouseWheel" Handler="HandlePreviewMouseWheel"/>-->
+                              --><!--<EventSetter Event="PreviewMouseWheel" Handler="HandlePreviewMouseWheel"/>--><!--
                               <Setter Property="Template">
                                 <Setter.Value>
                                   <ControlTemplate TargetType="ListBoxItem">
@@ -543,13 +564,13 @@
                                 </Setter.Value>
                               </Setter>
                               <Style.Triggers>
-                                <!--<Trigger Property="Selector.IsSelected" Value="True">
+                                --><!--<Trigger Property="Selector.IsSelected" Value="True">
           <Setter Property="Background" Value="{DynamicResource Esri_Blue6}" />
         </Trigger>-->
                                 <!-- IsKeyboardFocusWithin
         <Trigger Property="Selector.IsSelectionActive" Value="False">
           <Setter Property="Background" Value="{DynamicResource Esri_Gray100}" />
-        </Trigger>-->
+        </Trigger>--><!--
                                 <MultiTrigger>
                                   <MultiTrigger.Conditions>
                                     <Condition Property="Selector.IsSelected" Value="True"/>
@@ -573,7 +594,7 @@
                             </Style>
                           </ListBox.ItemContainerStyle>
 
-                        </ListBox>
+                        </ListBox>-->
                       </StackPanel>
                     </StackPanel>
                     <StackPanel Width="200" HorizontalAlignment="Left">
