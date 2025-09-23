@@ -1,5 +1,4 @@
 ﻿
-using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -531,34 +530,141 @@ namespace Toastmappers
 
     private void UpdateMemberStatus(MeetingModelBase meeting)
     {
+      // this needs to be dependent on the template for the meeting
+
       DateTime dayOfMeeting = DateTime.ParseExact(meeting.DayOfMeeting, "MM-dd-yyyy", System.Globalization.CultureInfo.InvariantCulture);
       var type = meeting.MeetingType;
-      var m = _members.First(it => it.Name == meeting.Toastmaster);
-      if (m != null) { m.Toastmaster = dayOfMeeting; }
-      m = _members.First(it => it.Name == meeting.Speaker1);
-      if (m != null) { m.Speaker = dayOfMeeting; }
-      m = _members.First(it => it.Name == meeting.Speaker2);
-      if (m != null) { m.Speaker = dayOfMeeting; }
-      m = _members.First(it => it.Name == meeting.GeneralEvaluator);
-      if (m != null) { m.GeneralEvaluator = dayOfMeeting; }
-      m = _members.First(it => it.Name == meeting.Evaluator1);
-      if (m != null) { m.Evaluator = dayOfMeeting; }
-      m = _members.First(it => it.Name == meeting.Evaluator2);
-      if (m != null) { m.Evaluator = dayOfMeeting; }
-      m = _members.First(it => it.Name == meeting.Grammarian);
-      if (m != null) { m.Gram = dayOfMeeting; }
-      m = _members.First(it => it.Name == meeting.AhCounter);
-      if (m != null) { m.Ah = dayOfMeeting; }
-      m = _members.First(it => it.Name == meeting.Timer);
-      if (m != null) { m.Timer = dayOfMeeting; }
-      m = _members.First(it => it.Name == meeting.HotSeat);
-      if (m != null) { m.HotSeat = dayOfMeeting; }
-      m = _members.First(it => it.Name == meeting.Video);
-      if (m != null) { m.Video = dayOfMeeting; }
-      m = _members.First(it => it.Name == (meeting as MeetingModelRegular).TableTopics);
-      if (m != null) { m.TT = dayOfMeeting; }
-      m = _members.First(it => it.Name == meeting.QuizMaster);
-      if (m != null) { m.Quiz = dayOfMeeting; }
+      MemberViewModel? member = null;
+
+      var tm = meeting.Toastmaster;
+      if (tm != null && !string.IsNullOrEmpty(tm))
+      {
+        member = _members.Where(it => it.Name == tm).FirstOrDefault();
+        if (member != null)
+          member.Toastmaster = dayOfMeeting;
+      }
+
+      var spkr1 = meeting.Speaker1;
+      if (!string.IsNullOrEmpty(spkr1))
+      {
+        member = _members.Where(it => it.Name == spkr1).FirstOrDefault();
+        if (member != null)
+          member.Speaker = dayOfMeeting;
+      }
+
+      var spkr2 = meeting.Speaker2;
+      if (!string.IsNullOrEmpty(spkr2))
+      {
+        member = _members.Where(it => it.Name == spkr2).FirstOrDefault();
+        if (member != null)
+          member.Speaker = dayOfMeeting;
+      }
+
+      var eval1 = meeting.Evaluator1;
+      if (!string.IsNullOrEmpty(eval1))
+      {
+        member = _members.Where(it => it.Name == eval1).FirstOrDefault();
+        if (member != null)
+          member.Evaluator = dayOfMeeting;
+      }
+
+      var eval2 = meeting.Evaluator2;
+      if (!string.IsNullOrEmpty(eval2))
+      {
+        member = _members.Where(it => it.Name == eval2).FirstOrDefault();
+        if (member != null)
+          member.Evaluator = dayOfMeeting;
+      }
+
+      var GE = meeting.GeneralEvaluator;
+      if (!string.IsNullOrEmpty(GE))
+      {
+        member = _members.Where(it => it.Name == GE).FirstOrDefault();
+        if (member != null)
+          member.GeneralEvaluator = dayOfMeeting;
+      }
+
+      var TT = (meeting as MeetingModelRegular).TableTopics;
+      if (!string.IsNullOrEmpty(TT))
+      {
+        member = _members.Where(it => it.Name == TT).FirstOrDefault();
+        if (member != null)
+          member.TT = dayOfMeeting;
+      }
+
+      var gram = meeting.Grammarian;
+      if (!string.IsNullOrEmpty(gram))
+      {
+        member = _members.Where(it => it.Name == gram).FirstOrDefault();
+        if (member != null)
+          member.Gram = dayOfMeeting;
+      }
+
+
+      var timer = meeting.Timer;
+      if (!string.IsNullOrEmpty(timer))
+      {
+        member = _members.Where(it => it.Name == timer).FirstOrDefault();
+        if (member != null)
+          member.Timer = dayOfMeeting;
+      }
+
+      var ah = meeting.AhCounter;
+      if (!string.IsNullOrEmpty(ah))
+      {
+        member = _members.Where(it => it.Name == ah).FirstOrDefault();
+        if (member != null)
+          member.Ah = dayOfMeeting;
+      }
+
+      var quiz = meeting.QuizMaster;
+      if (!string.IsNullOrEmpty(quiz))
+      {
+        member = _members.Where(it => it.Name == quiz).FirstOrDefault();
+        if (member != null)
+          member.Quiz = dayOfMeeting;
+      }
+
+      var video = meeting.Video;
+      if (!string.IsNullOrEmpty(video))
+      {
+        member = _members.Where(it => it.Name == video).FirstOrDefault();
+        if (member != null)
+          member.Video = dayOfMeeting;
+      }
+
+      var hotseat = meeting.HotSeat;
+      if (!string.IsNullOrEmpty(hotseat))
+      {
+        member = _members.Where(it => it.Name == hotseat).FirstOrDefault();
+        if (member != null)
+          member.HotSeat = dayOfMeeting;
+      }
+
+      //m = _members.First(it => it.Name == meeting.Speaker1);
+      //if (m != null) { m.Speaker = dayOfMeeting; }
+      //m = _members.First(it => it.Name == meeting.Speaker2);
+      //if (m != null) { m.Speaker = dayOfMeeting; }
+      //m = _members.First(it => it.Name == meeting.GeneralEvaluator);
+      //if (m != null) { m.GeneralEvaluator = dayOfMeeting; }
+      //m = _members.First(it => it.Name == meeting.Evaluator1);
+      //if (m != null) { m.Evaluator = dayOfMeeting; }
+      //m = _members.First(it => it.Name == meeting.Evaluator2);
+      //if (m != null) { m.Evaluator = dayOfMeeting; }
+      //m = _members.First(it => it.Name == meeting.Grammarian);
+      //if (m != null) { m.Gram = dayOfMeeting; }
+      //m = _members.First(it => it.Name == meeting.AhCounter);/
+      //if (m != null) { m.Ah = dayOfMeeting; }
+      //m = _members.First(it => it.Name == meeting.Timer);
+      //if (m != null) { m.Timer = dayOfMeeting; }
+      //m = _members.First(it => it.Name == meeting.HotSeat);
+      //if (m != null) { m.HotSeat = dayOfMeeting; }
+      //m = _members.First(it => it.Name == meeting.Video);
+      //if (m != null) { m.Video = dayOfMeeting; }
+      //m = _members.First(it => it.Name == (meeting as MeetingModelRegular).TableTopics);
+      //if (m != null) { m.TT = dayOfMeeting; }
+      //m = _members.First(it => it.Name == meeting.QuizMaster);
+      //if (m != null) { m.Quiz = dayOfMeeting; }
 
     }
     private void SaveMemberInfo(MemberViewModel m)
