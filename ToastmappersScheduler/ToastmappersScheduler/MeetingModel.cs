@@ -501,13 +501,13 @@ namespace Toastmappers
     public void Generate()
     {
       var tempMembers = new ObservableCollection<MemberViewModel>(_members);
-      var liz = tempMembers.Where(it => it.Member.Name == "Liz Graham").First();
+      var liz = tempMembers.Where(it => it.Member.Name == "Liz Graham").SingleOrDefault();
+      var kerri = tempMembers.Where(it => it.Member.Name == "Kerri Rasmussen").SingleOrDefault();
 
       var iterationMembers = tempMembers.Where(it => it.MeetingsOut.Contains(_meetingDate)).ToList();
       foreach (var im in iterationMembers)
         tempMembers.Remove(im);
 
-      var kerri = tempMembers.Where(it => it.Member.Name == "Kerri Rasmussen").First();
 
       tempMembers.Remove(kerri);
       tempMembers.Remove(liz);
