@@ -232,7 +232,7 @@ namespace Toastmappers
 
       MeetingModelBase mtg = null;
       DateTime date;
-      if (a.Count < 1)
+      if (a.Count <= 1)
       {
         // assume the last date is 01/01/0001
         date = new DateTime(0001, 01, 01);

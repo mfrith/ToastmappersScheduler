@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Toastmappers" 
         mc:Ignorable="d"
-        Title="New Meeting" Height="450" Width="600">
+        Title="New Meeting" Height="450" Width="800">
   <Window.Resources>
     <local:MeetingTemplateSelector x:Key="meetingTemplateSelector"/>
     <DataTemplate x:Key="stuff">
@@ -155,7 +155,8 @@
     <Grid>
       <Grid.ColumnDefinitions>
         <ColumnDefinition/>
-        <!--<ColumnDefinition/>-->
+        <ColumnDefinition/>
+        <ColumnDefinition/>
       </Grid.ColumnDefinitions>
       <Grid.RowDefinitions>
         <RowDefinition Height="Auto"></RowDefinition>
@@ -168,7 +169,9 @@
         <!--<ContentControl Margin="10" ContentTemplate="{StaticResource FirstThreeTemplate}" Content="{Binding}" VerticalAlignment="Top"/>-->
         <DockPanel Margin="10">
           <TextBlock Margin="0,0,10,0" Text="Day of Meeting"/>
-          <TextBox Text="{Binding DayOfMeeting}"/>
+          <!--<TextBox Text="{Binding DayOfMeeting}" Width="150"/>-->
+          <DatePicker Width="100" DockPanel.Dock="Left" HorizontalAlignment="Left" SelectedDate="{Binding DayOfMeeting, Mode=TwoWay}"/>
+          
         </DockPanel>
       </Grid>
       <Grid Grid.Row="1" Grid.Column="0">
@@ -189,7 +192,84 @@
       </Grid>
 
       <!--<ContentControl Grid.Row="1" Content="{Binding CurrentMeetingToResolve}" ContentTemplate="{StaticResource stuff}"/>-->
+      <StackPanel Grid.Row="1" Grid.Column="1" Width="250" HorizontalAlignment="Left" Background="Transparent">
+        <!--<DockPanel HorizontalAlignment="Left" LastChildFill="False">-->
 
+        <ComboBox Name="MemberInfoComboBox" Margin="10" Width="150" Height="25" HorizontalAlignment="Left" 
+                    ItemsSource="{Binding Members}" DisplayMemberPath="Name"
+                    SelectedValue="{Binding SetMemberRoleStatus}" DropDownClosed="MemberInfoComboBox_DropDownClosed"/>
+        <WrapPanel >
+          <TextBlock  Width="100" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="20,0,0,0" Text="Toastmaster"/>
+          <DatePicker  SelectedDate="{Binding SetMemberRoleStatus.Toastmaster}" Width="100" Margin="10,0,0,0"/>
+          <!--<Button Margin="7,0,0,0" Width="92" Content="Set To Last Date" Command="{Binding SetLastRoleCmd}" CommandParameter="Toastmaster" />-->
+        </WrapPanel>
+
+        <WrapPanel>
+          <TextBlock Width="100" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="20,0,0,0" Text="Speaker"/>
+          <DatePicker SelectedDate="{Binding SetMemberRoleStatus.Speaker}" Width="100" Margin="10,0,0,0"/>
+          <!--<Button Margin="7,0,0,0" Width="92" Content="Set To Last Date" Command="{Binding SetLastRoleCmd}" CommandParameter="Speaker" />-->
+        </WrapPanel>
+
+        <WrapPanel >
+          <TextBlock  Width="100" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="20,0,0,0" Text="Evaluator"/>
+          <DatePicker  SelectedDate="{Binding SetMemberRoleStatus.Evaluator}" Width="100" Margin="10,0,0,0"/>
+          <!--<Button Margin="7,0,0,0" Width="92" Content="Set To Last Date" Command="{Binding SetLastRoleCmd}" CommandParameter="Evaluator" />-->
+        </WrapPanel>
+
+        <WrapPanel>
+          <TextBlock Width="100" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="20,0,0,0" Text="General Evaluator"/>
+          <DatePicker SelectedDate="{Binding SetMemberRoleStatus.GeneralEvaluator}" Width="100" Margin="10,0,0,0"/>
+          <!--<Button Margin="7,0,0,0" Width="92" Content="Set To Last Date" Command="{Binding SetLastRoleCmd}" CommandParameter="GeneralEvaluator" />-->
+        </WrapPanel>
+
+        <WrapPanel >
+          <TextBlock  Width="100" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="20,0,0,0" Text="Table Topics"/>
+          <DatePicker  SelectedDate="{Binding SetMemberRoleStatus.TT}" Width="100" Margin="10,0,0,0"/>
+          <!--<Button Margin="7,0,0,0" Width="92" Content="Set To Last Date" Command="{Binding SetLastRoleCmd}" CommandParameter="TableTopics" />-->
+        </WrapPanel>
+
+        <WrapPanel>
+          <TextBlock Width="100" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="20,0,0,0" Text="Ah Counter"/>
+          <DatePicker SelectedDate="{Binding SetMemberRoleStatus.Ah}" Width="100" Margin="10,0,0,0"/>
+          <!--<Button Margin="7,0,0,0" Width="92" Content="Set To Last Date" Command="{Binding SetLastRoleCmd}" CommandParameter="AhCounter" />-->
+        </WrapPanel>
+
+        <WrapPanel >
+          <TextBlock  Width="100" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="20,0,0,0" Text="Timer"/>
+          <DatePicker  SelectedDate="{Binding SetMemberRoleStatus.Timer}" Width="100" Margin="10,0,0,0"/>
+          <!--<Button Margin="7,0,0,0" Width="92" Content="Set To Last Date" Command="{Binding SetLastRoleCmd}" CommandParameter="Timer" />-->
+        </WrapPanel>
+
+        <WrapPanel>
+          <TextBlock Width="100" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="20,0,0,0" Text="Grammarian"/>
+          <DatePicker SelectedDate="{Binding SetMemberRoleStatus.Gram}" Width="100" Margin="10,0,0,0"/>
+          <!--<Button Margin="7,0,0,0" Width="92" Content="Set To Last Date" Command="{Binding SetLastRoleCmd}" CommandParameter="Grammarian" />-->
+        </WrapPanel>
+
+        <WrapPanel>
+          <TextBlock Width="100" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="20,0,0,0" Text="Quiz Master"/>
+          <DatePicker SelectedDate="{Binding SetMemberRoleStatus.Quiz}" Width="100" Margin="10,0,0,0"/>
+          <!--<Button Margin="7,0,0,0" Width="92" Content="Set To Last Date" Command="{Binding SetLastRoleCmd}" CommandParameter="QuizMaster" />-->
+        </WrapPanel>
+
+        <WrapPanel >
+          <TextBlock  Width="100" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="20,0,0,0" Text="Video"/>
+          <DatePicker  SelectedDate="{Binding SetMemberRoleStatus.Video}" Width="100" Margin="10,0,0,0"/>
+          <!--<Button Margin="7,0,0,0" Width="92" Content="Set To Last Date" Command="{Binding SetLastRoleCmd}" CommandParameter="Video" />-->
+        </WrapPanel>
+
+        <WrapPanel>
+          <TextBlock Width="100" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="20,0,0,0" Text="Hot Seat"/>
+          <DatePicker SelectedDate="{Binding SetMemberRoleStatus.HotSeat}" Width="100" Margin="10,0,0,0"/>
+          <!--<Button Margin="7,0,0,0" Width="92" Content="Set To Last Date" Command="{Binding SetLastRoleCmd}" CommandParameter="HotSeat" />-->
+        </WrapPanel>
+
+        <!--<Button Width="50" Margin="20,10,0,0" HorizontalAlignment="Left" Content="Save"/>-->
+      </StackPanel>
+      <StackPanel Grid.Row="1" Grid.Column="2">
+        <ComboBox Name="MeetingRoles" ItemsSource="{Binding Roles}" SelectionChanged="MeetingRoles_SelectionChanged"/>
+        <ListBox Height="250" Name="MeetingRoleList"/>
+      </StackPanel>
       <StackPanel Grid.Row="2" VerticalAlignment="Bottom"  Orientation="Horizontal" HorizontalAlignment="Center">
         <!--<Button FontFamily="Segoe MDL2 Assets" FontSize="20" Content="&#xE76B;" HorizontalAlignment="Left"  VerticalAlignment="Top" Width="75" Command="{Binding PreviousMeetingToResolveCmd}"/>
         <Button FontFamily="Segoe MDL2 Assets" FontSize="20" Content="&#xE76C;" HorizontalAlignment="Left"  VerticalAlignment="Top" Width="75" Command="{Binding NextMeetingToResolveCmd}" />-->

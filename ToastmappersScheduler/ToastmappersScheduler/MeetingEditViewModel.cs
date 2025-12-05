@@ -289,6 +289,32 @@ namespace Toastmappers
       }
     }
 
+    private readonly List<string> _meetingRoles = new List<string>(new string[] {"Toastmaster","Speaker","GeneralEvaluator",
+                                                                  "Evaluator", "TT", "Ah",
+                                                                  "Timer", "Gram", "Quiz", "Video", "HotSeat" });
+    public List<string> Roles
+    {
+      get { return _meetingRoles; }
+    }
+
+    public bool MemberSet
+    {
+      get { return _mme == null ? false : true; }
+    }
+
+    private MemberViewModel _mme;
+    public MemberViewModel SetMemberRoleStatus
+    {
+      get { return _mme; }
+      set
+      {
+        SetProperty(ref _mme, value, () => SetMemberRoleStatus);
+        NotifyPropertyChanged(() => MemberSet);
+      }
+
+      //NotifyPropertyChanged(() => ShowMemberRoles);
+
+    }
     public ObservableCollection<string> MembersList
     {
       get
@@ -300,6 +326,13 @@ namespace Toastmappers
         };
         return newList;
       }
+    }
+    //private ObservableCollection<MemberViewModel> _members = new ObservableCollection<MemberViewModel>();
+    public ObservableCollection<MemberViewModel> Members
+    {
+      get => _members;
+
+      set {; }
     }
 
     private ObservableCollection<MemberViewModel> _attendeemembers;
