@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Windows;
-using System.Windows.Data;
 using System.IO.Compression;
+using System.Linq;
+using System.Windows.Data;
 using System.Windows.Input;
 
 namespace Toastmappers
@@ -34,9 +31,9 @@ namespace Toastmappers
     {
 
       //if (mode == "debug")
-        _home = "C:\\ETS-test";
+        //_home = "C:\\ETS-test";
       //else
-        //_home = "C:\\ETS";
+        _home = "C:\\ETS";
 
       //var t = Assembly.GetExecutingAssembly().Location;d
       //var e = Path.GetDirectoryName(t);

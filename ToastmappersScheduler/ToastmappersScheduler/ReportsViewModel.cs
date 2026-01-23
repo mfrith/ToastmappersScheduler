@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Windows.Input;
 
@@ -59,9 +60,44 @@ namespace Toastmappers
 
       set {; }
     }
+
+    public static Object GetListValue(Object obj, string name)
+    {
+      return obj.GetType().GetProperty(name).GetValue(obj, null);
+
+    }
+
     public void GenerateReport()
     {
+      var mtgs = _meetings.TakeLast(4).ToList();
 
+      List<string> regularTemplateOutput = new(new string[] {"DayOfMeeting","Toastmaster","Speaker1","Speaker2","GeneralEvaluator",
+                                                                  "Evaluator1", "Evaluator2", "TableTopics", "AhCounter",
+                                                                  "Timer", "Grammarian", "QuizMaster", "Video", "HotSeat" });
+
+      // show meetings in dialog for review;
+      string fileName = _home + "\\Agendas\\MeetingsPerMonth" + "January" + "2026" + ".csv";
+      if (File.Exists(fileName))
+      {
+        File.Delete(fileName);
+      }
+
+      using (StreamWriter file = new StreamWriter(fileName))
+      {
+        foreach (var role in regularTemplateOutput)
+        {
+          string row;
+          if (mtgs.Count() == 5)
+            row = role + "," + GetListValue(mtgs[0], role) + "," + GetListValue(mtgs[1], role) + "," + GetListValue(mtgs[2], role) + "," + GetListValue(mtgs[3], role) + "," + GetListValue(mtgs[4], role);
+          else if (mtgs.Count() == 4)
+            row = role + "," + GetListValue(mtgs[0], role) + "," + GetListValue(mtgs[1], role) + "," + GetListValue(mtgs[2], role) + "," + GetListValue(mtgs[3], role);
+          else
+            row = role + "," + GetListValue(mtgs[0], role) + "," + GetListValue(mtgs[1], role) + "," + GetListValue(mtgs[2], role);
+          file.WriteLine(row);
+        }
+
+      }
+      
       var last5 = _meetings.Skip(5).Take(6);
       HashSet<string> octoberAttendees = new HashSet<string>();
       foreach (var m in last5)
