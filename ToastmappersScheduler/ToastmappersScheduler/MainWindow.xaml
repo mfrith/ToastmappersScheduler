@@ -751,8 +751,8 @@
               <CheckBox DockPanel.Dock="Left" Margin="20,5,0,0" IsChecked="{Binding GenerateForMonth, Mode=TwoWay}" Content="Generate for the month"/>
               <CheckBox DockPanel.Dock="Left" Margin="20,5,0,0" IsChecked="{Binding GenerateForFriday, Mode=TwoWay}" Content="Generate for last Friday" IsEnabled="{Binding IsGenerateForMonth, Converter={StaticResource InverseBool}}"/>
               <ComboBox DockPanel.Dock="Left" Margin="10,0,0,0" ItemsSource="{Binding Months}" SelectedIndex="0" SelectedItem="{Binding MonthToGenerateFor}" IsEnabled="{Binding IsGenerateForMonth, Converter={StaticResource InverseBool}}"/>
-              <DatePicker DockPanel.Dock="Left" SelectedDate="{Binding MeetingDateMonth, Mode=TwoWay}" Margin="20, 0,0,0"
-                        IsEnabled="{Binding IsGenerateForMonth, Converter={StaticResource InverseBool}}" Visibility="Collapsed"/>
+              <!--<DatePicker DockPanel.Dock="Left" SelectedDate="{Binding MeetingDateMonth, Mode=TwoWay}" Margin="20, 0,0,0"
+                        IsEnabled="{Binding IsGenerateForMonth, Converter={StaticResource InverseBool}}" Visibility="Collapsed"/>-->
             </DockPanel>
             <DockPanel HorizontalAlignment="Center" LastChildFill="False">
               <Button Margin="10" Width="130" Height="25" HorizontalAlignment="Left" Command="{Binding GenerateMeetingCmd}" Content="Generate Meeting" 

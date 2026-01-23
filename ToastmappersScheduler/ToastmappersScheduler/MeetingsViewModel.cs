@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -478,11 +479,13 @@ namespace Toastmappers
       {
         //_newMeeting = new MeetingModelRegularVM(MeetingDate.ToString("MM-dd-yyyy", CultureInfo.InvariantCulture), MeetingTemplate, temporarymemberList);
         //MeetingModelRegularVM newMeetingVM1 = new MeetingModelRegularVM(MeetingDate, MeetingTemplate, temporarymemberList);
-
+        var iterationMembers = temporarymemberList.Where(it => it.MeetingsOut.Contains(MeetingDate)).ToList();
+        foreach (var im in iterationMembers)
+          temporarymemberList.Remove(im);
         MeetingModelRegular newMeeting = new MeetingModelRegular(MeetingDate, MeetingTemplate, temporarymemberList);
         // if (MeetingTemplate == "Regular Meeting")
         //   newMeeting = new MeetingModelRegularVM();
-
+        
         newMeeting.Generate();
         // generate should be on the model, not the vm
         //_newMeeting.Generate();
@@ -509,7 +512,7 @@ namespace Toastmappers
 
           // save roles out for members
           //var t = newMeetingVM.Toastmaster;
-
+          
           Meetings.Add(newMeeting);
           //newMeeting.
           //Save();
@@ -520,6 +523,8 @@ namespace Toastmappers
           UpdateMemberStatus(newMeeting);
           //Save();
         }
+
+        _newMeeting = new MeetingModelRegularVM(newMeeting);
       }
       NotifyPropertyChanged(() => Meetings);
       _generateButtonEnabled = true;

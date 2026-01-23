@@ -516,7 +516,7 @@ namespace Toastmappers
 
       if (month == 11) //november
       {
-        //meetings.Add(firstWednesday);
+        meetings.Add(firstWednesday);
         meetings.Add(secondWednesday);
         meetings.Add(thirdWednesday);
         meetings.Add(fourthWednesday);
