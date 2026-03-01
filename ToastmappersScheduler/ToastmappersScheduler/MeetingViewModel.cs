@@ -672,8 +672,16 @@ namespace Toastmappers
         if (members.Count == 0)
           ResetMemberList(m, ref members);
 
-        var evaluator = members.Where(a => a.CanBeEvaluator == true)?.OrderBy(a => a.Evaluator).First();
-        m.Evaluator1 = evaluator?.Name;
+        var evaluator = members.Where(a => a.CanBeEvaluator == true)?.OrderBy(a => a.Evaluator).FirstOrDefault();
+        if (evaluator == null)
+        {
+          ResetMemberList(m, ref members);
+          evaluator = members.Where(a => a.CanBeEvaluator == true)?.OrderBy(a => a.Evaluator).First();
+          m.Evaluator1 = evaluator?.Name;
+        }
+        else
+          m.Evaluator1 = evaluator?.Name;
+
         //enames.Add(evaluator.Name);
         evaluator.Evaluator = meetingDates[i];
 
