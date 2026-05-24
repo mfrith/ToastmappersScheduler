@@ -142,13 +142,12 @@ namespace Toastmappers
       var member = _members.Where(it => it.Name == tm).FirstOrDefault();
       DateTime newDate;
       bool bNewerDate;
-      if (member != null)
+      if (member is null)
       {
         member = _pastMembers.Where(it => it.Name == tm).FirstOrDefault();
       }
       if (member != null)
       {
-
         newDate = member.Toastmaster.AddMinutes(2);
         bNewerDate = date.CompareTo(member.Toastmaster.AddMinutes(2)) > 0;
         if (member != null && bNewerDate)
