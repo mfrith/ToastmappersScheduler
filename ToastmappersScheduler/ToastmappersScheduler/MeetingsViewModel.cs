@@ -425,32 +425,32 @@ namespace Toastmappers
         var w = _meetings.Last();
         list = _newMeeting.GenerateForMonth(GenerateForFriday, _meetings[_meetings.Count() - 1].ID + 1, DateTime.ParseExact(_meetings.Last().DayOfMeeting, "MM-dd-yyyy", System.Globalization.CultureInfo.InvariantCulture));
 
-        using (StreamWriter strmWriter = new StreamWriter(_home + "\\Data\\MembersStatus.json"))
-        {
-          // write out all objects(members)
-          string member = string.Empty;
-          //List<MemberModel> SortedList = _members.OrderBy(o => o.Name).ToList();
-          _members.ToList().Sort((x, y) => x.Name.CompareTo(y.Name));
-          foreach (var m in _members)
-          {
-            // need logic to set vm properties into the model before saving, and then need to have the vm not have a reference to the model in the first place
-            SaveMemberInfo(m);
-            member = m.Member.Serialize(m.Member);
-            //member = m.Serialize(m);
-            strmWriter.WriteLine(member);
-          }
-        }
+        //using (StreamWriter strmWriter = new StreamWriter(_home + "\\Data\\MembersStatus.json"))
+        //{
+        //  // write out all objects(members)
+        //  string member = string.Empty;
+        //  //List<MemberModel> SortedList = _members.OrderBy(o => o.Name).ToList();
+        //  _members.ToList().Sort((x, y) => x.Name.CompareTo(y.Name));
+        //  foreach (var m in _members)
+        //  {
+        //    // need logic to set vm properties into the model before saving, and then need to have the vm not have a reference to the model in the first place
+        //    SaveMemberInfo(m);
+        //    member = m.Member.Serialize(m.Member);
+        //    //member = m.Serialize(m);
+        //    strmWriter.WriteLine(member);
+        //  }
+        //}
 
         //IsoDateTimeConverter timeFormat = new IsoDateTimeConverter();
         //timeFormat.DateTimeFormat = "yyyy-MM-dd";
         //File.WriteAllText(_home + "\\Data\\MembersStatus.json", JsonConvert.SerializeObject(_members, timeFormat));
 
-        foreach (var m in list)
-        {
-          _meetings.Add(m);
-        }
+        //foreach (var m in list)
+        //{
+        //  _meetings.Add(m);
+        //}
 
-        Save();
+        //Save();
 
         //string fileName = _home + "\\Data\\Meetings" + MonthToGenerateFor + DateTime.Now.Year.ToString() + ".json";
         //if (!File.Exists(fileName))
