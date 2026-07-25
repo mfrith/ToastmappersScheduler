@@ -541,7 +541,9 @@ namespace Toastmappers
         meetings.Add(secondWednesday);
         //meetings.Add(thirdWednesday);
         meetings.Add(fourthWednesday);
-        //return meetings;
+        if (fifthWednesday <= lastDayOfMonth)
+          meetings.Add(fifthWednesday);
+        return meetings;
       }
       meetings.Add(firstWednesday);
       meetings.Add(secondWednesday);
