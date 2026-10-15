@@ -609,9 +609,12 @@ namespace Toastmappers
       List<MemberViewModel> members = new List<MemberViewModel>(_members);
       var kerri = members.Where(it => it.Member.Name == "Kerri Rasmussen").First();
       var liz = members.Where(it => it.Member.Name == "Liz Graham").First();
+      var suzanne = members.Where((it) => it.Member.Name == "Suzanne Boden").First();
 
       members.Remove(kerri);
       members.Remove(liz);
+      members.Remove(suzanne);
+
       List<string> snames = new List<string>();
       int i = 0;
       List<MeetingModelRegular> meetings = new List<MeetingModelRegular>();
@@ -649,6 +652,8 @@ namespace Toastmappers
 
       members.Add(kerri);
       members.Add(liz);
+      members.Add(suzanne);
+
       i = 0;
       // add the other roles
       foreach (var m in meetings)

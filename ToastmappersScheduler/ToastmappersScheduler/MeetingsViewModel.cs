@@ -93,7 +93,7 @@ namespace Toastmappers
     //ItemsSource="{Binding Months}" SelectedIndex="0" SelectedItem="{Binding MonthToGenerate}"/>
     private string _monthToGenerateFor;// = "January";
 
-    private List<string> _months = new List<string>(new string[] { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" });
+    private List<string> _months = new(["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]);
 
     public string MonthToGenerateFor
     {
@@ -120,7 +120,7 @@ namespace Toastmappers
       get { return !_generateForMonth; }
       set {; }
     }
-    private List<string> _meetingTemplates = new List<string>(new string[] { "Regular Meeting", "Three Speaker Meeting", "Speakathon" });
+    private List<string> _meetingTemplates = new(["Regular Meeting", "Three Speaker Meeting", "Speakathon"]);
     public List<string> MeetingTemplates
     {
       get
@@ -273,22 +273,19 @@ namespace Toastmappers
         File.Delete(fileName);
       }
 
-      using (StreamWriter file = new StreamWriter(fileName))
-      {
-        foreach (var role in regularTemplateOutput)
-        {
-          string row;
-          if (list.Count() == 5)
-            row = role + "," + GetListValue(list[0], role) + "," + GetListValue(list[1], role) + "," + GetListValue(list[2], role) + "," + GetListValue(list[3], role) + "," + GetListValue(list[4], role);
-          else if (list.Count() == 4)
-            row = role + "," + GetListValue(list[0], role) + "," + GetListValue(list[1], role) + "," + GetListValue(list[2], role) + "," + GetListValue(list[3], role);
-          else
-            row = role + "," + GetListValue(list[0], role) + "," + GetListValue(list[1], role) + "," + GetListValue(list[2], role);
-          file.WriteLine(row);
-        }
+      using StreamWriter file = new(fileName);
 
+      foreach (var role in regularTemplateOutput)
+      {
+        string row;
+        if (list.Count == 5)
+          row = role + "," + GetListValue(list[0], role) + "," + GetListValue(list[1], role) + "," + GetListValue(list[2], role) + "," + GetListValue(list[3], role) + "," + GetListValue(list[4], role);
+        else if (list.Count == 4)
+          row = role + "," + GetListValue(list[0], role) + "," + GetListValue(list[1], role) + "," + GetListValue(list[2], role) + "," + GetListValue(list[3], role);
+        else
+          row = role + "," + GetListValue(list[0], role) + "," + GetListValue(list[1], role) + "," + GetListValue(list[2], role);
+        file.WriteLine(row);
       }
-      
     }
 
     public void OK()
@@ -768,7 +765,6 @@ namespace Toastmappers
       //  _meetings = new ObservableCollection<MeetingModelRegular>(meetingList);
 
 
-      string json = File.ReadAllText(_home + "\\Data\\meetings5.json");
       //string json2 = File.ReadAllText(_home + "\\Data\\meetingsTest.json");
 
       //var meetingList = JsonConvert.DeserializeObject<List<MeetingModelRegular>>(json);
@@ -902,11 +898,11 @@ namespace Toastmappers
 
       //_currentMeeting.Sync();
       //string json = File.ReadAllText(_home + "\\Data\\meetings5.json");
-      if (File.Exists("C:\\Users\\mike\\Documents\\TI\\Meetings.json"))
-      {
-        //File.Delete("C:\\Users\\mike\\Documents\\TI\\MembersStatus.json");
+      //if (File.Exists("C:\\Users\\mike\\Documents\\TI\\Meetings.json"))
+      //{
+      //  //File.Delete("C:\\Users\\mike\\Documents\\TI\\MembersStatus.json");
 
-      }
+      //}
       using (StreamWriter strmWriter = new StreamWriter(_home + "\\Data\\meetingstest.json"))
       {
         // write out all objects(members)
@@ -921,6 +917,9 @@ namespace Toastmappers
 
       if (fromResolve)
         return;
+
+      if (_currentMeeting == null)
+        _currentMeeting = new MeetingEditViewModel(_meetings[^1]);
 
       var date = DateTime.ParseExact(_currentMeeting.DayOfMeeting, "MM-dd-yyyy", System.Globalization.CultureInfo.InvariantCulture);
 

@@ -922,7 +922,7 @@
             <!--</TreeView>-->
           </Grid>
           <DockPanel HorizontalAlignment="Left" LastChildFill="False">
-            <Button Margin="10" Width="130" Height="25" HorizontalAlignment="Left" Command="{Binding GenerateReportCmd}" Content="Generate Schedule"/>
+            <Button Margin="10" Width="130" Height="25" HorizontalAlignment="Left" Command="{Binding GenerateReportCmd}" Content="Create Monthly Schedule"/>
           </DockPanel>
         </StackPanel>
 

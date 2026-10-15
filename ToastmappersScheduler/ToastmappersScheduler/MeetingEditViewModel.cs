@@ -275,6 +275,11 @@ namespace Toastmappers
     public MeetingEditViewModel()
     { }
 
+    public MeetingEditViewModel(MeetingModelBase model)
+    {
+      _meeting = model;
+    }
+
     private List<string> _newMeeting;
     public MeetingEditViewModel(List<string> newMeeting)
     {

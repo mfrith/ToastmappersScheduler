@@ -31,7 +31,7 @@ namespace Toastmappers
     {
 
       //if (mode == "debug")
-        //_home = "C:\\ETS-test";
+        _home = "C:\\ETS-test";
       //else
         _home = "C:\\ETS";
 
