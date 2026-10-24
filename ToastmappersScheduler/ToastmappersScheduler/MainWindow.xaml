@@ -904,6 +904,8 @@
               <CheckBox Content="Quiz Master" IsChecked="{Binding QuizMaster}"/>
               <CheckBox Content="Videographer" IsChecked="{Binding Video}"/>
               <CheckBox Content="Hot Seat" IsChecked="{Binding HotSeat}"/>
+              <CheckBox Content="TT Contestant" IsChecked="{Binding TTContestant}"/>
+              <CheckBox Content="TT Winner" IsChecked="{Binding TTWinner}"/>
 
               <Button Margin="20,10,0,0" HorizontalAlignment="Left" Width="35" Content="Find" Command="{Binding FindPastRolesCmd}"/>
             </StackPanel>
