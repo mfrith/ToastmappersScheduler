@@ -19,6 +19,7 @@
     <local:MeetingTemplateSelector x:Key="meetingTemplateSelector"/>
     <BooleanToVisibilityConverter x:Key="Bool2Vis" />
     <local:InverseBoolConverter x:Key="InverseBool" />
+    
     <!--<Style x:Key="Style1" TargetType="{x:Type ListBoxItem}">
       <Setter Property="ContentTemplate">
         <Setter.Value>
@@ -761,7 +762,7 @@
                     Margin="10" Width="70" Height="25" IsEnabled="{Binding ResetButtonEnabled}" />
               <Button Name="clearBtn" Content="Clear" Command="{Binding ClearCmd}"
                     Margin="10" Width="70" Height="25" IsEnabled="{Binding ResetButtonEnabled}" />
-              <Button Name="okBtn" Content="Save" Command="{Binding OKCmd}"
+              <Button Name="okBtn" Content="Save" Command="{Binding OKCmd}" CommandParameter="True"
                     Margin="10" Width="70" Height="25"  />
             </DockPanel>
           </StackPanel>
@@ -921,7 +922,7 @@
             <!--</TreeView>-->
           </Grid>
           <DockPanel HorizontalAlignment="Left" LastChildFill="False">
-            <Button Margin="10" Width="130" Height="25" HorizontalAlignment="Left" Command="{Binding GenerateReportCmd}" Content="Generate Schedule"/>
+            <Button Margin="10" Width="130" Height="25" HorizontalAlignment="Left" Command="{Binding GenerateReportCmd}" Content="Create Monthly Schedule"/>
           </DockPanel>
         </StackPanel>
 
