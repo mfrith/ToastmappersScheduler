@@ -145,6 +145,9 @@ namespace Toastmappers
 
     public bool TableTopics { get; set; }
 
+    public bool TTWinner { get; set; }
+    public bool TTContestant { get; set; }
+
     private ICommand _findPastRoles;
     public ICommand FindPastRolesCmd
     {
@@ -309,7 +312,30 @@ namespace Toastmappers
           var f = Tuple.Create("Hotseat", results);
           _findResults.Add(f);
         }
+      }
 
+      if (TTWinner)
+      {
+        var result = _meetings.Where(it => it is MeetingModelRegular).Cast<MeetingModelRegular>().Where(it => it.TTWinner == _mme.Name).ToList();
+        if (result.Count > 0)
+        {
+          var results = result.Select(it => it.DayOfMeeting).ToList();
+          results.Reverse();
+          var f = Tuple.Create("TTWinner", results);
+          _findResults.Add(f);
+        }
+      }
+
+      if (TTContestant)
+      {
+        var result = _meetings.Where(it => it is MeetingModelRegular).Cast<MeetingModelRegular>().Where(it => it.TTContestants.Contains(_mme.Name)).ToList();
+        if (result.Count > 0)
+        {
+          var results = result.Select(it => it.DayOfMeeting).ToList();
+          results.Reverse();
+          var f = Tuple.Create("TTContestant", results);
+          _findResults.Add(f);
+        }
       }
 
       if (_findResults.Count > 0)
