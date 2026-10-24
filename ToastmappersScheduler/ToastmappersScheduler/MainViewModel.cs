@@ -33,7 +33,7 @@ namespace Toastmappers
       //if (mode == "debug")
         _home = "C:\\ETS-test";
       //else
-        _home = "C:\\ETS";
+        //_home = "C:\\ETS";
 
       //var t = Assembly.GetExecutingAssembly().Location;d
       //var e = Path.GetDirectoryName(t);

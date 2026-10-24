@@ -516,8 +516,10 @@ namespace Toastmappers
 
       if (month == 11) //november
       {
+        DateTime veteransDay = new(year, 11, 11);
         meetings.Add(firstWednesday);
-        meetings.Add(secondWednesday);
+        if (secondWednesday != veteransDay)
+          meetings.Add(secondWednesday);
         meetings.Add(thirdWednesday);
         meetings.Add(fourthWednesday);
         if (fifthWednesday <= lastDayOfMonth)
@@ -632,6 +634,9 @@ namespace Toastmappers
       //add speakers
       foreach (var m in meetings)
       {
+        // reverse order that members are selected. Members with names starting later in the alphabet are at 
+        // a disadvantage
+        // what to do with members who are attending one or two meetings a month?
         var iterationMembers = members.Where(it => it.MeetingsOut.Contains(meetingDates[i])).ToList();
         foreach (var im in iterationMembers)
           members.Remove(im);
