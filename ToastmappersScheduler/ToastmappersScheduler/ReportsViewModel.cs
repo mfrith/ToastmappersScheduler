@@ -129,6 +129,65 @@ namespace Toastmappers
 
     }
 
+    private ICommand _attendance;
+    public ICommand MemberAttendanceCmd
+    {
+      get
+      {
+        return _attendance ??= new RelayCommand(() => ShowAttendance(), () => true);
+      }
+    }
+
+    public HashSet<string> GetAllAttendees(MeetingModelBase meeting)
+    {
+      HashSet<string> attendees =
+      [
+        .. meeting.Attendees,
+        meeting.AhCounter,
+        meeting.Evaluator1,
+        meeting.Evaluator2,
+        meeting.GeneralEvaluator,
+        meeting.Grammarian,
+        meeting.HotSeat,
+        meeting.QuizMaster,
+        meeting.Speaker1,
+        meeting.Speaker2,
+        meeting.Timer,
+        meeting.Toastmaster,
+        meeting.Video,
+        meeting as MeetingModelRegular != null ? (meeting as MeetingModelRegular).TableTopics : "",
+        meeting as MeetingModelRegular != null ? (meeting as MeetingModelRegular).TTWinner : "",
+        .. (meeting as MeetingModelRegular).TTContestants,
+      ];
+
+      return attendees;
+    }
+    public void ShowAttendance()
+    {
+      _findResults.Clear();
+      List<string> names = [];
+
+      List<string> mNames = _members.Select(it => it.Name).ToList();
+
+      var res = _meetings.Where(it => it.DayOfMeeting.Contains("2026"));
+      var res2 = res.Where(it => it.DayOfMeeting.Contains("10-"));
+
+      foreach (var m in res2)
+      {
+        var attendees = GetAllAttendees(m);
+        foreach (var a in attendees)
+          names.Add(a);
+      }
+
+      List<string> outs = mNames.Except(names).ToList();
+
+      var f = Tuple.Create("October", outs);
+      _findResults.Add(f);
+
+      if (_findResults.Count > 0)
+        NotifyPropertyChanged(() => FindResults);
+    }
+
     public bool Toastmaster
     {
       get; set;
